@@ -5,13 +5,13 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mk</groupId>
-    <artifactId>whotel</artifactId>
+    <artifactId>crawers</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>whotel-api</module>
-        <module>whotel-biz</module>
-        <module>whotel-web</module>
+        <module>crawer-api</module>
+        <module>crawer-biz</module>
+        <module>crawer-web</module>
 
     </modules>
     <build>
@@ -37,6 +37,8 @@
     </pluginRepositories>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java-version>1.7</java-version>
         <spring.version>4.0.0.RELEASE</spring.version>
         <org.aspectj-version>1.7.3</org.aspectj-version>
@@ -58,6 +60,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+                <weChat.web.scope>snsapi_login</weChat.web.scope>
+                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
             </properties>
         </profile>
         <profile>
@@ -73,6 +79,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+                <weChat.web.scope>snsapi_login</weChat.web.scope>
+                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
             </properties>
         </profile>
 
@@ -87,9 +97,15 @@
                 <jdbc.password>LZBV5D5ak</jdbc.password>
                 <spring.redis.sentinel.master>ota2-test-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.4.20.206:26379</spring.redis.sentinel.nodes>
+                <!--<spring.redis.sentinel.master>mymaster</spring.redis.sentinel.master>-->
+                <!--<spring.redis.sentinel.nodes>192.168.70.52:26379</spring.redis.sentinel.nodes>-->
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+                <weChat.web.scope>snsapi_login</weChat.web.scope>
+                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
             </properties>
         </profile>
 
@@ -122,6 +138,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+                <weChat.web.scope>snsapi_login</weChat.web.scope>
+                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
             </properties>
         </profile>
     </profiles>

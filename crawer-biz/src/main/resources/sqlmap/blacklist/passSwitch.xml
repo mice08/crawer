@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.crawer.biz.mapper.blacklist.PassSwitchMapper">
+
+	<resultMap id="passSwitch" type="com.mk.crawer.biz.moudle.PassSwitch">
+	    <result property="id" column="id" />
+	    <result property="isClose" column="is_close" />
+	</resultMap>
+
+
+
+    <sql id="Base_Column_List" >
+        id, is_close
+    </sql>
+
+    <select id="isClose" resultMap="passSwitch">
+        SELECT
+         is_close
+        FROM  pass_switch
+         limit 1
+    </select>
+
+    <update id="updateSwitch" parameterType="int">
+        UPDATE pass_switch
+        set is_close = #{is_close}
+        where id = 1
+    </update>
+    
+
+
+</mapper>
