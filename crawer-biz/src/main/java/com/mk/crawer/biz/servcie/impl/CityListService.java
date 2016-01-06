@@ -5,12 +5,14 @@ import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.model.crawer.CityListExample;
 import com.mk.crawer.biz.servcie.ICityListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by kirinli on 16/1/6.
  */
+@Service
 public class CityListService implements ICityListService {
     @Autowired
     private CityListMapper cityListMapper;

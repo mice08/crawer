@@ -7,6 +7,7 @@ import com.mk.crawer.api.TCityListService;
 import com.mk.crawer.biz.enums.CityTypeEnum;
 import com.mk.crawer.biz.mapper.crawer.CityListMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.ITCityListBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.Date;
 public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
 
      @Autowired
-     public CityListMapper cityListMapper;
+     public ICityListService cityListService;
 
         public  boolean saveCityList(String   url) {
             if(StringUtils.isEmpty(url)){
@@ -44,7 +45,7 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
                         if (null != jso) {
                             bl = true;
                             CityList  tl = getCityByJSONObj(jso,i);
-                            cityListMapper.insert(tl);
+                            cityListService.insert(tl);
                             //TODO  保存tl;
                         }
                     }

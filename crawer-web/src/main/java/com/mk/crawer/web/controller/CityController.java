@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.unidal.helper.Objects;
 import  com.mk.framework.proxy.http.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping(value = "/citylict", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/citylict")
 public class CityController {
 
     @Autowired
@@ -34,11 +35,15 @@ public class CityController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> deleteByParams(HttpRequest request) {
-        String  url = "" ;
+    public ResponseEntity<Map<String,Object>> deleteByParams(HttpServletRequest request) {
+        String  url = "http://touch.qunar.com/h5/hotel/hotelcitylist" ;
         boolean bl = itCityListBusinessService.saveCityList(url);
-
-        return new ResponseEntity<Map<String,Object>>(new HashMap(), HttpStatus.OK);
+        HashMap hm = new HashMap();
+        String result = "请求成功";
+        boolean  success = true;
+        hm.put("result",result);
+        hm.put("success",success);
+        return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
 
 
