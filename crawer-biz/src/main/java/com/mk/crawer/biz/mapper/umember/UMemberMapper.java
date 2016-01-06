@@ -1,8 +1,8 @@
 package com.mk.crawer.biz.mapper.umember;
 
-import com.mk.crawer.biz.moudle.UMember;
-
 import java.util.List;
+
+import com.mk.crawer.biz.module.UMember;
 
 /**
  * Created by kirinli on 15/9/9.
