@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mk.crawer.biz.module.HotelDetail;
 import com.mk.crawer.biz.module.UMember;
-import com.mk.crawer.biz.servcie.impl.HotelDetailCrawlServiceImpl;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 
 @Controller
 public class HomeController {
 	private final Logger logger = Logger.getLogger(HomeController.class);
 
 	@Autowired
-	private HotelDetailCrawlServiceImpl hotelDetailService;
+	private HotelDetailCrawlService hotelDetailService;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
