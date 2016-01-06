@@ -6,6 +6,8 @@ import java.util.Date;
 public class Hotel {
     private Long id;
 
+    private String sourceId;
+
     private String cityName;
 
     private Long distance;
@@ -302,5 +304,13 @@ public class Hotel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 }
