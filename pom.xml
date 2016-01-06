@@ -8,6 +8,7 @@
     <artifactId>crawers</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>crawer-api</module>
         <module>crawer-biz</module>

@@ -18,7 +18,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.mk</groupId>
+            <artifactId>crawer-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.mk</groupId>
             <artifactId>crawer-biz</artifactId>
