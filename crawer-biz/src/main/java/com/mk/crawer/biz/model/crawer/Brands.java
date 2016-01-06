@@ -2,7 +2,7 @@ package com.mk.crawer.biz.model.crawer;
 
 import java.util.Date;
 
-public class Brands1 {
+public class Brands {
     private   Long id;
     private   Long  cityId;
     private   String  cityUrl;
