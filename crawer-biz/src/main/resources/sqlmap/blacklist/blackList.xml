@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mk.crawer.biz.mapper.blacklist.BlackListMapper">
 
-	<resultMap id="blackList" type="com.mk.crawer.biz.moudle.BlackList">
+	<resultMap id="blackList" type="com.mk.crawer.biz.module.BlackList">
 	    <result property="id" column="id" />
 	    <result property="mid" column="mid" />
 	    <result property="idcard" column="idcard" />
@@ -31,7 +31,7 @@
         WHERE flag = '1'
     </select>
     
-    <insert id="saveBlackList"  parameterType="com.mk.crawer.biz.moudle.BlackList" >
+    <insert id="saveBlackList"  parameterType="com.mk.crawer.biz.module.BlackList" >
         INSERT INTO blacklist
          ( mid, idcard, loginName, userName, phone, memo, opUserName, opUserCode, flag, regTime,createTime)
          VALUE
@@ -55,7 +55,7 @@
          delete from blacklist where id = #{id}
     </delete>
 
-    <update id="updateBlackList" parameterType="com.mk.crawer.biz.moudle.BlackList" >
+    <update id="updateBlackList" parameterType="com.mk.crawer.biz.module.BlackList" >
         update blacklist
         set
          mid = #{mid},

@@ -2,7 +2,7 @@ package com.mk.crawer.web.controller;
 
 
 import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.moudle.UMember;
+import com.mk.crawer.biz.module.UMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

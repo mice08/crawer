@@ -4,7 +4,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
 import com.mk.crawer.biz.mapper.blacklist.BlackListMapper;
-import com.mk.crawer.biz.moudle.BlackList;
+import com.mk.crawer.biz.module.BlackList;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import org.slf4j.Logger;
@@ -217,11 +217,11 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         resultMap.put("message","备份成功");
         resultMap.put("SUCCESS", true);
         resultMap.put("Data", urlStrings);
-        Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
-                "endTime=" + DateUtils.format_yMdHms(new Date())
-        );
-        logger.info("====================doPriceDump method end time{}===================="
-                , DateUtils.format_yMdHms(new Date()));
+//        Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
+//                "endTime=" + DateUtils.format_yMdHms(new Date())
+//        );
+//        logger.info("====================doPriceDump method end time{}===================="
+//                , DateUtils.format_yMdHms(new Date()));
         return resultMap;
     }
 }
