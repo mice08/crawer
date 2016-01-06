@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mk.crawer.biz.model.ots.HotelDetail;
 import com.mk.crawer.biz.model.ots.UMember;
-import com.mk.crawer.biz.servcieImpl.impl.HotelDetailCrawlServiceImpl;
-import com.mk.crawer.biz.model.ots.UMember;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 
 @Controller

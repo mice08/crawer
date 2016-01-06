@@ -1,4 +1,4 @@
-package com.mk.crawer.biz.servcieImpl.impl;
+package com.mk.crawer.biz.servcieImpl.crawer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;

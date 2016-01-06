@@ -1,4 +1,4 @@
-package com.mk.crawer.biz.servcieImpl.impl;
+package com.mk.crawer.biz.servcieImpl.crawer;
 
 import java.util.Date;
 import java.util.HashMap;
