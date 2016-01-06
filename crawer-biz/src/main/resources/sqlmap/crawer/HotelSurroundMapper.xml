@@ -50,7 +50,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_hotel_surround
+    from t_ex_hotel_surround
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -61,23 +61,33 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_hotel_surround
+    from t_ex_hotel_surround
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_hotel_surround
+    delete from t_ex_hotel_surround
     where id = #{id,jdbcType=BIGINT}
   </delete>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelSurroundMapper.xml
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelSurround" >
     insert into t_hotel_surround (id, type, hotel_id, 
+=======
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.HotelSurround" >
+    insert into t_ex_hotel_surround (id, type, hotel_id, 
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/HotelSurroundMapper.xml
       name, gpoint, distance, 
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT}, 
       #{name,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR}, #{distance,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelSurroundMapper.xml
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelSurround" >
     insert into t_hotel_surround
+=======
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.HotelSurround" >
+    insert into t_ex_hotel_surround
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/HotelSurroundMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -131,14 +141,24 @@
       </if>
     </trim>
   </insert>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelSurroundMapper.xml
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelSurroundExample" resultType="java.lang.Integer" >
     select count(*) from t_hotel_surround
+=======
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.HotelSurroundExample" resultType="java.lang.Integer" >
+    select count(*) from t_ex_hotel_surround
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/HotelSurroundMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelSurroundMapper.xml
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.HotelSurround" >
     update t_hotel_surround
+=======
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.HotelSurround" >
+    update t_ex_hotel_surround
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/HotelSurroundMapper.xml
     <set >
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
@@ -164,8 +184,13 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelSurroundMapper.xml
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.HotelSurround" >
     update t_hotel_surround
+=======
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.HotelSurround" >
+    update t_ex_hotel_surround
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/HotelSurroundMapper.xml
     set type = #{type,jdbcType=VARCHAR},
       hotel_id = #{hotelId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},

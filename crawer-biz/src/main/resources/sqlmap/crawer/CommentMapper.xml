@@ -57,7 +57,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_comment
+    from t_ex_comment
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -68,15 +68,20 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_comment
+    from t_ex_comment
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_comment
+    delete from t_ex_comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentMapper.xml
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.Comment" >
     insert into t_comment (id, hotel_id, content, 
+=======
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.Comment" >
+    insert into t_ex_comment (id, hotel_id, content, 
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentMapper.xml
       date, gid, score, title, 
       click_useful_status, author, image_id, 
       reply_num, cuid, create_time, 
@@ -87,8 +92,13 @@
       #{replyNum,jdbcType=BIGINT}, #{cuid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentMapper.xml
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.Comment" >
     insert into t_comment
+=======
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.Comment" >
+    insert into t_ex_comment
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -178,14 +188,24 @@
       </if>
     </trim>
   </insert>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentMapper.xml
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.CommentExample" resultType="java.lang.Integer" >
     select count(*) from t_comment
+=======
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from t_ex_comment
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentMapper.xml
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.Comment" >
     update t_comment
+=======
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.Comment" >
+    update t_ex_comment
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentMapper.xml
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -229,8 +249,13 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentMapper.xml
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.Comment" >
     update t_comment
+=======
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.Comment" >
+    update t_ex_comment
+>>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentMapper.xml
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       content = #{content,jdbcType=VARCHAR},
       date = #{date,jdbcType=VARCHAR},
