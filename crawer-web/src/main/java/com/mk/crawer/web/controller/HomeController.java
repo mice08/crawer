@@ -1,13 +1,8 @@
 package com.mk.crawer.web.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.mk.crawer.biz.model.ots.HotelDetail;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import com.mk.framework.UrlUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mk.crawer.biz.model.ots.HotelDetail;
-import com.mk.crawer.biz.model.ots.UMember;
-import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -31,10 +29,10 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> check(HttpSession httpSession, UMember userCheckDto) {
+	public ResponseEntity<Map<String, Object>> check(HttpSession httpSession, String key) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-
-		result.put("check", "123");
+		String url = UrlUtils.getUrl(key);
+		result.put("url", url);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
@@ -42,6 +40,7 @@ public class HomeController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> hoteldetail(HttpServletRequest request, HotelDetail hotelDetail) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
+
 
 		List<String> hotelIdList = new ArrayList<String>();
 		hotelIdList.add(hotelDetail.getHotelIds());
