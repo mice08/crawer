@@ -215,10 +215,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         resultMap.put("SUCCESS", true);
         resultMap.put("Data", urlStrings);
         Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
-                "endTime=" + DateUtils.format_yMdHms(new Date())
+                "endTime=" + DateUtils.getDatetime()
         );
         logger.info("====================doPriceDump method end time{}===================="
-                , DateUtils.format_yMdHms(new Date()));
+                , DateUtils.getDatetime());
         return resultMap;
     }
 }
