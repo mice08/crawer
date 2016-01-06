@@ -1,7 +1,8 @@
 package com.mk.crawer.biz.servcie;
 
 import com.mk.crawer.biz.mapper.blacklist.BlackListMapper;
-import com.mk.crawer.biz.moudle.BlackList;
+import com.mk.crawer.biz.module.BlackList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
