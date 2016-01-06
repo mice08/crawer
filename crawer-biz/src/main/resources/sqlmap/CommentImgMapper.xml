@@ -52,7 +52,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_comment_img
+    from t_ex_comment_img
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -63,15 +63,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_comment_img
+    from t_ex_comment_img
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_comment_img
+    delete from t_ex_comment_img
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.CommentImg" >
-    insert into t_comment_img (id, hotel_id, comment_id, 
+    insert into t_ex_comment_img (id, hotel_id, comment_id, 
       url, small_url, tag, 
       title, src, create_time, 
       update_time)
@@ -81,7 +81,7 @@
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.CommentImg" >
-    insert into t_comment_img
+    insert into t_ex_comment_img
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -148,13 +148,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.CommentImgExample" resultType="java.lang.Integer" >
-    select count(*) from t_comment_img
+    select count(*) from t_ex_comment_img
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.CommentImg" >
-    update t_comment_img
+    update t_ex_comment_img
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -187,7 +187,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.CommentImg" >
-    update t_comment_img
+    update t_ex_comment_img
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       comment_id = #{commentId,jdbcType=BIGINT},
       url = #{url,jdbcType=VARCHAR},

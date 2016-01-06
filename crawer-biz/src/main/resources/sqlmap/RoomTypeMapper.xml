@@ -73,7 +73,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_roomtype
+    from t_ex_roomtype
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,15 +84,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_roomtype
+    from t_ex_roomtype
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_roomtype
+    delete from t_ex_roomtype
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomType" >
-    insert into t_roomtype (id, hotel_id, bed_type, 
+    insert into t_ex_roomtype (id, hotel_id, bed_type, 
       room_name, room_type, area, 
       network_price, room_category, rt_area, 
       rt_floor, rt_broadband, rt_bedtype, 
@@ -114,7 +114,7 @@
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomType" >
-    insert into t_roomtype
+    insert into t_ex_roomtype
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -289,13 +289,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeExample" resultType="java.lang.Integer" >
-    select count(*) from t_roomtype
+    select count(*) from t_ex_roomtype
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomType" >
-    update t_roomtype
+    update t_ex_roomtype
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -382,7 +382,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomType" >
-    update t_roomtype
+    update t_ex_roomtype
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       bed_type = #{bedType,jdbcType=VARCHAR},
       room_name = #{roomName,jdbcType=VARCHAR},

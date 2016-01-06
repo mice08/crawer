@@ -76,7 +76,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_hotel
+    from t_ex_hotel
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,15 +87,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_hotel
+    from t_ex_hotel
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_hotel
+    delete from t_ex_hotel
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.Hotel" >
-    insert into t_hotel (id, city_name, distance, 
+    insert into t_ex_hotel (id, city_name, distance, 
       price, has_breakfast, image_count, 
       has_fitness_room, comment_score, has_business_center, 
       has_restaurant, hotel_stars, bpoint, 
@@ -119,7 +119,7 @@
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.Hotel" >
-    insert into t_hotel
+    insert into t_ex_hotel
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -306,13 +306,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.HotelExample" resultType="java.lang.Integer" >
-    select count(*) from t_hotel
+    select count(*) from t_ex_hotel
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.Hotel" >
-    update t_hotel
+    update t_ex_hotel
     <set >
       <if test="cityName != null" >
         city_name = #{cityName,jdbcType=VARCHAR},
@@ -405,7 +405,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.Hotel" >
-    update t_hotel
+    update t_ex_hotel
     set city_name = #{cityName,jdbcType=VARCHAR},
       distance = #{distance,jdbcType=BIGINT},
       price = #{price,jdbcType=DECIMAL},

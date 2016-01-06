@@ -48,7 +48,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_site
+    from t_ex_site
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -59,15 +59,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_site
+    from t_ex_site
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_site
+    delete from t_ex_site
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.Site" >
-    insert into t_site (id, site_name, site_url, 
+    insert into t_ex_site (id, site_name, site_url, 
       valid, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{siteName,jdbcType=VARCHAR}, #{siteUrl,jdbcType=VARCHAR}, 
@@ -75,7 +75,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.Site" >
-    insert into t_site
+    insert into t_ex_site
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -118,13 +118,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.SiteExample" resultType="java.lang.Integer" >
-    select count(*) from t_site
+    select count(*) from t_ex_site
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.Site" >
-    update t_site
+    update t_ex_site
     <set >
       <if test="siteName != null" >
         site_name = #{siteName,jdbcType=VARCHAR},
@@ -145,7 +145,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.Site" >
-    update t_site
+    update t_ex_site
     set site_name = #{siteName,jdbcType=VARCHAR},
       site_url = #{siteUrl,jdbcType=VARCHAR},
       valid = #{valid,jdbcType=VARCHAR},

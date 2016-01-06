@@ -58,7 +58,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_roomtype_facilities
+    from t_ex_roomtype_facilities
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -69,15 +69,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_roomtype_facilities
+    from t_ex_roomtype_facilities
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_roomtype_facilities
+    delete from t_ex_roomtype_facilities
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
-    insert into t_roomtype_facilities (id, room_type_id, hotel_id, 
+    insert into t_ex_roomtype_facilities (id, room_type_id, hotel_id, 
       short_name, type, field, 
       low_star_sort, high_star_sort, oversea_sort, 
       color, icon_url, display, 
@@ -91,7 +91,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
-    insert into t_roomtype_facilities
+    insert into t_ex_roomtype_facilities
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -188,13 +188,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeFacilitiesExample" resultType="java.lang.Integer" >
-    select count(*) from t_roomtype_facilities
+    select count(*) from t_ex_roomtype_facilities
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
-    update t_roomtype_facilities
+    update t_ex_roomtype_facilities
     <set >
       <if test="roomTypeId != null" >
         room_type_id = #{roomTypeId,jdbcType=BIGINT},
@@ -242,7 +242,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
-    update t_roomtype_facilities
+    update t_ex_roomtype_facilities
     set room_type_id = #{roomTypeId,jdbcType=BIGINT},
       hotel_id = #{hotelId,jdbcType=BIGINT},
       short_name = #{shortName,jdbcType=VARCHAR},
