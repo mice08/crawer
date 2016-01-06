@@ -21,7 +21,7 @@ public class QunarHotelSyncController {
     @Autowired
     private QunarHotelSyncService qunarHotelSyncService;
 
-    @RequestMapping(value = "/qunarHotelSync", method = RequestMethod.GET)
+    @RequestMapping(value = "/qunarhotelsync", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> qunarHotelSync(HttpSession httpSession,UMember userCheckDto) {
         Map<String, Object> result = new HashMap<String, Object>();
