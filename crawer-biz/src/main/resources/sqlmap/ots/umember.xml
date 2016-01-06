@@ -3,7 +3,7 @@
 <mapper namespace="com.mk.crawer.biz.mapper.ots.UMemberMapper">
 
     
-	<resultMap id="u_member" type="com.mk.crawer.biz.moudle.UMember">
+	<resultMap id="u_member" type="com.mk.crawer.biz.model.ots.UMember">
         <result property="mid" column="mid" />
         <result property="loginName" column="loginName" />
         <result property="password" column="password" />
@@ -62,7 +62,7 @@
 
 	</resultMap>
 
-    <select id="getByParams" parameterType="com.mk.crawer.biz.moudle.UMember" resultMap="u_member" >
+    <select id="getByParams" parameterType="com.mk.crawer.biz.model.ots.UMember" resultMap="u_member" >
         SELECT * FROM  ots.u_member where 1=1
         <if test="mid != null">
             AND mid = #{mid}

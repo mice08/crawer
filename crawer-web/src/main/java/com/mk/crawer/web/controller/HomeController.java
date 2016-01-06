@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +21,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mk.crawer.biz.model.ots.HotelDetail;
 import com.mk.crawer.biz.model.ots.UMember;
 import com.mk.crawer.biz.servcieImpl.impl.HotelDetailCrawlServiceImpl;
+import com.mk.crawer.biz.model.ots.UMember;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 
 @Controller
 public class HomeController {
 	private final Logger logger = Logger.getLogger(HomeController.class);
 
 	@Autowired
-	private HotelDetailCrawlServiceImpl hotelDetailService;
+	private HotelDetailCrawlService hotelDetailService;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
@@ -36,9 +40,9 @@ public class HomeController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/crawl/hoteldetail", method = RequestMethod.POST)
+	@RequestMapping(value = "/hoteldetail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> hoteldetail(HttpSession httpSession, HotelDetail hotelDetail) {
+	public ResponseEntity<Map<String, Object>> hoteldetail(HttpServletRequest request, HotelDetail hotelDetail) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		List<String> hotelIdList = new ArrayList<String>();

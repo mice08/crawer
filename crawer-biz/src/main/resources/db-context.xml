@@ -22,22 +22,22 @@
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
   
-   <context:component-scan base-package="com.mk.bypass">
+   <context:component-scan base-package="com.mk">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
     <context:property-placeholder location="classpath:db.properties"/>
     <bean id="otsDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${ots.jdbc.url}"/>
-        <property name="username" value="${ots.jdbc.username}"/>
-        <property name="password" value="${ots.jdbc.password}"/>
+        <property name="url" value="${ots.jdbc.urls}"/>
+        <property name="username" value="${ots.jdbc.usernames}"/>
+        <property name="password" value="${ots.jdbc.passwords}"/>
     </bean>
 
 	<bean id="crawerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${crawer.jdbc.driverClassName}"/>
-		<property name="url" value="${crawer.jdbc.url}"/>
-		<property name="username" value="${crawer.jdbc.username}"/>
-		<property name="password" value="${crawer.jdbc.password}"/>
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${crawler.jdbc.url}"/>
+		<property name="username" value="${crawler.jdbc.username}"/>
+		<property name="password" value="${crawler.jdbc.password}"/>
 	</bean>
 
 	<bean id="otsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
