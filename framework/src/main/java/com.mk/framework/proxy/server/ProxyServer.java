@@ -1,4 +1,4 @@
-package com.mk.crawer.framework.proxy.server;
+package com.mk.framework.proxy.server;
 
 /**
  * Created by 振涛 on 2016/1/6.

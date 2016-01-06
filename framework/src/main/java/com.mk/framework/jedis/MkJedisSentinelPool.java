@@ -1,4 +1,4 @@
-package com.mk.crawer.framework.jedis;
+package com.mk.framework.jedis;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.HostAndPort;

@@ -1,4 +1,4 @@
-package com.mk.crawer.framework.manager;
+package com.mk.framework.manager;
 
 /**
  * Created by 振涛 on 2015/12/25.

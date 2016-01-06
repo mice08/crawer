@@ -1,6 +1,5 @@
-package com.mk.crawer.framework.proxy.http;
+package com.mk.framework.proxy.http;
 
-import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;

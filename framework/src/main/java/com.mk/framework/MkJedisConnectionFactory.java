@@ -1,7 +1,7 @@
-package com.mk.crawer.framework;
+package com.mk.framework;
 
-import com.mk.crawer.framework.jedis.MkJedis;
-import com.mk.crawer.framework.jedis.MkJedisSentinelPool;
+import com.mk.framework.jedis.MkJedis;
+import com.mk.framework.jedis.MkJedisSentinelPool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.DisposableBean;

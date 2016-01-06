@@ -1,4 +1,4 @@
-package com.mk.crawer.framework.jedis;
+package com.mk.framework.jedis;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;

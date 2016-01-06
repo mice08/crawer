@@ -1,7 +1,7 @@
-package com.mk.crawer.framework.proxy.server;
+package com.mk.framework.proxy.server;
 
-import com.mk.crawer.framework.AppUtils;
-import com.mk.crawer.framework.MkJedisConnectionFactory;
+import com.mk.framework.AppUtils;
+import com.mk.framework.MkJedisConnectionFactory;
 import redis.clients.jedis.Jedis;
 
 /**

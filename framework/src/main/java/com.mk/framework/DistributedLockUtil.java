@@ -1,4 +1,4 @@
-package com.mk.crawer.framework;
+package com.mk.framework;
 
 import redis.clients.jedis.Jedis;
 

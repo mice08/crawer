@@ -1,6 +1,7 @@
-package com.mk.crawer.framework.proxy.server;
+package com.mk.framework.proxy.server;
 
-import com.mk.crawer.framework.proxy.http.HttpUtil;
+
+import com.mk.framework.proxy.http.HttpUtil;
 
 import java.util.List;
 

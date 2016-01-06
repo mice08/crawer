@@ -1,4 +1,4 @@
-package com.mk.crawer.framework.proxy.http;
+package com.mk.framework.proxy.http;
 
 import com.google.gson.Gson;
 
