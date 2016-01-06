@@ -3,21 +3,14 @@ package com.mk.crawer.biz.model.crawer;
 import java.util.Date;
 
 public class CityList {
-    private Long id;
-
-    private String cityCode;
-
-    private String cityName;
-
-    private String cityUrl;
-
-    private Long siteId;
-
-    private String cityType;
-
-    private Date createTime;
-
-    private Date updateTime;
+    private   Long id;
+    private   String  cityCode;
+    private   String  cityName;
+    private   String  cityUrl;
+    private   Date createTime;
+    private   Date  updateTime;
+    private   String  siteId;
+    private   String  cityType;
 
     public Long getId() {
         return id;
@@ -32,7 +25,7 @@ public class CityList {
     }
 
     public void setCityCode(String cityCode) {
-        this.cityCode = cityCode == null ? null : cityCode.trim();
+        this.cityCode = cityCode;
     }
 
     public String getCityName() {
@@ -40,7 +33,7 @@ public class CityList {
     }
 
     public void setCityName(String cityName) {
-        this.cityName = cityName == null ? null : cityName.trim();
+        this.cityName = cityName;
     }
 
     public String getCityUrl() {
@@ -48,23 +41,7 @@ public class CityList {
     }
 
     public void setCityUrl(String cityUrl) {
-        this.cityUrl = cityUrl == null ? null : cityUrl.trim();
-    }
-
-    public Long getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(Long siteId) {
-        this.siteId = siteId;
-    }
-
-    public String getCityType() {
-        return cityType;
-    }
-
-    public void setCityType(String cityType) {
-        this.cityType = cityType == null ? null : cityType.trim();
+        this.cityUrl = cityUrl;
     }
 
     public Date getCreateTime() {
@@ -81,5 +58,21 @@ public class CityList {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
+    }
+
+    public String getCityType() {
+        return cityType;
+    }
+
+    public void setCityType(String cityType) {
+        this.cityType = cityType;
     }
 }
