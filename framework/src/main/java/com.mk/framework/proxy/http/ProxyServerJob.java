@@ -1,0 +1,34 @@
+package com.mk.framework.proxy.http;
+
+import org.slf4j.Logger;
+
+import java.util.List;
+
+/**
+ * Created by 振涛 on 2016/1/6.
+ */
+public class ProxyServerJob {
+
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerJob.class);
+
+    public void validAndRemove() {
+        List<ProxyServer> proxyServerList = ProxyServerManager.listProxyServer();
+        for (ProxyServer proxyServer : proxyServerList) {
+            if ( !ProxyServerManager.check(proxyServer) ) {
+                ProxyServerManager.remove(proxyServer);
+                LOGGER.info("移除：{}，还有{}个代理IP。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
+            }
+        }
+    }
+
+    public void fetchAndAdd() {
+        List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
+        for (ProxyServer proxyServer : proxyServerList) {
+            if ( ProxyServerManager.check(proxyServer) ) {
+                ProxyServerManager.add(proxyServer);
+                LOGGER.info("添加：{}，还有{}个代理IP。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
+            }
+        }
+    }
+
+}
