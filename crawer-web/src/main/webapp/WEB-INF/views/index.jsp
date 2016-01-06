@@ -8,13 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>安全旁路系统</title>
+    <title>Crawer</title>
 </head>
 <body>
-<h1>Hello, ByPass</h1>
+<h1>Hello, Crawer</h1>
 <ul>
   <li>
-    <a href="/check">/check  </a>
+    <a href="#">/check  </a>
   </li>
 </ul>
 </body>
