@@ -4,7 +4,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
 
-import com.mk.crawer.biz.model.crawer.Brands;
+import com.mk.crawer.biz.model.crawer.Brands1;
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
@@ -236,7 +236,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             if(brandsMap!=null){
                 for (String key:brandsMap.keySet()){
                     Map<String,String> brandMap=getJsonList(key);
-                    Brands brands =new Brands();
+                    Brands1 brands =new Brands1();
                     brands.setName(brandMap.get("name"));
                     if (brandMap.get("count")!=null)
                         brands.setCount(Integer.valueOf(brandMap.get("count")));
