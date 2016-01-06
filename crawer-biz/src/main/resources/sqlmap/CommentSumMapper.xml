@@ -61,7 +61,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_comment_sum
+    from t_ex_comment_sum
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -72,15 +72,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_comment_sum
+    from t_ex_comment_sum
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_comment_sum
+    delete from t_ex_comment_sum
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.CommentSum" >
-    insert into t_comment_sum (id, hotel_id, score, 
+    insert into t_ex_comment_sum (id, hotel_id, score, 
       good_total, bad_total, medium_total, 
       all_total, image_count, hot_titles, 
       tags, sentence_cmt, score_shop_msg, 
@@ -94,7 +94,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.CommentSum" >
-    insert into t_comment_sum
+    insert into t_ex_comment_sum
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -203,13 +203,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.CommentSumExample" resultType="java.lang.Integer" >
-    select count(*) from t_comment_sum
+    select count(*) from t_ex_comment_sum
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.CommentSum" >
-    update t_comment_sum
+    update t_ex_comment_sum
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -263,7 +263,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.CommentSum" >
-    update t_comment_sum
+    update t_ex_comment_sum
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       score = #{score,jdbcType=DECIMAL},
       good_total = #{goodTotal,jdbcType=BIGINT},
