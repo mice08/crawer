@@ -2,12 +2,12 @@ package com.mk.crawer.biz.model;
 
 import java.util.Date;
 
-public class RoomTypeFacilities {
+public class HotelFacilities {
     private Long id;
 
-    private Long roomTypeId;
-
     private Long hotelId;
+    
+    private String hotelSourceId;
 
     private String shortName;
 
@@ -41,14 +41,6 @@ public class RoomTypeFacilities {
         this.id = id;
     }
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
-    }
-
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
-    }
-
     public Long getHotelId() {
         return hotelId;
     }
@@ -57,7 +49,16 @@ public class RoomTypeFacilities {
         this.hotelId = hotelId;
     }
 
-    public String getShortName() {
+    
+    public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
+
+	public String getShortName() {
         return shortName;
     }
 

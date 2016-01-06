@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.RoomTypeFacilitiesMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeFacilities" >
+<mapper namespace="com.mk.crawer.biz.mapper.HotelFacilitiesMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.HotelFacilities" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
     <result column="short_name" property="shortName" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="field" property="field" jdbcType="VARCHAR" />
@@ -48,7 +48,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, room_type_id, hotel_id, short_name, type, field, low_star_sort, high_star_sort, 
+    id, hotel_id, hotel_source_id, short_name, type, field, low_star_sort, high_star_sort, 
     oversea_sort, color, icon_url, display, item, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypeFacilitiesExample" >
@@ -77,13 +77,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
-    insert into t_ex_roomtype_facilities (id, room_type_id, hotel_id, 
+    insert into t_ex_roomtype_facilities (id, hotel_id, 
       short_name, type, field, 
       low_star_sort, high_star_sort, oversea_sort, 
       color, icon_url, display, 
       item, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
       #{shortName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR}, 
       #{lowStarSort,jdbcType=BIGINT}, #{highStarSort,jdbcType=BIGINT}, #{overseaSort,jdbcType=BIGINT}, 
       #{color,jdbcType=BIGINT}, #{iconUrl,jdbcType=VARCHAR}, #{display,jdbcType=VARCHAR}, 
@@ -143,9 +143,6 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="roomTypeId != null" >
-        #{roomTypeId,jdbcType=BIGINT},
-      </if>
       <if test="hotelId != null" >
         #{hotelId,jdbcType=BIGINT},
       </if>
@@ -196,9 +193,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
     update t_ex_roomtype_facilities
     <set >
-      <if test="roomTypeId != null" >
-        room_type_id = #{roomTypeId,jdbcType=BIGINT},
-      </if>
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
       </if>
@@ -243,8 +237,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypeFacilities" >
     update t_ex_roomtype_facilities
-    set room_type_id = #{roomTypeId,jdbcType=BIGINT},
-      hotel_id = #{hotelId,jdbcType=BIGINT},
+    set hotel_id = #{hotelId,jdbcType=BIGINT},
       short_name = #{shortName,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       field = #{field,jdbcType=VARCHAR},

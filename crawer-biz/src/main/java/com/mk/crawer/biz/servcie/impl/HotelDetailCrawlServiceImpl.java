@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mk.crawer.biz.mapper.RoomTypeMapper;
 import com.mk.crawer.biz.model.HotelDetailParseException;
+import com.mk.crawer.biz.model.HotelFacilities;
 import com.mk.crawer.biz.model.HotelSurround;
 import com.mk.crawer.biz.model.RoomType;
 import com.mk.crawer.biz.model.RoomTypeDesc;
@@ -50,9 +51,10 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			throw new Exception(errorMsg, ex.getCause());
 		}
 
-		List<RoomTypeCombination> roomtypeCombs = this.parseJson(hotelid, jsonString);
+		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
+
 		try {
-			persistRoomtypeCombs(roomtypeCombs);
+			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
@@ -62,10 +64,10 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<RoomTypeCombination> parseJson(String hotelid, String json) throws Exception {
+	private HotelCombination parseJson(String hotelid, String json) throws Exception {
 		Map<String, Object> jsonContent = gson.fromJson(json, new TypeToken<Map<String, Object>>() {
 		}.getType());
-		List<RoomTypeCombination> roomtypeCombs = null;
+		HotelCombination hotelComb = new HotelCombination();
 
 		for (String key : jsonContent.keySet()) {
 			Object jsonNode = jsonContent.get(key);
@@ -80,14 +82,27 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			if ("data".equals(key)) {
 				if (jsonNode != null && jsonNode.getClass().isAssignableFrom(Map.class)) {
 					try {
-						roomtypeCombs = parseDataNodeForRoomtype(hotelid, (Map<String, Object>) jsonNode);
+						List<RoomTypeCombination> roomtypeCombs = parseDataNodeForRoomtype(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (roomtypeCombs != null) {
+							hotelComb.setRoomtypeCombs(roomtypeCombs);
+						}
 					} catch (Exception ex) {
 						logger.error(String.format("failed to parse roomtypes for hotelid:%s", hotelid), ex);
 					}
 
-					parseDataNodeForHotelSurround(hotelid, (Map<String, Object>) jsonNode);
-					
-					
+					try {
+						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (hotelSurrounds != null) {
+							hotelComb.setHotelSurrounds(hotelSurrounds);
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
 				} else {
 					logger.warn("invalid data node received, skip...");
 					continue;
@@ -95,7 +110,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
-		return roomtypeCombs;
+		return hotelComb;
 	}
 
 	private void persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
@@ -106,12 +121,18 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private HotelSurround parseDataNodeForHotelSurround(String hotelid, Map<String, Object> dataNode)
+	private List<HotelFacilities> parseDataNodeForHotelFacilities(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
-		HotelSurround hotelSurround = new HotelSurround();
+		List<HotelFacilities> roomtypeFacilities = new ArrayList<HotelFacilities>();
 
-		return hotelSurround;
+		return roomtypeFacilities;
+	}
+
+	private List<HotelSurround> parseDataNodeForHotelSurrounds(String hotelid, Map<String, Object> dataNode)
+			throws HotelDetailParseException {
+		List<HotelSurround> hotelSurrounds = new ArrayList<HotelSurround>();
+
+		return hotelSurrounds;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -263,6 +284,38 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		return roomtypeComb;
+	}
+
+	private class HotelCombination {
+		private List<RoomTypeCombination> roomtypeCombs;
+
+		private List<HotelSurround> hotelSurrounds;
+
+		private List<HotelFacilities> hotelfacilities;
+
+		public List<RoomTypeCombination> getRoomtypeCombs() {
+			return roomtypeCombs;
+		}
+
+		public void setRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) {
+			this.roomtypeCombs = roomtypeCombs;
+		}
+
+		public List<HotelSurround> getHotelSurrounds() {
+			return hotelSurrounds;
+		}
+
+		public void setHotelSurrounds(List<HotelSurround> hotelSurrounds) {
+			this.hotelSurrounds = hotelSurrounds;
+		}
+
+		public List<HotelFacilities> getHotelfacilities() {
+			return hotelfacilities;
+		}
+
+		public void setHotelfacilities(List<HotelFacilities> hotelfacilities) {
+			this.hotelfacilities = hotelfacilities;
+		}
 	}
 
 	private class RoomTypeCombination {
