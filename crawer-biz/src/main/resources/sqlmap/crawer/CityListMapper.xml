@@ -6,7 +6,7 @@
     <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
     <result column="city_url" property="cityUrl" jdbcType="VARCHAR" />
-    <result column="site_id" property="siteId" jdbcType="BIGINT" />
+    <result column="site_name" property="siteId" jdbcType="VARCHAR" />
     <result column="city_type" property="cityType" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -68,26 +68,18 @@
     delete from t_ex_citylist
     where id = #{id,jdbcType=BIGINT}
   </delete>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
+
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    insert into t_citylist (id, city_code, city_name, 
-=======
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.CityList" >
-    insert into t_ex_citylist (id, city_code, city_name, 
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CityListMapper.xml
-      city_url, site_id, city_type, 
+    insert into t_ex_citylist (id, city_code, city_name,
+      city_url, site_id, city_type,
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, 
       #{cityUrl,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{cityType,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
+
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    insert into t_citylist
-=======
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.CityList" >
     insert into t_ex_citylist
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CityListMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -141,24 +133,16 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
+
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.CityListExample" resultType="java.lang.Integer" >
-    select count(*) from t_citylist
-=======
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.CityListExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_citylist
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CityListMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    update t_citylist
-=======
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.CityList" >
     update t_ex_citylist
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CityListMapper.xml
     <set >
       <if test="cityCode != null" >
         city_code = #{cityCode,jdbcType=VARCHAR},
@@ -184,13 +168,9 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
+
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    update t_citylist
-=======
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.CityList" >
     update t_ex_citylist
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CityListMapper.xml
     set city_code = #{cityCode,jdbcType=VARCHAR},
       city_name = #{cityName,jdbcType=VARCHAR},
       city_url = #{cityUrl,jdbcType=VARCHAR},

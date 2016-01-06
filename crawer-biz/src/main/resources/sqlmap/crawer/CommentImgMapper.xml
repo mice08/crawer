@@ -70,14 +70,10 @@
     delete from t_ex_comment_img
     where id = #{id,jdbcType=BIGINT}
   </delete>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentImgMapper.xml
+
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CommentImg" >
-    insert into t_comment_img (id, hotel_id, comment_id, 
-=======
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.CommentImg" >
     insert into t_ex_comment_img (id, hotel_id, comment_id, 
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentImgMapper.xml
-      url, small_url, tag, 
+      url, small_url, tag,
       title, src, create_time, 
       update_time)
     values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, 
@@ -85,13 +81,9 @@
       #{title,jdbcType=VARCHAR}, #{src,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentImgMapper.xml
+
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.CommentImg" >
-    insert into t_comment_img
-=======
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.CommentImg" >
     insert into t_ex_comment_img
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentImgMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -157,24 +149,16 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentImgMapper.xml
+
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.CommentImgExample" resultType="java.lang.Integer" >
-    select count(*) from t_comment_img
-=======
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.CommentImgExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_comment_img
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentImgMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentImgMapper.xml
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.CommentImg" >
-    update t_comment_img
-=======
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.CommentImg" >
     update t_ex_comment_img
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentImgMapper.xml
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -206,13 +190,9 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CommentImgMapper.xml
+
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.CommentImg" >
-    update t_comment_img
-=======
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.CommentImg" >
     update t_ex_comment_img
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/CommentImgMapper.xml
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       comment_id = #{commentId,jdbcType=BIGINT},
       url = #{url,jdbcType=VARCHAR},

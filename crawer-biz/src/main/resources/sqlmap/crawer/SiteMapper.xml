@@ -66,26 +66,18 @@
     delete from t_ex_site
     where id = #{id,jdbcType=BIGINT}
   </delete>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/SiteMapper.xml
+
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.Site" >
-    insert into t_site (id, site_name, site_url, 
-=======
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.Site" >
     insert into t_ex_site (id, site_name, site_url, 
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/SiteMapper.xml
       valid, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{siteName,jdbcType=VARCHAR}, #{siteUrl,jdbcType=VARCHAR}, 
       #{valid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/SiteMapper.xml
+
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.Site" >
-    insert into t_site
-=======
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.Site" >
     insert into t_ex_site
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/SiteMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -127,24 +119,16 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/SiteMapper.xml
+
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.SiteExample" resultType="java.lang.Integer" >
-    select count(*) from t_site
-=======
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.SiteExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_site
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/SiteMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/SiteMapper.xml
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.Site" >
-    update t_site
-=======
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.Site" >
     update t_ex_site
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/SiteMapper.xml
     <set >
       <if test="siteName != null" >
         site_name = #{siteName,jdbcType=VARCHAR},
@@ -164,13 +148,9 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/SiteMapper.xml
+
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.Site" >
-    update t_site
-=======
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.Site" >
     update t_ex_site
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/SiteMapper.xml
     set site_name = #{siteName,jdbcType=VARCHAR},
       site_url = #{siteUrl,jdbcType=VARCHAR},
       valid = #{valid,jdbcType=VARCHAR},

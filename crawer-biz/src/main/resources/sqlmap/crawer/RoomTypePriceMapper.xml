@@ -77,14 +77,10 @@
     delete from t_ex_roomtype_price
     where id = #{id,jdbcType=BIGINT}
   </delete>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
+
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice" >
-    insert into t_roomtype_price (id, room_type_id, room_id, 
-=======
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
     insert into t_ex_roomtype_price (id, room_type_id, room_id, 
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypePriceMapper.xml
-      price, real_price, origin_price, 
+      price, real_price, origin_price,
       show_price, ota_show_price, wrapper_name, 
       wrapper_id, all_room_count, available_roomcount, 
       crawer_time, create_time, update_time
@@ -96,13 +92,9 @@
       #{crawerTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
+
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice" >
-    insert into t_roomtype_price
-=======
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
     insert into t_ex_roomtype_price
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypePriceMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -198,24 +190,16 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
+
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePriceExample" resultType="java.lang.Integer" >
-    select count(*) from t_roomtype_price
-=======
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypePriceExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_roomtype_price
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypePriceMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice" >
-    update t_roomtype_price
-=======
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
     update t_ex_roomtype_price
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypePriceMapper.xml
     <set >
       <if test="roomTypeId != null" >
         room_type_id = #{roomTypeId,jdbcType=BIGINT},
@@ -262,13 +246,9 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
+
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice" >
-    update t_roomtype_price
-=======
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
     update t_ex_roomtype_price
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypePriceMapper.xml
     set room_type_id = #{roomTypeId,jdbcType=BIGINT},
       room_id = #{roomId,jdbcType=BIGINT},
       price = #{price,jdbcType=DECIMAL},

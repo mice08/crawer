@@ -91,14 +91,10 @@
     delete from t_ex_roomtype
     where id = #{id,jdbcType=BIGINT}
   </delete>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypeMapper.xml
+
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomType" >
-    insert into t_roomtype (id, hotel_id, bed_type, 
-=======
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomType" >
     insert into t_ex_roomtype (id, hotel_id, bed_type, 
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypeMapper.xml
-      room_name, room_type, area, 
+      room_name, room_type, area,
       network_price, room_category, rt_area, 
       rt_floor, rt_broadband, rt_bedtype, 
       rt_addbed, bath, window, 
@@ -118,13 +114,9 @@
       #{outerShow,jdbcType=VARCHAR}, #{districtName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypeMapper.xml
+
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomType" >
-    insert into t_roomtype
-=======
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomType" >
     insert into t_ex_roomtype
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypeMapper.xml
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -298,24 +290,16 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypeMapper.xml
+
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeExample" resultType="java.lang.Integer" >
-    select count(*) from t_roomtype
-=======
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_roomtype
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypeMapper.xml
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypeMapper.xml
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.RoomType" >
-    update t_roomtype
-=======
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomType" >
     update t_ex_roomtype
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypeMapper.xml
     <set >
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
@@ -401,13 +385,9 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypeMapper.xml
+
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.RoomType" >
-    update t_roomtype
-=======
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomType" >
     update t_ex_roomtype
->>>>>>> 0cf116193d7d9847e65e5baf913b75bf85d96dfc:crawer-biz/src/main/resources/sqlmap/RoomTypeMapper.xml
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       bed_type = #{bedType,jdbcType=VARCHAR},
       room_name = #{roomName,jdbcType=VARCHAR},
