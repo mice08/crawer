@@ -123,14 +123,52 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	private List<HotelFacilities> parseDataNodeForHotelFacilities(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
-		List<HotelFacilities> roomtypeFacilities = new ArrayList<HotelFacilities>();
+		List<HotelFacilities> hotelFacilities = new ArrayList<HotelFacilities>();
 
-		return roomtypeFacilities;
+		if (dataNode.get("dinfo") != null && dataNode.get("dinfo").getClass().isAssignableFrom(Map.class)) {
+			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
+
+			if (dinfo.get("facilities") != null && dinfo.get("facilities").getClass().isAssignableFrom(Map.class)) {
+				List<Map<String, Object>> facilities = (List<Map<String, Object>>) dinfo.get("facilities");
+
+				for (Map<String, Object> facility : facilities) {
+					String surroundType = typesafeGetString(facility.get("type"));
+
+					if (facility.get("datas") != null && facility.get("datas").getClass().isAssignableFrom(Map.class)) {
+						List<Map<String, Object>> datas = (List<Map<String, Object>>) facility.get("datas");
+
+						for (Map<String, Object> data : datas) {
+							HotelFacilities hotelFacility = new HotelFacilities();
+							hotelFacility.setHotelSourceId(hotelid);
+							hotelFacility.setType(surroundType);
+							hotelFacility.setShortName(typesafeGetString(data.get("shortName")));
+							hotelFacility.setHighStarSort(typesafeGetDouble(data.get("highStarSort")).longValue());
+							hotelFacility.setIconBigUrl(typesafeGetString(data.get("iconBig")));
+							hotelFacility.setLowStarSort(typesafeGetDouble(data.get("lowStartSort")).longValue());
+							hotelFacility.setOverseaSort(typesafeGetDouble(data.get("overseasSort")).longValue());
+							hotelFacility.setColor(typesafeGetDouble(data.get("color")).longValue());
+							hotelFacility.setDisplay(typesafeGetString(data.get("display")));
+							hotelFacility.setIconUrl(typesafeGetString(data.get("iconUrl")));
+							hotelFacility.setItem(typesafeGetString(data.get("item")));
+							hotelFacility.setField(typesafeGetString(data.get("field")));
+
+							hotelFacilities.add(hotelFacility);
+						}
+					}
+
+				}
+			}
+		}
+
+		return hotelFacilities;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<HotelSurround> parseDataNodeForHotelSurrounds(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
 		List<HotelSurround> hotelSurrounds = new ArrayList<HotelSurround>();
+
+		Map<String, Object> x;
 
 		return hotelSurrounds;
 	}

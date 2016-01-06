@@ -3,54 +3,63 @@ package com.mk.crawer.biz.model;
 import java.util.Date;
 
 public class HotelFacilities {
-    private Long id;
+	private Long id;
 
-    private Long hotelId;
-    
-    private String hotelSourceId;
+	private Long hotelId;
 
-    private String shortName;
+	private String hotelSourceId;
 
-    private String type;
+	private String shortName;
 
-    private String field;
+	private String type;
 
-    private Long lowStarSort;
+	private String field;
 
-    private Long highStarSort;
+	private Long lowStarSort;
 
-    private Long overseaSort;
+	private Long highStarSort;
 
-    private Long color;
+	private Long overseaSort;
 
-    private String iconUrl;
+	private Long color;
 
-    private String display;
+	private String iconBigUrl;
 
-    private String item;
+	private String iconUrl;
 
-    private Date createTime;
+	private String display;
 
-    private Date updateTime;
+	private String item;
 
-    public Long getId() {
-        return id;
-    }
+	private Date createTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	private Date updateTime;
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    
-    public String getHotelSourceId() {
+	public Long getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public String getIconBigUrl() {
+		return iconBigUrl;
+	}
+
+	public void setIconBigUrl(String iconBigUrl) {
+		this.iconBigUrl = iconBigUrl;
+	}
+
+	public String getHotelSourceId() {
 		return hotelSourceId;
 	}
 
@@ -59,98 +68,98 @@ public class HotelFacilities {
 	}
 
 	public String getShortName() {
-        return shortName;
-    }
+		return shortName;
+	}
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName == null ? null : shortName.trim();
-    }
+	public void setShortName(String shortName) {
+		this.shortName = shortName == null ? null : shortName.trim();
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
+	}
 
-    public String getField() {
-        return field;
-    }
+	public String getField() {
+		return field;
+	}
 
-    public void setField(String field) {
-        this.field = field == null ? null : field.trim();
-    }
+	public void setField(String field) {
+		this.field = field == null ? null : field.trim();
+	}
 
-    public Long getLowStarSort() {
-        return lowStarSort;
-    }
+	public Long getLowStarSort() {
+		return lowStarSort;
+	}
 
-    public void setLowStarSort(Long lowStarSort) {
-        this.lowStarSort = lowStarSort;
-    }
+	public void setLowStarSort(Long lowStarSort) {
+		this.lowStarSort = lowStarSort;
+	}
 
-    public Long getHighStarSort() {
-        return highStarSort;
-    }
+	public Long getHighStarSort() {
+		return highStarSort;
+	}
 
-    public void setHighStarSort(Long highStarSort) {
-        this.highStarSort = highStarSort;
-    }
+	public void setHighStarSort(Long highStarSort) {
+		this.highStarSort = highStarSort;
+	}
 
-    public Long getOverseaSort() {
-        return overseaSort;
-    }
+	public Long getOverseaSort() {
+		return overseaSort;
+	}
 
-    public void setOverseaSort(Long overseaSort) {
-        this.overseaSort = overseaSort;
-    }
+	public void setOverseaSort(Long overseaSort) {
+		this.overseaSort = overseaSort;
+	}
 
-    public Long getColor() {
-        return color;
-    }
+	public Long getColor() {
+		return color;
+	}
 
-    public void setColor(Long color) {
-        this.color = color;
-    }
+	public void setColor(Long color) {
+		this.color = color;
+	}
 
-    public String getIconUrl() {
-        return iconUrl;
-    }
+	public String getIconUrl() {
+		return iconUrl;
+	}
 
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl == null ? null : iconUrl.trim();
-    }
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl == null ? null : iconUrl.trim();
+	}
 
-    public String getDisplay() {
-        return display;
-    }
+	public String getDisplay() {
+		return display;
+	}
 
-    public void setDisplay(String display) {
-        this.display = display == null ? null : display.trim();
-    }
+	public void setDisplay(String display) {
+		this.display = display == null ? null : display.trim();
+	}
 
-    public String getItem() {
-        return item;
-    }
+	public String getItem() {
+		return item;
+	}
 
-    public void setItem(String item) {
-        this.item = item == null ? null : item.trim();
-    }
+	public void setItem(String item) {
+		this.item = item == null ? null : item.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 }

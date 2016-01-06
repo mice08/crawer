@@ -9,6 +9,8 @@ public class HotelSurround {
 
     private Long hotelId;
 
+    private String hotelSourceId;
+    
     private String name;
 
     private String gpoint;
@@ -27,7 +29,15 @@ public class HotelSurround {
         this.id = id;
     }
 
-    public String getType() {
+    public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
+
+	public String getType() {
         return type;
     }
 
