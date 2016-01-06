@@ -3,13 +3,10 @@ package com.mk.crawer.biz.servcie.impl;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.mapper.blacklist.BlackListMapper;
-import com.mk.crawer.biz.moudle.BlackList;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
