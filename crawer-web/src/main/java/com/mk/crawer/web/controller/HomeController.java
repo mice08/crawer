@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mk.crawer.biz.module.HotelDetail;
-import com.mk.crawer.biz.module.UMember;
-import com.mk.crawer.biz.servcie.impl.HotelDetailCrawlServiceImpl;
+import com.mk.crawer.biz.model.ots.HotelDetail;
+import com.mk.crawer.biz.model.ots.UMember;
+import com.mk.crawer.biz.servcieImpl.impl.HotelDetailCrawlServiceImpl;
 
 @Controller
 public class HomeController {

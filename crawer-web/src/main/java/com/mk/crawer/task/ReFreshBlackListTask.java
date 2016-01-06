@@ -3,8 +3,8 @@ package com.mk.crawer.task;
 import com.mk.crawer.api.enums.BlackUserEnum;
 import com.mk.crawer.biz.mapper.blacklist.BlackListMapper;
 import com.mk.crawer.biz.mapper.blacklist.PassSwitchMapper;
-import com.mk.crawer.biz.module.BlackList;
-import com.mk.crawer.biz.module.PassSwitch;
+import com.mk.crawer.biz.model.crawer.module.BlackList;
+import com.mk.crawer.biz.model.ots.PassSwitch;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;

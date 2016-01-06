@@ -2,7 +2,6 @@ package com.mk.crawer.web.controller;
 
 
 import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.moudle.UMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class QunarHotelSyncController {
 
     @RequestMapping(value = "/qunarhotelsync", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> qunarHotelSync(HttpSession httpSession,UMember userCheckDto) {
+    public ResponseEntity<Map<String, Object>> qunarHotelSync() {
         Map<String, Object> result = new HashMap<String, Object>();
 
         result=qunarHotelSyncService.qunarHotelSync();
