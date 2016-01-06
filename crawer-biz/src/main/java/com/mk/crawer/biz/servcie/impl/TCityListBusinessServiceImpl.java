@@ -7,6 +7,7 @@ import com.mk.crawer.api.TCityListService;
 import com.mk.crawer.biz.enums.CityTypeEnum;
 import com.mk.crawer.biz.mapper.crawer.CityListMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.servcie.ITCityListBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,7 +19,7 @@ import java.util.Date;
  */
 
 @Service
-public class TCityListBusinessServiceImpl implements TCityListService {
+public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
 
      @Autowired
      public CityListMapper cityListMapper;

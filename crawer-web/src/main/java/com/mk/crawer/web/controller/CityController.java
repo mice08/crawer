@@ -30,13 +30,13 @@ import java.util.Map;
 public class CityController {
 
     @Autowired
-    private  ITCityListBusinessService  itcityListBusinessService;
+    private  ITCityListBusinessService  itCityListBusinessService;
 
     @RequestMapping(value = "/add")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> deleteByParams(HttpRequest request) {
         String  url = "" ;
-        boolean bl = itcityListBusinessService.saveCityList(url);
+        boolean bl = itCityListBusinessService.saveCityList(url);
 
         return new ResponseEntity<Map<String,Object>>(new HashMap(), HttpStatus.OK);
     }
