@@ -1,5 +1,6 @@
-package com.mk.crawer.biz.servcie;
+package com.mk.crawer.biz.servcie.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mk.crawer.api.TCityListService;
@@ -8,7 +9,8 @@ import com.mk.crawer.biz.mapper.crawer.CityListMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 import java.util.Date;
 
 /**
@@ -16,12 +18,21 @@ import java.util.Date;
  */
 
 @Service
-public class TCityListImpl implements TCityListService {
+public class TCityListBusinessServiceImpl implements TCityListService {
 
      @Autowired
      public CityListMapper cityListMapper;
 
-        public  boolean saveCityList(JSONObject  jsonCity) {
+        public  boolean saveCityList(String   url) {
+            if(StringUtils.isEmpty(url)){
+                return false;
+            }
+            String getStr = HttpUtil.doGet(url);
+            if(StringUtils.isEmpty(getStr)){
+                return false;
+            }
+            JSONObject  jsonCity = JSON.parseObject(getStr);
+
             boolean bl = false;
             String[]  strTemplet = {"en","gj"};
             for(int i=0;i<strTemplet.length;i++){
