@@ -4,6 +4,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
 
+import com.mk.crawer.biz.model.crawer.Brands;
+import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import org.slf4j.Logger;
@@ -200,7 +202,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 "}" +
                 "}]" +
                 "}";
-        Map<String,String> urlMaps=JsonUtils.jsonToMap(hotelResult);
+        Map<String,String> urlMaps=getJsonList(hotelResult);
         if(urlMaps==null){
             resultMap.put("message","解析url 结果为null");
             resultMap.put("SUCCESS", false);
@@ -220,7 +222,31 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             logger.info("====================qunarHotelSync method end because info is null || hotels is null====================");
             return resultMap;
         }
-        Map<String,String> infoMap=JsonUtils.jsonToMap(info);
+        Map<String,String> infoMap=getJsonList(info);
+        if (infoMap==null){
+            resultMap.put("message","infoMap is null");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        CityList city =new CityList();
+        city.setCityUrl(infoMap.get("cityurl"));
+        city.setCityName(infoMap.get("cityName"));
+        if(infoMap.get("brands")!=null){
+            Map<String,String> brandsMap=getJsonList(infoMap.get("brands"));
+            if(brandsMap!=null){
+                for (String key:brandsMap.keySet()){
+                    Map<String,String> brandMap=getJsonList(key);
+                    Brands brands =new Brands();
+                    brands.setName(brandMap.get("name"));
+                    if (brandMap.get("count")!=null)
+                        brands.setCount(Integer.valueOf(brandMap.get("count")));
+                    brands.setGroup(brandMap.get("group"));
+                    brands.setLog(brandMap.get("logo"));
+                }
+            }
+            String brands=infoMap.get("brands");
+        }
+
         List<Object> hotelList=JsonUtils.jsonToList(hotels);
         for(int i=0;i<hotelList.size();i++){
             Map<String,String> hotelMap=JsonUtils.jsonToMap(hotelList.get(i).toString());
@@ -235,6 +261,15 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         );
         logger.info("====================doPriceDump method end time{}===================="
                 , DateUtils.getDatetime());
+        return resultMap;
+    }
+    public Map<String,String> getJsonList(String value){
+        Map<String,String> resultMap=new HashMap<String,String>();
+        try {
+            resultMap=JsonUtils.jsonToMap(value);
+        }catch (Exception e){
+            return null;
+        }
         return resultMap;
     }
 }

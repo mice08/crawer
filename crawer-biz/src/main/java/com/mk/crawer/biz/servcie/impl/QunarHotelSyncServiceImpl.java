@@ -28,7 +28,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 "\"fromDate\": \"2016-01-05\",\n" +
                 "\"toDate\": \"2016-01-06\",\n" +
                 "\"key\": \"\",\n" +
-                "\"brands\": {\n" +
+                "\"branddsd\": {\n" +
                 "\"速8\": {\n" +
                 "\"name\": \"速8\",\n" +
                 "\"count\": 2,\n" +
