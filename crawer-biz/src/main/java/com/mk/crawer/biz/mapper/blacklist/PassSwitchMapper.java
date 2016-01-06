@@ -1,6 +1,6 @@
 package com.mk.crawer.biz.mapper.blacklist;
 
-import com.mk.crawer.biz.moudle.PassSwitch;
+import com.mk.crawer.biz.module.PassSwitch;
 
 /**
  * Created by kirinli on 15/9/10.

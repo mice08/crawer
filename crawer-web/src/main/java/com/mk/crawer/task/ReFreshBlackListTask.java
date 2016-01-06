@@ -3,8 +3,9 @@ package com.mk.crawer.task;
 import com.mk.crawer.api.enums.BlackUserEnum;
 import com.mk.crawer.biz.mapper.blacklist.BlackListMapper;
 import com.mk.crawer.biz.mapper.blacklist.PassSwitchMapper;
-import com.mk.crawer.biz.moudle.BlackList;
-import com.mk.crawer.biz.moudle.PassSwitch;
+import com.mk.crawer.biz.module.BlackList;
+import com.mk.crawer.biz.module.PassSwitch;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

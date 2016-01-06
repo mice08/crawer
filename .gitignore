@@ -4,3 +4,9 @@
 *.iml
 target
 .svn
+*.classpath
+.metadata/
+.recommenders/
+Servers/
+
+

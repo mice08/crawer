@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.HotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.Hotel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="distance" property="distance" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="has_breakfast" property="hasBreakfast" jdbcType="VARCHAR" />
+    <result column="image_count" property="imageCount" jdbcType="BIGINT" />
+    <result column="has_fitness_room" property="hasFitnessRoom" jdbcType="VARCHAR" />
+    <result column="comment_score" property="commentScore" jdbcType="DECIMAL" />
+    <result column="has_business_center" property="hasBusinessCenter" jdbcType="VARCHAR" />
+    <result column="has_restaurant" property="hasRestaurant" jdbcType="VARCHAR" />
+    <result column="hotel_stars" property="hotelStars" jdbcType="BIGINT" />
+    <result column="bpoint" property="bpoint" jdbcType="VARCHAR" />
+    <result column="gpoint" property="gpoint" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="hotel_brand" property="hotelBrand" jdbcType="VARCHAR" />
+    <result column="trading_area" property="tradingArea" jdbcType="VARCHAR" />
+    <result column="is_web_free" property="isWebFree" jdbcType="VARCHAR" />
+    <result column="dang_ci" property="dangCi" jdbcType="VARCHAR" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="hotel_address" property="hotelAddress" jdbcType="VARCHAR" />
+    <result column="image_id" property="imageId" jdbcType="VARCHAR" />
+    <result column="has_meeting_or_banquet_space" property="hasMeetingOrBanquetSpace" jdbcType="VARCHAR" />
+    <result column="has_indoor_pool" property="hasIndoorPool" jdbcType="VARCHAR" />
+    <result column="has_non_smoking_available" property="hasNonSmokingAvailable" jdbcType="VARCHAR" />
+    <result column="one_sentence" property="oneSentence" jdbcType="VARCHAR" />
+    <result column="comment_count" property="commentCount" jdbcType="BIGINT" />
+    <result column="hotel_area" property="hotelArea" jdbcType="VARCHAR" />
+    <result column="short_name" property="shortName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, city_name, distance, price, has_breakfast, image_count, has_fitness_room, comment_score, 
+    has_business_center, has_restaurant, hotel_stars, bpoint, gpoint, phone_number, hotel_brand, 
+    trading_area, is_web_free, dang_ci, hotel_name, hotel_address, image_id, has_meeting_or_banquet_space, 
+    has_indoor_pool, has_non_smoking_available, one_sentence, comment_count, hotel_area, 
+    short_name, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.HotelExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_hotel
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_hotel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_hotel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.Hotel" >
+    insert into t_hotel (id, city_name, distance, 
+      price, has_breakfast, image_count, 
+      has_fitness_room, comment_score, has_business_center, 
+      has_restaurant, hotel_stars, bpoint, 
+      gpoint, phone_number, hotel_brand, 
+      trading_area, is_web_free, dang_ci, 
+      hotel_name, hotel_address, image_id, 
+      has_meeting_or_banquet_space, has_indoor_pool, 
+      has_non_smoking_available, one_sentence, comment_count, 
+      hotel_area, short_name, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{distance,jdbcType=BIGINT}, 
+      #{price,jdbcType=DECIMAL}, #{hasBreakfast,jdbcType=VARCHAR}, #{imageCount,jdbcType=BIGINT}, 
+      #{hasFitnessRoom,jdbcType=VARCHAR}, #{commentScore,jdbcType=DECIMAL}, #{hasBusinessCenter,jdbcType=VARCHAR}, 
+      #{hasRestaurant,jdbcType=VARCHAR}, #{hotelStars,jdbcType=BIGINT}, #{bpoint,jdbcType=VARCHAR}, 
+      #{gpoint,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{hotelBrand,jdbcType=VARCHAR}, 
+      #{tradingArea,jdbcType=VARCHAR}, #{isWebFree,jdbcType=VARCHAR}, #{dangCi,jdbcType=VARCHAR}, 
+      #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, #{imageId,jdbcType=VARCHAR}, 
+      #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR}, #{hasIndoorPool,jdbcType=VARCHAR}, 
+      #{hasNonSmokingAvailable,jdbcType=VARCHAR}, #{oneSentence,jdbcType=VARCHAR}, #{commentCount,jdbcType=BIGINT}, 
+      #{hotelArea,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.Hotel" >
+    insert into t_hotel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="distance != null" >
+        distance,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="hasBreakfast != null" >
+        has_breakfast,
+      </if>
+      <if test="imageCount != null" >
+        image_count,
+      </if>
+      <if test="hasFitnessRoom != null" >
+        has_fitness_room,
+      </if>
+      <if test="commentScore != null" >
+        comment_score,
+      </if>
+      <if test="hasBusinessCenter != null" >
+        has_business_center,
+      </if>
+      <if test="hasRestaurant != null" >
+        has_restaurant,
+      </if>
+      <if test="hotelStars != null" >
+        hotel_stars,
+      </if>
+      <if test="bpoint != null" >
+        bpoint,
+      </if>
+      <if test="gpoint != null" >
+        gpoint,
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number,
+      </if>
+      <if test="hotelBrand != null" >
+        hotel_brand,
+      </if>
+      <if test="tradingArea != null" >
+        trading_area,
+      </if>
+      <if test="isWebFree != null" >
+        is_web_free,
+      </if>
+      <if test="dangCi != null" >
+        dang_ci,
+      </if>
+      <if test="hotelName != null" >
+        hotel_name,
+      </if>
+      <if test="hotelAddress != null" >
+        hotel_address,
+      </if>
+      <if test="imageId != null" >
+        image_id,
+      </if>
+      <if test="hasMeetingOrBanquetSpace != null" >
+        has_meeting_or_banquet_space,
+      </if>
+      <if test="hasIndoorPool != null" >
+        has_indoor_pool,
+      </if>
+      <if test="hasNonSmokingAvailable != null" >
+        has_non_smoking_available,
+      </if>
+      <if test="oneSentence != null" >
+        one_sentence,
+      </if>
+      <if test="commentCount != null" >
+        comment_count,
+      </if>
+      <if test="hotelArea != null" >
+        hotel_area,
+      </if>
+      <if test="shortName != null" >
+        short_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        #{distance,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="hasBreakfast != null" >
+        #{hasBreakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="imageCount != null" >
+        #{imageCount,jdbcType=BIGINT},
+      </if>
+      <if test="hasFitnessRoom != null" >
+        #{hasFitnessRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="commentScore != null" >
+        #{commentScore,jdbcType=DECIMAL},
+      </if>
+      <if test="hasBusinessCenter != null" >
+        #{hasBusinessCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="hasRestaurant != null" >
+        #{hasRestaurant,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelStars != null" >
+        #{hotelStars,jdbcType=BIGINT},
+      </if>
+      <if test="bpoint != null" >
+        #{bpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="gpoint != null" >
+        #{gpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelBrand != null" >
+        #{hotelBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingArea != null" >
+        #{tradingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="isWebFree != null" >
+        #{isWebFree,jdbcType=VARCHAR},
+      </if>
+      <if test="dangCi != null" >
+        #{dangCi,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelName != null" >
+        #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelAddress != null" >
+        #{hotelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="imageId != null" >
+        #{imageId,jdbcType=VARCHAR},
+      </if>
+      <if test="hasMeetingOrBanquetSpace != null" >
+        #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR},
+      </if>
+      <if test="hasIndoorPool != null" >
+        #{hasIndoorPool,jdbcType=VARCHAR},
+      </if>
+      <if test="hasNonSmokingAvailable != null" >
+        #{hasNonSmokingAvailable,jdbcType=VARCHAR},
+      </if>
+      <if test="oneSentence != null" >
+        #{oneSentence,jdbcType=VARCHAR},
+      </if>
+      <if test="commentCount != null" >
+        #{commentCount,jdbcType=BIGINT},
+      </if>
+      <if test="hotelArea != null" >
+        #{hotelArea,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null" >
+        #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.HotelExample" resultType="java.lang.Integer" >
+    select count(*) from t_hotel
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.Hotel" >
+    update t_hotel
+    <set >
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        distance = #{distance,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="hasBreakfast != null" >
+        has_breakfast = #{hasBreakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="imageCount != null" >
+        image_count = #{imageCount,jdbcType=BIGINT},
+      </if>
+      <if test="hasFitnessRoom != null" >
+        has_fitness_room = #{hasFitnessRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="commentScore != null" >
+        comment_score = #{commentScore,jdbcType=DECIMAL},
+      </if>
+      <if test="hasBusinessCenter != null" >
+        has_business_center = #{hasBusinessCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="hasRestaurant != null" >
+        has_restaurant = #{hasRestaurant,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelStars != null" >
+        hotel_stars = #{hotelStars,jdbcType=BIGINT},
+      </if>
+      <if test="bpoint != null" >
+        bpoint = #{bpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="gpoint != null" >
+        gpoint = #{gpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelBrand != null" >
+        hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingArea != null" >
+        trading_area = #{tradingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="isWebFree != null" >
+        is_web_free = #{isWebFree,jdbcType=VARCHAR},
+      </if>
+      <if test="dangCi != null" >
+        dang_ci = #{dangCi,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelAddress != null" >
+        hotel_address = #{hotelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="imageId != null" >
+        image_id = #{imageId,jdbcType=VARCHAR},
+      </if>
+      <if test="hasMeetingOrBanquetSpace != null" >
+        has_meeting_or_banquet_space = #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR},
+      </if>
+      <if test="hasIndoorPool != null" >
+        has_indoor_pool = #{hasIndoorPool,jdbcType=VARCHAR},
+      </if>
+      <if test="hasNonSmokingAvailable != null" >
+        has_non_smoking_available = #{hasNonSmokingAvailable,jdbcType=VARCHAR},
+      </if>
+      <if test="oneSentence != null" >
+        one_sentence = #{oneSentence,jdbcType=VARCHAR},
+      </if>
+      <if test="commentCount != null" >
+        comment_count = #{commentCount,jdbcType=BIGINT},
+      </if>
+      <if test="hotelArea != null" >
+        hotel_area = #{hotelArea,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null" >
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.Hotel" >
+    update t_hotel
+    set city_name = #{cityName,jdbcType=VARCHAR},
+      distance = #{distance,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      has_breakfast = #{hasBreakfast,jdbcType=VARCHAR},
+      image_count = #{imageCount,jdbcType=BIGINT},
+      has_fitness_room = #{hasFitnessRoom,jdbcType=VARCHAR},
+      comment_score = #{commentScore,jdbcType=DECIMAL},
+      has_business_center = #{hasBusinessCenter,jdbcType=VARCHAR},
+      has_restaurant = #{hasRestaurant,jdbcType=VARCHAR},
+      hotel_stars = #{hotelStars,jdbcType=BIGINT},
+      bpoint = #{bpoint,jdbcType=VARCHAR},
+      gpoint = #{gpoint,jdbcType=VARCHAR},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
+      trading_area = #{tradingArea,jdbcType=VARCHAR},
+      is_web_free = #{isWebFree,jdbcType=VARCHAR},
+      dang_ci = #{dangCi,jdbcType=VARCHAR},
+      hotel_name = #{hotelName,jdbcType=VARCHAR},
+      hotel_address = #{hotelAddress,jdbcType=VARCHAR},
+      image_id = #{imageId,jdbcType=VARCHAR},
+      has_meeting_or_banquet_space = #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR},
+      has_indoor_pool = #{hasIndoorPool,jdbcType=VARCHAR},
+      has_non_smoking_available = #{hasNonSmokingAvailable,jdbcType=VARCHAR},
+      one_sentence = #{oneSentence,jdbcType=VARCHAR},
+      comment_count = #{commentCount,jdbcType=BIGINT},
+      hotel_area = #{hotelArea,jdbcType=VARCHAR},
+      short_name = #{shortName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
