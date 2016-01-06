@@ -12,6 +12,10 @@ public class RoomTypeDesc {
     private Long roomTypeId;
 
     private Long hotelId;
+    
+    private String roomTypeKey;
+    
+    private String hotelSourceId;
 
     private String type;
 
@@ -27,7 +31,23 @@ public class RoomTypeDesc {
         this.id = id;
     }
 
-    public String getContent() {
+    public String getRoomTypeKey() {
+		return roomTypeKey;
+	}
+
+	public void setRoomTypeKey(String roomTypeKey) {
+		this.roomTypeKey = roomTypeKey;
+	}
+
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
+
+	public String getContent() {
         return content;
     }
 
