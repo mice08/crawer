@@ -41,7 +41,7 @@ public class MkJedis extends Jedis  {
 	}
 
 	@Override
-	public String set(String key, String value){
+	public String set(String key, String value) {
 		String result = null;
 		Transaction t = Cat.newTransaction("Redis", "set");
 		try {
@@ -49,7 +49,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -66,7 +66,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -83,7 +83,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -100,7 +100,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -117,7 +117,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -134,7 +134,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -151,7 +151,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -168,7 +168,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -185,7 +185,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -202,7 +202,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -219,7 +219,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -236,7 +236,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -253,7 +253,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -270,7 +270,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -287,7 +287,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -304,7 +304,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -321,7 +321,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -338,7 +338,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -355,7 +355,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -372,7 +372,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -389,7 +389,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -406,7 +406,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -423,7 +423,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -441,7 +441,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -458,7 +458,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -475,7 +475,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -492,7 +492,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -509,7 +509,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -526,7 +526,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -543,7 +543,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -560,7 +560,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -577,7 +577,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -594,7 +594,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -611,7 +611,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -628,7 +628,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -645,7 +645,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -662,7 +662,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -679,7 +679,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -696,7 +696,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -713,7 +713,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -730,7 +730,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -747,7 +747,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -764,7 +764,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -781,7 +781,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -798,7 +798,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -815,7 +815,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -832,7 +832,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -849,7 +849,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -866,7 +866,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -883,7 +883,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -900,7 +900,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -917,7 +917,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -935,7 +935,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -953,7 +953,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -970,7 +970,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -987,7 +987,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1004,7 +1004,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1021,7 +1021,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1038,7 +1038,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1055,7 +1055,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1156,7 +1156,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1173,7 +1173,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1190,7 +1190,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1807,7 +1807,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -1825,7 +1825,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -2098,7 +2098,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
@@ -2113,7 +2113,7 @@ public class MkJedis extends Jedis  {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception ex) {
 			t.setStatus(ex);
-			throw ex;
+			throw new RuntimeException(ex);
 		} finally {
 			t.complete();
 		}
