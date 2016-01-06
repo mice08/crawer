@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.RoomTypePriceMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypePrice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="room_id" property="roomId" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="real_price" property="realPrice" jdbcType="DECIMAL" />
+    <result column="origin_price" property="originPrice" jdbcType="DECIMAL" />
+    <result column="show_price" property="showPrice" jdbcType="DECIMAL" />
+    <result column="ota_show_price" property="otaShowPrice" jdbcType="DECIMAL" />
+    <result column="wrapper_name" property="wrapperName" jdbcType="VARCHAR" />
+    <result column="wrapper_id" property="wrapperId" jdbcType="VARCHAR" />
+    <result column="all_room_count" property="allRoomCount" jdbcType="INTEGER" />
+    <result column="available_roomcount" property="availableRoomcount" jdbcType="INTEGER" />
+    <result column="crawer_time" property="crawerTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, room_type_id, room_id, price, real_price, origin_price, show_price, ota_show_price, 
+    wrapper_name, wrapper_id, all_room_count, available_roomcount, crawer_time, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypePriceExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_roomtype_price
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_roomtype_price
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_roomtype_price
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
+    insert into t_roomtype_price (id, room_type_id, room_id, 
+      price, real_price, origin_price, 
+      show_price, ota_show_price, wrapper_name, 
+      wrapper_id, all_room_count, available_roomcount, 
+      crawer_time, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT}, 
+      #{price,jdbcType=DECIMAL}, #{realPrice,jdbcType=DECIMAL}, #{originPrice,jdbcType=DECIMAL}, 
+      #{showPrice,jdbcType=DECIMAL}, #{otaShowPrice,jdbcType=DECIMAL}, #{wrapperName,jdbcType=VARCHAR}, 
+      #{wrapperId,jdbcType=VARCHAR}, #{allRoomCount,jdbcType=INTEGER}, #{availableRoomcount,jdbcType=INTEGER}, 
+      #{crawerTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
+    insert into t_roomtype_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="realPrice != null" >
+        real_price,
+      </if>
+      <if test="originPrice != null" >
+        origin_price,
+      </if>
+      <if test="showPrice != null" >
+        show_price,
+      </if>
+      <if test="otaShowPrice != null" >
+        ota_show_price,
+      </if>
+      <if test="wrapperName != null" >
+        wrapper_name,
+      </if>
+      <if test="wrapperId != null" >
+        wrapper_id,
+      </if>
+      <if test="allRoomCount != null" >
+        all_room_count,
+      </if>
+      <if test="availableRoomcount != null" >
+        available_roomcount,
+      </if>
+      <if test="crawerTime != null" >
+        crawer_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="originPrice != null" >
+        #{originPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="showPrice != null" >
+        #{showPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="otaShowPrice != null" >
+        #{otaShowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wrapperName != null" >
+        #{wrapperName,jdbcType=VARCHAR},
+      </if>
+      <if test="wrapperId != null" >
+        #{wrapperId,jdbcType=VARCHAR},
+      </if>
+      <if test="allRoomCount != null" >
+        #{allRoomCount,jdbcType=INTEGER},
+      </if>
+      <if test="availableRoomcount != null" >
+        #{availableRoomcount,jdbcType=INTEGER},
+      </if>
+      <if test="crawerTime != null" >
+        #{crawerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypePriceExample" resultType="java.lang.Integer" >
+    select count(*) from t_roomtype_price
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
+    update t_roomtype_price
+    <set >
+      <if test="roomTypeId != null" >
+        room_type_id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        real_price = #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="originPrice != null" >
+        origin_price = #{originPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="showPrice != null" >
+        show_price = #{showPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="otaShowPrice != null" >
+        ota_show_price = #{otaShowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wrapperName != null" >
+        wrapper_name = #{wrapperName,jdbcType=VARCHAR},
+      </if>
+      <if test="wrapperId != null" >
+        wrapper_id = #{wrapperId,jdbcType=VARCHAR},
+      </if>
+      <if test="allRoomCount != null" >
+        all_room_count = #{allRoomCount,jdbcType=INTEGER},
+      </if>
+      <if test="availableRoomcount != null" >
+        available_roomcount = #{availableRoomcount,jdbcType=INTEGER},
+      </if>
+      <if test="crawerTime != null" >
+        crawer_time = #{crawerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
+    update t_roomtype_price
+    set room_type_id = #{roomTypeId,jdbcType=BIGINT},
+      room_id = #{roomId,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      real_price = #{realPrice,jdbcType=DECIMAL},
+      origin_price = #{originPrice,jdbcType=DECIMAL},
+      show_price = #{showPrice,jdbcType=DECIMAL},
+      ota_show_price = #{otaShowPrice,jdbcType=DECIMAL},
+      wrapper_name = #{wrapperName,jdbcType=VARCHAR},
+      wrapper_id = #{wrapperId,jdbcType=VARCHAR},
+      all_room_count = #{allRoomCount,jdbcType=INTEGER},
+      available_roomcount = #{availableRoomcount,jdbcType=INTEGER},
+      crawer_time = #{crawerTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

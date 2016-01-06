@@ -1,8 +1,8 @@
 package com.mk.crawer.biz.mapper.blacklist;
 
-import com.mk.crawer.biz.moudle.BlackList;
-
 import java.util.ArrayList;
+
+import com.mk.crawer.biz.module.BlackList;
 
 /**
  * Created by kirinli on 15/9/9.
