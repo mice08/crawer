@@ -13,22 +13,7 @@
 
 
 
-<<<<<<< HEAD
 
-    <dependencies>
-        <dependency>
-            <groupId>com.mk</groupId>
-            <artifactId>crawer-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mk</groupId>
-            <artifactId>crawer-biz</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
-=======
 	<dependencies>
 		<dependency>
 			<groupId>com.mk</groupId>
@@ -262,7 +247,6 @@
 			<version>4.3.5</version>
 		</dependency>
 	</dependencies>
->>>>>>> dev_hoteldetail
 
 	<build>
 

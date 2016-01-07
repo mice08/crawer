@@ -1,4 +1,4 @@
-package com.mk.crawer.biz.servcieImpl.crawer;
+package com.mk.crawer.biz.servcie.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
