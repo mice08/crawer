@@ -1,9 +1,26 @@
 package com.mk.crawer.biz.servcie.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.model.crawer.*;
+import com.mk.crawer.biz.model.crawer.Brands;
+import com.mk.crawer.biz.model.crawer.BrandsExample;
+import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.model.crawer.CityListExample;
+import com.mk.crawer.biz.model.crawer.Hotel;
+import com.mk.crawer.biz.model.crawer.HotelExample;
 import com.mk.crawer.biz.servcie.BrandsService;
 import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.IHotelService;
@@ -11,18 +28,6 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by kangxiaolong on 2016-01-06.
@@ -35,7 +40,6 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     @Autowired
     private IHotelService hotelService ;
     @Autowired
-    @Qualifier("brandsService")
     private BrandsService brandsService ;
 
     public Map<String,Object> qunarHotelSync(){
