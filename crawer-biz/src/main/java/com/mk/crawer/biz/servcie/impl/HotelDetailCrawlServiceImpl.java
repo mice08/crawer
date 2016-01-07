@@ -481,12 +481,12 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 				if (vendor.get("allRoomCountArr") != null
 						&& List.class.isAssignableFrom(vendor.get("allRoomCountArr").getClass())) {
-					List<Long> allRoomCounts = (List<Long>) vendor.get("allRoomCountArr");
+					List<Double> allRoomCounts = (List<Double>) vendor.get("allRoomCountArr");
 
 					if (allRoomCounts != null && allRoomCounts.size() > 0) {
-						roomtypePrice.setAllRoomCount(allRoomCounts.get(0));
+						roomtypePrice
+								.setAllRoomCount(allRoomCounts.get(0) != null ? allRoomCounts.get(0).longValue() : 0L);
 					}
-
 				}
 
 				if (vendor.get("availableRoomCountArr") != null
@@ -494,7 +494,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					List<Long> availableRoomCounts = (List<Long>) vendor.get("availableRoomCountArr");
 
 					if (availableRoomCounts != null && availableRoomCounts.size() > 0) {
-						roomtypePrice.setAvailableRoomcount(availableRoomCounts.get(0));
+						roomtypePrice.setAvailableRoomcount(
+								availableRoomCounts.get(0) != null ? availableRoomCounts.get(0).longValue() : 0L);
 					}
 				}
 			}
