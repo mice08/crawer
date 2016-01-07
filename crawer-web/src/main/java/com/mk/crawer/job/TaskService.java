@@ -6,19 +6,19 @@ import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.framework.proxy.http.JSONUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by kirin on 2016/1/6.
  */
+@Service
 public class TaskService {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TaskService.class);
 
     @Autowired
-    @Qualifier("cityListService")
     public ICityListService cityListService;
     public static void removeCityList() {
         List<CityList> cityLists = TaskServiceManager.listAllCity();
