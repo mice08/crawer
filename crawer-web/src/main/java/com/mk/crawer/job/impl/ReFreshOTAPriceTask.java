@@ -100,6 +100,7 @@ public class ReFreshOTAPriceTask implements Worker {
 
                     for (Hotel hotel : hotelList) {
                         HotelInfoReFleshJob hotelInfoReFleshJob = new HotelInfoReFleshJob(hotel.getSourceId(), city.getCityName(), city.getCityUrl());
+
                         if ( Config.HOT_CITY_100_SET.contains(city.getCityName()) ) {
                             EXECUTOR_100.execute(hotelInfoReFleshJob);
                         } else if ( Config.HOT_CITY_1000_SET.contains(city.getCityName()) ) {
