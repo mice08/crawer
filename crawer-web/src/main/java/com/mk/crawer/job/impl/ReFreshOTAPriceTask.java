@@ -40,13 +40,9 @@ public class ReFreshOTAPriceTask implements Worker {
     class HotelInfoReFleshJob implements Runnable {
 
         private String hotelId;
-        private String city;
-        private String cityUrl;
 
-        public HotelInfoReFleshJob(String hotelId, String city, String cityUrl) {
+        public HotelInfoReFleshJob(String hotelId) {
             this.hotelId = hotelId;
-            this.city = city;
-            this.cityUrl = cityUrl;
         }
 
         @Override
@@ -56,7 +52,7 @@ public class ReFreshOTAPriceTask implements Worker {
 
         private void done() {
             try {
-                hotelDetailCrawlService.crawl(hotelId, city, cityUrl);
+                hotelDetailCrawlService.crawl(hotelId);
             } catch (Exception e) {
                 LOGGER.error("价格刷新线程出错：", e);
             }
@@ -99,7 +95,7 @@ public class ReFreshOTAPriceTask implements Worker {
                     List<Hotel> hotelList = iHotelService.selectByExample(hotelExample);
 
                     for (Hotel hotel : hotelList) {
-                        HotelInfoReFleshJob hotelInfoReFleshJob = new HotelInfoReFleshJob(hotel.getSourceId(), city.getCityName(), city.getCityUrl());
+                        HotelInfoReFleshJob hotelInfoReFleshJob = new HotelInfoReFleshJob(hotel.getSourceId());
 
                         if ( Config.HOT_CITY_100_SET.contains(city.getCityName()) ) {
                             EXECUTOR_100.execute(hotelInfoReFleshJob);
