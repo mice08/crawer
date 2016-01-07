@@ -30,7 +30,8 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
             if(StringUtils.isEmpty(url)){
                 return false;
             }
-            String getStr = HttpUtil.doGet(url);
+            String getStr = null;
+            getStr = HttpUtil.doGet(url);
             if(StringUtils.isEmpty(getStr)){
                 return false;
             }
