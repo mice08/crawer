@@ -3,15 +3,16 @@ package com.mk.crawer.biz.servcie.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.mk.crawer.api.TCityListService;
 import com.mk.crawer.biz.enums.CityTypeEnum;
-import com.mk.crawer.biz.mapper.crawer.CityListMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.ITCityListBusinessService;
+import com.mk.framework.proxy.http.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import com.mk.framework.proxy.http.HttpUtil;
+
 import java.util.Date;
 
 /**
@@ -22,7 +23,8 @@ import java.util.Date;
 public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
 
      @Autowired
-     public CityListMapper cityListMapper;
+     @Qualifier("cityListService")
+     public ICityListService cityListService;
 
         public  boolean saveCityList(String   url) {
             if(StringUtils.isEmpty(url)){
@@ -44,7 +46,11 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
                         if (null != jso) {
                             bl = true;
                             CityList  tl = getCityByJSONObj(jso,i);
-                            cityListMapper.insert(tl);
+                            CityList tmpCity = cityListService.selectByName(tl.getCityName());
+                            if (null == tmpCity){
+                                cityListService.insert(tl);
+                            }
+
                             //TODO  保存tl;
                         }
                     }

@@ -180,4 +180,21 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_ex_citylist
+    where city_name = #{cityName,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectByCityCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_ex_citylist
+    where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

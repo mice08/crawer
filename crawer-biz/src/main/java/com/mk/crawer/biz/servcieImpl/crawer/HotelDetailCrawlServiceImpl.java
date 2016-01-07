@@ -1,19 +1,20 @@
 package com.mk.crawer.biz.servcieImpl.crawer;
 
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
+import com.mk.framework.UrlUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
-import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
-
 @Service
 public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService{
-	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?city=%s&cityUrl=%s&checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
+	private final String hotelDetailUrl = UrlUtils.getUrl("qunar.hotldetail")
+			+ "?city=%s&cityUrl=%s&checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
 
 	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
 
