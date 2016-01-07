@@ -50,11 +50,11 @@
 		color, icon_big_url,
 		icon_url,
 		display,
-		item, create_time, update_time
+		item
 		)
 		values
 		(
-		#{hotelId,jdbcType=BIGINT},#{hotel_source_id,jdbcType=VARCHAR},
+		#{hotelId,jdbcType=BIGINT},#{hotelSourceId,jdbcType=VARCHAR},
 		#{shortName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
 		#{field,jdbcType=VARCHAR},
 		#{lowStarSort,jdbcType=BIGINT},
@@ -62,8 +62,7 @@
 		#{color,jdbcType=BIGINT},
 		#{iconBigUrl,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR},
 		#{display,jdbcType=VARCHAR},
-		#{item,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+		#{item,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.HotelFacilities">
