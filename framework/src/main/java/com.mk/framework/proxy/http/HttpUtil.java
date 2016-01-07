@@ -40,7 +40,7 @@ public class HttpUtil {
         try {
             resp = doGet(url, null);
         } catch (IOException e) {
-            LOGGER.error("获取眯客的代理IP列表出错：", e);
+            LOGGER.error("请求出错：", e);
 
             e.printStackTrace();
         }
