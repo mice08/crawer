@@ -6,14 +6,16 @@ import org.springframework.util.StringUtils;
  * Created by jeashi on 2016/1/6.
  */
 public enum CityTypeEnum {
-    DONGNANYA("东南亚","1"),
-    YAZHOU("亚洲","1"),
-    DAXIYANG("大洋洲","1"),
-    OUZZHOU("欧洲","1"),
-    HAIDAO("海岛","2"),
-    REMENCS("热门城市","3"),
-    MEIZHOU("美洲","1"),
-    DEAFULT("默认","1");
+    DEAFULT("默认","-1"),
+    REMENCS("热门城市","1"),
+    DONGNANYA("东南亚","2"),
+    YAZHOU("亚洲","3"),
+    DAXIYANG("大洋洲","4"),
+    OUZZHOU("欧洲","5"),
+    HAIDAO("海岛","6"),
+
+    MEIZHOU("美洲","7");
+
 
     private final String name;
     private final String type;
