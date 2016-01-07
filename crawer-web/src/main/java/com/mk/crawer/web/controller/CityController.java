@@ -28,11 +28,11 @@ public class CityController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> deleteByParams(HttpServletRequest request) {
+    public ResponseEntity<Map<String,Object>> deleteByParams(HttpServletRequest request, String sitename) {
 
         String  url = UrlUtils.getUrl("qunar.citylist");
 
-        boolean bl = itCityListBusinessService.saveCityList(url);
+        boolean bl = itCityListBusinessService.saveCityList(url,sitename);
         HashMap hm = new HashMap();
         String result = "请求成功";
         boolean  success = true;

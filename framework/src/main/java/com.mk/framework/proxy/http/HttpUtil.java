@@ -1,6 +1,7 @@
 package com.mk.framework.proxy.http;
 
 import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.net.*;
@@ -68,10 +69,22 @@ public class HttpUtil {
 
             httpUrlConn.connect();
 
+            //获取编码
+            String contentType = httpUrlConn.getHeaderField("Content-Type");
+            String charSet = "UTF-8";
+            if (!StringUtils.isEmpty(contentType)) {
+                if (contentType.indexOf("GBK") != -1) {
+                    charSet = "GBK";
+                } else if (contentType.indexOf("GB2312") != -1) {
+                    charSet = "GB2312";
+                }
+            }
+
             // 将返回的输入流转换成字符串
             inputStream = httpUrlConn.getInputStream();
-            inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+            inputStreamReader = new InputStreamReader(inputStream, charSet);
             bufferedReader = new BufferedReader(inputStreamReader);
+
 
             String str;
             while ((str = bufferedReader.readLine()) != null) {
@@ -101,9 +114,7 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        LOGGER.info(doGet("http://touch.qunar.com/h5/hotel/hotelcitylist"));
-        LOGGER.info(doGet("http://pad.qunar.com/api/hotel/hotellist?city=%E6%AD%A6%E6%B1%89&cityUrl=wuhan_city&checkInDate=2016-01-05&checkOutDate=2016-01-06&location=&keywords=&pr=&level=&back=&page=3&tpl=hotel.hotelListTpl&_=1451997490018"));
-        LOGGER.info(doGet("http://pad.qunar.com/api/hotel/hoteldetail?city=%E5%8C%97%E4%BA%AC&cityUrl=beijing_city&checkInDate=2016-01-05&checkOutDate=2016-01-06&keywords=&location=&seq=beijing_city_22493&clickNum=0&isLM=0&type=0&extra=%25257B%25257D"));
+        LOGGER.info(doGetNoProxy("http://bdapi.qunar.com/api/map.jsp?city=芒市&fromDate=2016-01-08&toDate=2016-01-09"));
     }
 
 }

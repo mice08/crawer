@@ -75,7 +75,7 @@
 
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
     insert into t_ex_citylist (id, city_code, city_name,
-      city_url, site_id, city_type,
+      city_url, site_name, city_type,
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, 
       #{cityUrl,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{cityType,jdbcType=VARCHAR}, 
@@ -98,7 +98,7 @@
         city_url,
       </if>
       <if test="siteId != null" >
-        site_id,
+        site_name,
       </if>
       <if test="cityType != null" >
         city_type,
@@ -158,7 +158,7 @@
         city_url = #{cityUrl,jdbcType=VARCHAR},
       </if>
       <if test="siteId != null" >
-        site_id = #{siteId,jdbcType=BIGINT},
+        site_name = #{siteId,jdbcType=BIGINT},
       </if>
       <if test="cityType != null" >
         city_type = #{cityType,jdbcType=VARCHAR},
@@ -178,7 +178,7 @@
     set city_code = #{cityCode,jdbcType=VARCHAR},
       city_name = #{cityName,jdbcType=VARCHAR},
       city_url = #{cityUrl,jdbcType=VARCHAR},
-      site_id = #{siteId,jdbcType=BIGINT},
+      site_name = #{siteId,jdbcType=BIGINT},
       city_type = #{cityType,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
