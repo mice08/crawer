@@ -38,6 +38,8 @@ public class HttpUtil {
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+        LOGGER.info("发送请求：{}", urlStr);
+
         StringBuffer stringBuffer = new StringBuffer();
 
         InputStream inputStream = null;
@@ -82,7 +84,10 @@ public class HttpUtil {
             if (inputStream != null) inputStream.close();
         }
 
-        return stringBuffer.toString();
+        String result = stringBuffer.toString();
+        LOGGER.info("获得响应：{}", stringBuffer.toString());
+
+        return result;
     }
 
     public static String urlEncoder(String url) {
