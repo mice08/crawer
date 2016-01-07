@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by kangxiaolong on 16/1/7.
  */
-@Service("brandsService")
+@Service
 public class BrandsServiceImpl implements BrandsService {
     @Autowired
     private BrandsMapper brandsMapper;

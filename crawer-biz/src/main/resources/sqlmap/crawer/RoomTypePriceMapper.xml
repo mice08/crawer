@@ -69,6 +69,7 @@
 		#{availableRoomcount,jdbcType=INTEGER}
 		)
 	</insert>
+
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice">
 		insert into t_ex_roomtype_price
 		<trim prefix="(" suffix=")" suffixOverrides=",">
