@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.CityListMapper" >
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.CityList" >
+=======
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.CityList" >
+>>>>>>> dev_hoteldetail:crawer-biz/src/main/resources/sqlmap/crawer/CityListMapper.xml
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />

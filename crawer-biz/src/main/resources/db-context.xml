@@ -21,97 +21,113 @@
  	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd  
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
-  
-   <context:component-scan base-package="com.mk">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	<context:component-scan base-package="com.mk">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-    <context:property-placeholder location="classpath:db.properties"/>
-    <bean id="otsDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${ots.jdbc.urls}"/>
-        <property name="username" value="${ots.jdbc.usernames}"/>
-        <property name="password" value="${ots.jdbc.passwords}"/>
-    </bean>
+	<context:property-placeholder location="classpath:db.properties" />
+	<bean id="otsDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${ots.jdbc.urls}" />
+		<property name="username" value="${ots.jdbc.usernames}" />
+		<property name="password" value="${ots.jdbc.passwords}" />
+	</bean>
 
-	<bean id="crawerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<property name="url" value="${crawler.jdbc.url}"/>
-		<property name="username" value="${crawler.jdbc.username}"/>
-		<property name="password" value="${crawler.jdbc.password}"/>
+	<bean id="crawerDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${crawler.jdbc.url}" />
+		<property name="username" value="${crawler.jdbc.username}" />
+		<property name="password" value="${crawler.jdbc.password}" />
 	</bean>
 
 	<bean id="otsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="otsDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/ots/*.xml"/>
+		<property name="dataSource" ref="otsDataSource" />
+		<property name="mapperLocations" value="classpath:/sqlmap/ots/*.xml" />
 
 	</bean>
 	<bean id="crawerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="crawerDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml"/>
+		<property name="dataSource" ref="crawerDataSource" />
+		<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml" />
 
 	</bean>
 
-    <bean id="otsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="otsDataSource"/>
-    </bean>
-
-	<bean id="crawerTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="crawerDataSource"/>
+	<bean id="otsTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="otsDataSource" />
 	</bean>
 
+	<bean id="crawerTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="crawerDataSource" />
+
+		<context:component-scan base-package="com.mk">
+			<context:exclude-filter type="annotation"
+				expression="org.springframework.stereotype.Controller" />
+		</context:component-scan>
+		<context:property-placeholder location="classpath:db.properties" />
+
+		<bean id="crawerDataSource"
+			class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driverClassName}" />
+			<property name="url" value="${crawler.jdbc.url}" />
+			<property name="username" value="${crawler.jdbc.username}" />
+			<property name="password" value="${crawler.jdbc.password}" />
+		</bean>
+
+		<bean id="crawerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="crawerDataSource" />
+			<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml" />
+		</bean>
 
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-    <tx:annotation-driven transaction-manager="otsTransactionManager" proxy-target-class="true"/>
-<tx:advice id="txadvice" transaction-manager="otsTransactionManager">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="txPointcut" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
-	</aop:config>
+		<bean id="crawerTransactionManager"
+			class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="crawerDataSource" />
+		</bean>
 
-	<tx:annotation-driven transaction-manager="crawerTransactionManager" proxy-target-class="true"/>
-	<tx:advice id="crawerTxadvice" transaction-manager="crawerTransactionManager">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="crawerTxPointcut" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="crawerTxadvice" pointcut-ref="crawerTxPointcut" />
-	</aop:config>
+		<aop:aspectj-autoproxy expose-proxy="true" />
 
-	<bean name="otsScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.ots"/>
+		<tx:annotation-driven transaction-manager="otsTransactionManager"
+			proxy-target-class="true" />
+		<tx:advice id="txadvice" transaction-manager="otsTransactionManager">
 
-		<property name="sqlSessionFactoryBeanName" value="otsSqlSessionFactory"></property>
-	</bean>
+			<tx:annotation-driven transaction-manager="crawerTransactionManager"
+				proxy-target-class="true" />
+			<tx:advice id="crawerTxadvice" transaction-manager="crawerTransactionManager">
+				<tx:attributes>
+					<tx:method name="add*" propagation="REQUIRED" />
+					<tx:method name="save*" propagation="REQUIRED" />
+					<tx:method name="update*" propagation="REQUIRED" />
+					<tx:method name="delete*" propagation="REQUIRED" />
+					<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
+					<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
+					<tx:method name="*" read-only="true" />
+				</tx:attributes>
+			</tx:advice>
+			<aop:config expose-proxy="true">
+				<aop:pointcut id="crawerTxPointcut"
+					expression="execution(* com.mk..service..*.*(..))" />
+				<aop:advisor advice-ref="crawerTxadvice" pointcut-ref="crawerTxPointcut" />
+			</aop:config>
 
-	<bean name="blackListScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist"/>
+			<bean name="otsScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+				<property name="basePackage" value="com.mk.crawer.biz.mapper.ots" />
 
-		<property name="sqlSessionFactoryBeanName" value="blackListSqlSessionFactory"></property>
-	</bean>
+				<property name="sqlSessionFactoryBeanName" value="otsSqlSessionFactory"></property>
+			</bean>
 
-	<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer"/>
+			<bean name="blackListScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+				<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist" />
 
-		<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
-	</bean>
+				<property name="sqlSessionFactoryBeanName" value="blackListSqlSessionFactory"></property>
+			</bean>
+
+			<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+				<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer" />
+
+				<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
+			</bean>
 
 </beans>

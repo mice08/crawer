@@ -1,4 +1,4 @@
-package com.mk.crawer.biz.servcieImpl.crawer;
+package com.mk.crawer.biz.servcie.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -86,10 +86,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
         resultMap.put("message","备份成功");
         resultMap.put("SUCCESS", true);
-        Cat.logEvent("doPriceDump", "去哪儿酒店信息同步", Event.SUCCESS,
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
         );
-        logger.info("====================doPriceDump method end time{}===================="
+        logger.info("====================qunarHotelSync method end time{}===================="
                 , DateUtils.getDatetime());
         return resultMap;
     }

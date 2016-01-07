@@ -52,6 +52,7 @@
     wrapper_name, wrapper_id, all_room_count, available_roomcount, crawer_time, create_time, 
     update_time
   </sql>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePriceExample" >
     select
     <if test="distinct" >
@@ -67,6 +68,8 @@
       order by ${orderByClause}
     </if>
   </select>
+=======
+>>>>>>> dev_hoteldetail:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -190,6 +193,7 @@
       </if>
     </trim>
   </insert>
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
 
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePriceExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_roomtype_price
@@ -199,6 +203,9 @@
   </select>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice" >
+=======
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
+>>>>>>> dev_hoteldetail:crawer-biz/src/main/resources/sqlmap/crawer/RoomTypePriceMapper.xml
     update t_ex_roomtype_price
     <set >
       <if test="roomTypeId != null" >
