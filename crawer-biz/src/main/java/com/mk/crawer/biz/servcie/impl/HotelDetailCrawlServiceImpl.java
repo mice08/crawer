@@ -479,6 +479,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				roomtypePrices.add(roomtypePrice);
 
 				roomtypePrice.setPrice(typesafeGetBigDecimal(vendor.get("price")));
+				roomtypePrice.setOprice(typesafeGetBigDecimal(vendor.get("oprice")));
 				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
 				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(vendor.get("originPrice")));
 				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPriceInt")));
