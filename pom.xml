@@ -255,7 +255,7 @@
     <build>
         <finalName>crawer</finalName>
     </build>
-
+<!--
     <repositories>
         <repository>
             <snapshots>
@@ -273,7 +273,24 @@
             <url>http://192.168.20.80:8081/mkrepo</url>
         </pluginRepository>
     </pluginRepositories>
-
+-->
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>public</id>
+            <name>Public Repositories</name>
+            <url>http://10.4.4.228:8081/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>Public Repositories</name>
+            <url>http://10.4.4.228:8081/nexus/content/repositories/releases/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

@@ -65,7 +65,7 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
         for (int j = 0; j <alphabetMap.length ; j++) {
             CityTypeEnum cityTypeEnum = CityTypeEnum.getByName(alphabetMap[j]);
             String cityType = cityTypeEnum.DEAFULT.getType();
-            if (cityTypeEnum == null){
+            if (cityTypeEnum.getType() != cityTypeEnum.DEAFULT.getType()){
                 cityType = cityTypeEnum.getType();
             }
             JSONArray cityJsonArray = jso.getJSONArray(alphabetMap[j]);
