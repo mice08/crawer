@@ -106,7 +106,6 @@
 
 	<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer"/>
-
 		<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
 	</bean>
 

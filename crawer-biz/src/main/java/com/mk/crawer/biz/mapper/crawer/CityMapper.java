@@ -2,12 +2,10 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.model.crawer.CityListExample;
-import com.mk.crawer.biz.repository.MyBatisRepository;
 
 import java.util.List;
 
-@MyBatisRepository
-public interface CityListMapper {
+public interface CityMapper {
     int countByExample(CityListExample example);
 
     int deleteByPrimaryKey(Long id);

@@ -1,6 +1,7 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.job.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,8 @@ public class ReFreshCityListController {
 
     @RequestMapping(value = "/removecitylist")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> Remove() {
+    public ResponseEntity<Map<String,Object>> remove() {
+
         TaskService.removeCityList();
 
         HashMap hm = new HashMap();
@@ -45,7 +47,7 @@ public class ReFreshCityListController {
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/refreshcitylist")
+    @RequestMapping(value = "/listcity")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> all() {
         List<CityList> cityLists =  new TaskService().allCityList();

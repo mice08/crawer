@@ -30,5 +30,9 @@ class Config {
      * 付费IP代理提取地址
      */
     public static final String BILL_PROXY_IP_LIST_URL = "http://api.goubanjia.com/api/get.shtml?order=7fad4d177bdcd13da3ae957aef770bd5&num=20&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=1&an1=1&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=0&seprator=%0D%0A";
+    /**
+     * 眯客BI提供的代理提取地址
+     */
+    public static final String IMIKE_BI_PROXY_IP_LIST_URL = "http://xvre.daili666api.com/ip/?tid=556890485581990&num=20&operator=1&delay=1&sortby=time&foreign=none&filter=on";
 
 }

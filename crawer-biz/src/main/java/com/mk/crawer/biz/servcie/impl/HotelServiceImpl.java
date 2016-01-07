@@ -13,7 +13,7 @@ import java.util.List;
  * Created by kirinli on 16/1/6.
  */
 @Service
-public class HotelService implements IHotelService{
+public class HotelServiceImpl implements IHotelService{
     @Autowired
     private HotelMapper hotelMapper;
 

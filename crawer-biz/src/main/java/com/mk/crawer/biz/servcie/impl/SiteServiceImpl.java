@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by kirinli on 16/1/6.
  */
-public class SiteService implements ISiteService {
+public class SiteServiceImpl implements ISiteService {
     @Autowired
     private SiteMapper siteMapper;
 

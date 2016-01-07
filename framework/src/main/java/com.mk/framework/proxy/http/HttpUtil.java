@@ -114,7 +114,7 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        LOGGER.info(doGetNoProxy("http://bdapi.qunar.com/api/map.jsp?city=芒市&fromDate=2016-01-08&toDate=2016-01-09"));
+        LOGGER.info(doGet("http://bdapi.qunar.com/api/map.jsp?city=芒市&fromDate=2016-01-08&toDate=2016-01-09"));
     }
 
 }
