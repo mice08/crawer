@@ -461,7 +461,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		if (roomComb.containsKey("vendors") && roomComb.get("vendors") != null
-				&& roomComb.get("vendors").getClass().isAssignableFrom(List.class)) {
+				&& List.class.isAssignableFrom(roomComb.get("vendors").getClass())) {
 			List<Map<String, Object>> vendors = (List<Map<String, Object>>) roomComb.get("vendors");
 
 			List<RoomTypePrice> roomtypePrices = new ArrayList<RoomTypePrice>();
