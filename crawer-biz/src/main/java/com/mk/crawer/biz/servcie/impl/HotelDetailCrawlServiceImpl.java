@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mk.crawer.biz.mapper.RoomTypeMapper;
+import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.model.HotelDetailParseException;
 import com.mk.crawer.biz.model.HotelFacilities;
 import com.mk.crawer.biz.model.HotelSurround;

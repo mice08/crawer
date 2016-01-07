@@ -1,4 +1,4 @@
-package com.mk.crawer.biz.mapper;
+package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.HotelSurround;
 import com.mk.crawer.biz.model.HotelSurroundExample;
