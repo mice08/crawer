@@ -11,4 +11,8 @@ public interface RoomTypeDescMapper {
     int insertSelective(RoomTypeDesc record);
 
     RoomTypeDesc selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(RoomTypeDesc record);
+
+    int updateByPrimaryKey(RoomTypeDesc record);
 }
