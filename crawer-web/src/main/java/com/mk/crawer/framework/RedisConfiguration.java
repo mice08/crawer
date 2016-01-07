@@ -1,17 +1,15 @@
 package com.mk.crawer.framework;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.util.StringUtils;
+
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.util.Set;
-
-@Configuration
-@PropertySource("classpath:redis.properties")
 public class RedisConfiguration {
 
 	@Value("${spring.redis.sentinel.master}")

@@ -40,7 +40,12 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
-		String invokeUrl = String.format(hotelDetailUrl, city, cityUrl, strCurDay, strNextDay, hotelid);
+		String invokeUrl = String.format(hotelDetailUrl, city, cityUrl, strCurDay, strNextDay,
+				String.format("%s_%s", cityUrl, hotelid));
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(invokeUrl);
+		}
 
 		String jsonString = "";
 		try {
