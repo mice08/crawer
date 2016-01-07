@@ -22,4 +22,5 @@ public interface HotelMapper {
     int updateByPrimaryKeySelective(Hotel record);
 
     int updateByPrimaryKey(Hotel record);
+    List<Hotel>  selectByCityName(String cityName);
 }
