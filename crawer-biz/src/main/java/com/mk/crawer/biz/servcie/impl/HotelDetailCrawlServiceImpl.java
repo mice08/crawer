@@ -78,14 +78,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			Object jsonNode = jsonContent.get(key);
 
 			if ("status".equals(key)) {
-				if (jsonNode == null || !jsonNode.getClass().isAssignableFrom(Double.class)
+				if (jsonNode == null || !Double.class.isAssignableFrom(jsonNode.getClass())
 						|| ((Double) jsonNode) != 0) {
 					logger.warn(String.format("invalid status %s received...", jsonNode));
 				}
 			}
 
 			if ("data".equals(key)) {
-				if (jsonNode != null && jsonNode.getClass().isAssignableFrom(Map.class)) {
+				if (jsonNode != null && Map.class.isAssignableFrom(jsonNode.getClass())) {
 					try {
 						List<RoomTypeCombination> roomtypeCombs = parseDataNodeForRoomtype(hotelid,
 								(Map<String, Object>) jsonNode);
@@ -133,7 +133,11 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 
-			roomtypeMapper.insert(roomtype);
+			try {
+				roomtypeMapper.insert(roomtype);
+			} catch (Exception ex) {
+				logger.error("failed to roomtypeMapper.insert", ex);
+			}
 		}
 	}
 
@@ -142,16 +146,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			throws HotelDetailParseException {
 		List<HotelFacilities> hotelFacilities = new ArrayList<HotelFacilities>();
 
-		if (dataNode.get("dinfo") != null && dataNode.get("dinfo").getClass().isAssignableFrom(Map.class)) {
+		if (dataNode.get("dinfo") != null && Map.class.isAssignableFrom(dataNode.get("dinfo").getClass())) {
 			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
 
-			if (dinfo.get("facilities") != null && dinfo.get("facilities").getClass().isAssignableFrom(Map.class)) {
+			if (dinfo.get("facilities") != null && Map.class.isAssignableFrom(dinfo.get("facilities").getClass())) {
 				List<Map<String, Object>> facilities = (List<Map<String, Object>>) dinfo.get("facilities");
 
 				for (Map<String, Object> facility : facilities) {
 					String surroundType = typesafeGetString(facility.get("type"));
 
-					if (facility.get("datas") != null && facility.get("datas").getClass().isAssignableFrom(Map.class)) {
+					if (facility.get("datas") != null && Map.class.isAssignableFrom(facility.get("datas").getClass())) {
 						List<Map<String, Object>> datas = (List<Map<String, Object>>) facility.get("datas");
 
 						for (Map<String, Object> data : datas) {
@@ -185,7 +189,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			throws HotelDetailParseException {
 		List<HotelSurround> hotelSurrounds = new ArrayList<HotelSurround>();
 
-		if (dataNode.get("traffic") != null && dataNode.get("traffic").getClass().isAssignableFrom(List.class)) {
+		if (dataNode.get("traffic") != null && List.class.isAssignableFrom(dataNode.get("traffic").getClass())) {
 			List<Map<String, Object>> traffics = (List<Map<String, Object>>) dataNode.get("traffic");
 
 			for (Map<String, Object> traffic : traffics) {
@@ -207,14 +211,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		List<RoomTypeCombination> combinations = new ArrayList<RoomTypeCombination>();
 
 		if (dataNode.containsKey("rooms")) {
-			if (dataNode.get("rooms") != null && dataNode.get("rooms").getClass().isAssignableFrom(List.class)) {
+			if (dataNode.get("rooms") != null && List.class.isAssignableFrom(dataNode.get("rooms").getClass())) {
 				List<Map<String, Object>> rooms = (List<Map<String, Object>>) dataNode.get("rooms");
 				for (Map<String, Object> room : rooms) {
 					RoomTypeCombination roomtypeComb = null;
 
 					String roomtypeKey = "";
 					if (room.containsKey("key") && room.get("key") != null
-							&& room.get("key").getClass().isAssignableFrom(String.class)) {
+							&& String.class.isAssignableFrom(room.get("key").getClass())) {
 						roomtypeKey = (String) room.get("key");
 					}
 
@@ -241,7 +245,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private String typesafeGetString(Object attribute) {
 		String attrVal = "";
 
-		if (attribute != null && attribute.getClass().isAssignableFrom(String.class)) {
+		if (attribute != null && String.class.isAssignableFrom(attribute.getClass())) {
 			attrVal = (String) attribute;
 		}
 
@@ -251,7 +255,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private Double typesafeGetDouble(Object attribute) {
 		Double attrVal = 0.0;
 
-		if (attribute != null && attribute.getClass().isAssignableFrom(Double.class)) {
+		if (attribute != null && Double.class.isAssignableFrom(attribute.getClass())) {
 			attrVal = (Double) attribute;
 		}
 
@@ -259,7 +263,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	}
 
 	private BigDecimal typesafeGetBigDecimal(Object attribute) {
-		if (attribute != null && attribute.getClass().isAssignableFrom(Double.class)) {
+		if (attribute != null && Double.class.isAssignableFrom(attribute.getClass())) {
 			Double attrVal = (Double) attribute;
 
 			try {
@@ -321,7 +325,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		List<RoomTypeDesc> roomtypeDescs = new ArrayList<RoomTypeDesc>();
 		roomtypeComb.setRoomtypeDescs(roomtypeDescs);
 
-		if (rtDesc1 != null && rtDesc1.getClass().isAssignableFrom(List.class)) {
+		if (rtDesc1 != null && List.class.isAssignableFrom(rtDesc1.getClass())) {
 			List<Map<String, Object>> desc1 = (List<Map<String, Object>>) rtDesc1;
 			for (Map<String, Object> desc : desc1) {
 				RoomTypeDesc roomtypeDesc = new RoomTypeDesc();
@@ -335,7 +339,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
-		if (rtDesc2 != null && rtDesc2.getClass().isAssignableFrom(List.class)) {
+		if (rtDesc2 != null && List.class.isAssignableFrom(rtDesc2.getClass())) {
 			List<Map<String, Object>> desc2 = (List<Map<String, Object>>) rtDesc2;
 			for (Map<String, Object> desc : desc2) {
 				RoomTypeDesc roomtypeDesc = new RoomTypeDesc();

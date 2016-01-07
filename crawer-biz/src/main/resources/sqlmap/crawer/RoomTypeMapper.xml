@@ -4,6 +4,8 @@
 	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomType">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+		<result column="hotel_source_id" property="hotelSourceId"
+			jdbcType="VARCHAR" />
 		<result column="count" property="count" jdbcType="BIGINT" />
 		<result column="key" property="key" jdbcType="VARCHAR" />
 		<result column="bed_type" property="bedType" jdbcType="VARCHAR" />
@@ -11,7 +13,7 @@
 		<result column="room_type" property="roomType" jdbcType="VARCHAR" />
 		<result column="area" property="area" jdbcType="VARCHAR" />
 		<result column="network_price" property="networkPrice"
-			jdbcType="DECIMAL" />
+			jdbcType="VARCHAR" />
 		<result column="room_category" property="roomCategory"
 			jdbcType="VARCHAR" />
 		<result column="rt_area" property="rtArea" jdbcType="VARCHAR" />
@@ -41,13 +43,16 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, hotel_id, count, key, bed_type, room_name, room_type,
+		id, hotel_id, hotel_source_id, count, key, bed_type,
+		room_name, room_type,
 		area, network_price,
 		room_category,
-		rt_area, rt_floor, rt_broadband,
+		rt_area,
+		rt_floor, rt_broadband,
 		rt_bedtype, rt_addbed, bath, window, wifi,
 		max_customers,
-		add_bed_price, currency_sign, extra_bed, order_all, mprice,
+		add_bed_price, currency_sign, extra_bed, order_all,
+		mprice,
 		has_quick_check_in,
 		have_coupons,
 		outer_show, district_name,
@@ -69,9 +74,10 @@
 	</delete>
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.RoomType">
-		insert into t_ex_roomtype (id,
-		hotel_id, count, key, bed_type,
-		room_name, room_type, area,
+		insert into t_ex_roomtype (
+		hotel_id, hotel_source_id, count, key, bed_type,
+		room_name, room_type,
+		area,
 		network_price, room_category, rt_area,
 		rt_floor, rt_broadband,
 		rt_bedtype,
@@ -80,28 +86,36 @@
 		currency_sign, extra_bed, order_all,
 		mprice, has_quick_check_in,
 		have_coupons,
-		outer_show, district_name, create_time,
-		update_time)
-		values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT},
-		#{count,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR},
+		outer_show, district_name)
+		values (
+		#{hotelId,jdbcType=BIGINT},
+		#{hotelSourceId,jdbcType=VARCHAR},
+		#{count,jdbcType=BIGINT},
+		#{key,jdbcType=VARCHAR},
 		#{bedType,jdbcType=VARCHAR},
 		#{roomName,jdbcType=VARCHAR},
-		#{roomType,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
-		#{networkPrice,jdbcType=DECIMAL}, #{roomCategory,jdbcType=VARCHAR},
+		#{roomType,jdbcType=VARCHAR},
+		#{area,jdbcType=VARCHAR},
+		#{networkPrice,jdbcType=VARCHAR},
+		#{roomCategory,jdbcType=VARCHAR},
 		#{rtArea,jdbcType=VARCHAR},
 		#{rtFloor,jdbcType=VARCHAR},
-		#{rtBroadband,jdbcType=VARCHAR}, #{rtBedtype,jdbcType=VARCHAR},
-		#{rtAddbed,jdbcType=VARCHAR}, #{bath,jdbcType=VARCHAR},
+		#{rtBroadband,jdbcType=VARCHAR},
+		#{rtBedtype,jdbcType=VARCHAR},
+		#{rtAddbed,jdbcType=VARCHAR},
+		#{bath,jdbcType=VARCHAR},
 		#{window,jdbcType=VARCHAR},
 		#{wifi,jdbcType=VARCHAR},
-		#{maxCustomers,jdbcType=BIGINT}, #{addBedPrice,jdbcType=BIGINT},
-		#{currencySign,jdbcType=VARCHAR}, #{extraBed,jdbcType=VARCHAR},
+		#{maxCustomers,jdbcType=BIGINT},
+		#{addBedPrice,jdbcType=BIGINT},
+		#{currencySign,jdbcType=VARCHAR},
+		#{extraBed,jdbcType=VARCHAR},
 		#{orderAll,jdbcType=VARCHAR},
 		#{mprice,jdbcType=DECIMAL},
-		#{hasQuickCheckIn,jdbcType=VARCHAR}, #{haveCoupons,jdbcType=VARCHAR},
-		#{outerShow,jdbcType=VARCHAR}, #{districtName,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{hasQuickCheckIn,jdbcType=VARCHAR},
+		#{haveCoupons,jdbcType=VARCHAR},
+		#{outerShow,jdbcType=VARCHAR},
+		#{districtName,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomType">
 		insert into t_ex_roomtype

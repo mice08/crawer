@@ -8,6 +8,8 @@ public class RoomType {
 
 	private Long hotelId;
 
+	private String hotelSourceId;
+
 	private Long count;
 
 	private String key;
@@ -63,7 +65,7 @@ public class RoomType {
 	private String roominfoDesc;
 
 	private String hasTuangou;
-	
+
 	private Long roomOrderCount;
 
 	private Date createTime;
@@ -76,6 +78,14 @@ public class RoomType {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
 	}
 
 	public String getHasTuangou() {
