@@ -24,6 +24,7 @@
         </plugins>
     </build>
     <dependencies>
+
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>

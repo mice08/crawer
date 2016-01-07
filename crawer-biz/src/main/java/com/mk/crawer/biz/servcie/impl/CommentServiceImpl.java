@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by kirinli on 16/1/6.
  */
-public class CommentService implements ICommentService {
+public class CommentServiceImpl implements ICommentService {
     @Autowired
     private CommentMapper commentMapper;
     @Override

@@ -4,37 +4,37 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class RoomTypePrice {
-    private Long id;
+	private Long id;
 
-    private Long roomTypeId;
+	private Long roomTypeId;
 
-    private String roomTypeKey;
-    
-    private Long hotelId;
-    
-    private String hotelSourceId;
+	private String roomTypeKey;
 
-    private BigDecimal price;
+	private Long hotelId;
 
-    private BigDecimal realPrice;
+	private String hotelSourceId;
 
-    private BigDecimal originPrice;
+	private BigDecimal price;
 
-    private BigDecimal showPrice;
+	private BigDecimal realPrice;
 
-    private BigDecimal otaShowPrice;
+	private BigDecimal originPrice;
 
-    private String wrapperName;
+	private BigDecimal showPrice;
 
-    private String wrapperId;
+	private BigDecimal otaShowPrice;
 
-    private Integer allRoomCount;
+	private String wrapperName;
 
-    private Integer availableRoomcount;
+	private String wrapperId;
 
-    private Date createTime;
+	private Long allRoomCount;
 
-    private Date updateTime;
+	private Long availableRoomcount;
+
+	private Date createTime;
+
+	private Date updateTime;
 
 	public Long getId() {
 		return id;
@@ -132,19 +132,19 @@ public class RoomTypePrice {
 		this.wrapperId = wrapperId;
 	}
 
-	public Integer getAllRoomCount() {
+	public Long getAllRoomCount() {
 		return allRoomCount;
 	}
 
-	public void setAllRoomCount(Integer allRoomCount) {
+	public void setAllRoomCount(Long allRoomCount) {
 		this.allRoomCount = allRoomCount;
 	}
 
-	public Integer getAvailableRoomcount() {
+	public Long getAvailableRoomcount() {
 		return availableRoomcount;
 	}
 
-	public void setAvailableRoomcount(Integer availableRoomcount) {
+	public void setAvailableRoomcount(Long availableRoomcount) {
 		this.availableRoomcount = availableRoomcount;
 	}
 

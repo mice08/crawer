@@ -17,11 +17,13 @@ import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
+import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
 import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
 import com.mk.crawer.biz.model.crawer.HotelFacilities;
 import com.mk.crawer.biz.model.crawer.HotelSurround;
 import com.mk.crawer.biz.model.crawer.RoomType;
 import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
+import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
@@ -43,6 +45,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private RoomTypeMapper roomtypeMapper;
+
+	@Autowired
+	private RoomTypePriceMapper roomtypePriceMapper;
 
 	@Autowired
 	private RoomTypeDescMapper roomtypeDescMapper;
@@ -211,6 +216,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
+			List<RoomTypePrice> roomtypePrices = roomtypeComb.getRoomtypePrices();
 
 			try {
 				roomtypeMapper.insert(roomtype);
@@ -224,6 +230,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 						roomtypeDescMapper.insert(roomtypeDesc);
 					} catch (Exception ex) {
 						logger.error("failed to roomtypeDescMapper.insert", ex);
+					}
+				}
+			}
+
+			if (roomtypePrices != null) {
+				for (RoomTypePrice roomtypePrice : roomtypePrices) {
+					try {
+						roomtypePriceMapper.insert(roomtypePrice);
+					} catch (Exception ex) {
+						logger.error("failed to roomtypePriceMapper.insert", ex);
 					}
 				}
 			}
@@ -444,6 +460,48 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
+		if (roomComb.containsKey("vendors") && roomComb.get("vendors") != null
+				&& List.class.isAssignableFrom(roomComb.get("vendors").getClass())) {
+			List<Map<String, Object>> vendors = (List<Map<String, Object>>) roomComb.get("vendors");
+
+			List<RoomTypePrice> roomtypePrices = new ArrayList<RoomTypePrice>();
+			roomtypeComb.setRoomtypePrices(roomtypePrices);
+			for (Map<String, Object> vendor : vendors) {
+				RoomTypePrice roomtypePrice = new RoomTypePrice();
+				roomtypePrices.add(roomtypePrice);
+
+				roomtypePrice.setPrice(typesafeGetBigDecimal(vendor.get("price")));
+				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
+				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(vendor.get("originPrice")));
+				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPriceInt")));
+				roomtypePrice.setOtaShowPrice(typesafeGetBigDecimal(vendor.get("otaShowPrice")));
+				roomtypePrice.setWrapperName(typesafeGetString(vendor.get("wrapperName")));
+				roomtypePrice.setWrapperId(typesafeGetString(vendor.get("wrapperid")));
+				roomtypePrice.setRoomTypeKey(roomtypeKey);
+				roomtypePrice.setHotelSourceId(hotelid);
+
+				if (vendor.get("allRoomCountArr") != null
+						&& List.class.isAssignableFrom(vendor.get("allRoomCountArr").getClass())) {
+					List<Double> allRoomCounts = (List<Double>) vendor.get("allRoomCountArr");
+
+					if (allRoomCounts != null && allRoomCounts.size() > 0) {
+						roomtypePrice
+								.setAllRoomCount(allRoomCounts.get(0) != null ? allRoomCounts.get(0).longValue() : 0L);
+					}
+				}
+
+				if (vendor.get("availableRoomCountArr") != null
+						&& List.class.isAssignableFrom(vendor.get("availableRoomCountArr").getClass())) {
+					List<Double> availableRoomCounts = (List<Double>) vendor.get("availableRoomCountArr");
+
+					if (availableRoomCounts != null && availableRoomCounts.size() > 0) {
+						roomtypePrice.setAvailableRoomcount(
+								availableRoomCounts.get(0) != null ? availableRoomCounts.get(0).longValue() : 0L);
+					}
+				}
+			}
+		}
+
 		return roomtypeComb;
 	}
 
@@ -483,6 +541,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		private RoomType roomtype;
 
 		private List<RoomTypeDesc> roomtypeDescs;
+
+		private List<RoomTypePrice> roomtypePrices;
+
+		public List<RoomTypePrice> getRoomtypePrices() {
+			return roomtypePrices;
+		}
+
+		public void setRoomtypePrices(List<RoomTypePrice> roomtypePrices) {
+			this.roomtypePrices = roomtypePrices;
+		}
 
 		public RoomType getRoomtype() {
 			return roomtype;

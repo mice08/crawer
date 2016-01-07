@@ -15,4 +15,5 @@ public class RedisCacheName {
      */
     public static final String CRAWER_PROXY_SERVER_POOL_SET = "crawer_proxy_server_pool_set";
 
+    public static final String CRAWER_CITY_NAME_SET = "crawer_city_list_and_city_name";
 }

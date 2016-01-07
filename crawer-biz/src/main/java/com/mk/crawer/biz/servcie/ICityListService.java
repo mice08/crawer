@@ -28,4 +28,5 @@ public interface ICityListService {
 
     public CityList selectByName(String cityName);
     public CityList selectByCityCode(String cityCode);
+    public List<CityList> selectByCityType(String cityType);
 }
