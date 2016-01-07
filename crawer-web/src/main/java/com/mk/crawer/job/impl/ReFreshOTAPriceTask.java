@@ -1,5 +1,7 @@
 package com.mk.crawer.job.impl;
 
+import com.mk.crawer.biz.model.crawer.Hotel;
+import com.mk.crawer.biz.model.crawer.HotelExample;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.IHotelService;
@@ -9,7 +11,10 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,8 +62,18 @@ public class ReFreshOTAPriceTask implements Worker {
     public void work() {
         try {
             LOGGER.error("定时任务执行开始");
-
-
+            HotelExample hotelExample=new HotelExample();
+            hotelExample.createCriteria().andCityNameEqualTo("上海");
+            List<Hotel> hotelList=iHotelService.selectByExample(hotelExample);
+            if (CollectionUtils.isEmpty(hotelList)){
+                LOGGER.error("city={} hotelList is empty","上海");
+                return;
+            }
+            for (Hotel hotel:hotelList){
+                List<String> sourceIdList=new ArrayList<String>();
+                sourceIdList.add(hotel.getSourceId());
+                hotelDetailCrawlService.crawl(sourceIdList,"上海","shanghaig");
+            }
 
             LOGGER.error("定时任务执行结束");
         } catch (Exception e) {
