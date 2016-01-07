@@ -29,7 +29,13 @@ public class QunarHotelSyncController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/hotelsync", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> hotelSyncByCity(String city) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result=qunarHotelSyncService.hotelSyncByCity(city);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
 
 
 }
