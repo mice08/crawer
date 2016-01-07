@@ -465,6 +465,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			List<Map<String, Object>> vendors = (List<Map<String, Object>>) roomComb.get("vendors");
 
 			List<RoomTypePrice> roomtypePrices = new ArrayList<RoomTypePrice>();
+			roomtypeComb.setRoomtypePrices(roomtypePrices);
 			for (Map<String, Object> vendor : vendors) {
 				RoomTypePrice roomtypePrice = new RoomTypePrice();
 				roomtypePrices.add(roomtypePrice);
