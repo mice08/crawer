@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by kirinli on 16/1/6.
  */
-@Service
+@Service("cityListService")
 public class CityListService implements ICityListService {
     @Autowired
     private CityListMapper cityListMapper;
@@ -54,5 +54,15 @@ public class CityListService implements ICityListService {
     @Override
     public int updateByPrimaryKey(CityList record) {
         return cityListMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public CityList selectByName(String cityName) {
+        return cityListMapper.selectByName(cityName);
+    }
+
+    @Override
+    public CityList selectByCityCode(String cityCode) {
+        return cityListMapper.selectByCityCode(cityCode);
     }
 }

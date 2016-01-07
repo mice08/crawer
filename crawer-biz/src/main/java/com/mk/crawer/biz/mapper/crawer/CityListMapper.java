@@ -23,4 +23,7 @@ public interface CityListMapper {
     int updateByPrimaryKeySelective(CityList record);
 
     int updateByPrimaryKey(CityList record);
+
+    CityList selectByName(String cityName);
+    CityList selectByCityCode(String cityCode);
 }
