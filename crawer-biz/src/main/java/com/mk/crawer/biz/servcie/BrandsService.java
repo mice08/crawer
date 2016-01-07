@@ -1,11 +1,9 @@
 package com.mk.crawer.biz.servcie;
 
+import java.util.List;
+
 import com.mk.crawer.biz.model.crawer.Brands;
 import com.mk.crawer.biz.model.crawer.BrandsExample;
-import com.mk.crawer.biz.model.crawer.Comment;
-import com.mk.crawer.biz.model.crawer.CommentExample;
-
-import java.util.List;
 
 public interface BrandsService {
     int countByExample(BrandsExample example);

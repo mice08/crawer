@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper">
-<<<<<<< HEAD
 	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.RoomTypePrice">
-=======
-	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypePrice">
->>>>>>> 31f2ddf42f0648d0e31c2efecaacb2ff09814901
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
 		<result column="hotel_source_id" property="hotelSourceId"
@@ -49,11 +45,7 @@
 		t_ex_roomtype_price
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
-<<<<<<< HEAD
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice">
-=======
-	<insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypePrice">
->>>>>>> 31f2ddf42f0648d0e31c2efecaacb2ff09814901
 		insert into
 		t_ex_roomtype_price (room_type_id, room_type_key, hotel_id,
 		hotel_source_id,
@@ -77,11 +69,8 @@
 		#{availableRoomcount,jdbcType=INTEGER}
 		)
 	</insert>
-<<<<<<< HEAD
+
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypePrice">
-=======
-	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice">
->>>>>>> 31f2ddf42f0648d0e31c2efecaacb2ff09814901
 		insert into t_ex_roomtype_price
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
