@@ -243,7 +243,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				for (Map<String, Object> facility : facilities) {
 					String surroundType = typesafeGetString(facility.get("type"));
 
-					if (facility.get("datas") != null && Map.class.isAssignableFrom(facility.get("datas").getClass())) {
+					if (facility.get("datas") != null && List.class.isAssignableFrom(facility.get("datas").getClass())) {
 						List<Map<String, Object>> datas = (List<Map<String, Object>>) facility.get("datas");
 
 						for (Map<String, Object> data : datas) {
