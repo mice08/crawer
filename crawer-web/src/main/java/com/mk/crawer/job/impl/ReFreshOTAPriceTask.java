@@ -1,29 +1,53 @@
 package com.mk.crawer.job.impl;
 
+import com.google.gson.Gson;
+import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.model.crawer.Hotel;
+import com.mk.crawer.biz.model.crawer.HotelExample;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.IHotelService;
-import com.mk.crawer.biz.servcie.ITCityListBusinessService;
 import com.mk.crawer.job.Worker;
+import com.mk.framework.AppUtils;
+import com.mk.framework.MkJedisConnectionFactory;
+import com.mk.framework.manager.RedisCacheName;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
 public class ReFreshOTAPriceTask implements Worker {
 
-    public static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ReFreshOTAPriceTask.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ReFreshOTAPriceTask.class);
 
-    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(100);
+    private static final ExecutorService EXECUTOR_100 = Executors.newFixedThreadPool(20);
+    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(20);
+    private static final ExecutorService EXECUTOR_OTHER = Executors.newFixedThreadPool(20);
 
-    class RefleshJob implements Runnable {
+    private static MkJedisConnectionFactory connectionFactory = null;
 
+    @Autowired
+    private IHotelService iHotelService;
+    @Autowired
+    private HotelDetailCrawlService hotelDetailCrawlService;
 
+    class HotelInfoReFleshJob implements Runnable {
+
+        private String hotelId;
+        private String city;
+        private String cityUrl;
+
+        public HotelInfoReFleshJob(String hotelId, String city, String cityUrl) {
+            this.hotelId = hotelId;
+            this.city = city;
+            this.cityUrl = cityUrl;
+        }
 
         @Override
         public void run() {
@@ -31,7 +55,11 @@ public class ReFreshOTAPriceTask implements Worker {
         }
 
         private void done() {
-
+            try {
+                hotelDetailCrawlService.crawl(hotelId, city, cityUrl);
+            } catch (Exception e) {
+                LOGGER.error("价格刷新线程出错：", e);
+            }
         }
     }
 
@@ -39,19 +67,14 @@ public class ReFreshOTAPriceTask implements Worker {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                EXECUTOR_SERVICE.shutdown();
+                EXECUTOR_100.shutdown();
+                EXECUTOR_1000.shutdown();
+                EXECUTOR_OTHER.shutdown();
+                LOGGER.info("价格刷新线程池关闭。");
             }
         });
     }
 
-    @Autowired
-    private ICityListService iCityListService;
-    @Autowired
-    private IHotelService iHotelService;
-    @Autowired
-    private HotelDetailCrawlService hotelDetailCrawlService;
-    @Autowired
-    private ITCityListBusinessService itCityListBusinessService;
 
     @Scheduled(cron = "0 0/30 * * * ? ")
     @Override
@@ -59,7 +82,39 @@ public class ReFreshOTAPriceTask implements Worker {
         try {
             LOGGER.error("定时任务执行开始");
 
+            Jedis jedis = null;
 
+            try {
+                jedis = getJedis();
+
+                Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWER_CITY_NAME_SET);
+
+                for (String s : jsonStrSet) {
+                    Gson gson = new Gson();
+                    CityList city = gson.fromJson(s, CityList.class);
+
+                    HotelExample hotelExample = new HotelExample();
+                    hotelExample.createCriteria().andCityNameEqualTo(city.getCityName());
+
+                    List<Hotel> hotelList = iHotelService.selectByExample(hotelExample);
+
+                    for (Hotel hotel : hotelList) {
+                        HotelInfoReFleshJob hotelInfoReFleshJob = new HotelInfoReFleshJob(hotel.getSourceId(), city.getCityName(), city.getCityUrl());
+                        if ( Config.HOT_CITY_100_SET.contains(city.getCityName()) ) {
+                            EXECUTOR_100.execute(hotelInfoReFleshJob);
+                        } else if ( Config.HOT_CITY_1000_SET.contains(city.getCityName()) ) {
+                            EXECUTOR_1000.execute(hotelInfoReFleshJob);
+                        } else {
+                            EXECUTOR_OTHER.execute(hotelInfoReFleshJob);
+                        }
+                    }
+                }
+            }
+            finally {
+                if (jedis != null) {
+                    jedis.close();
+                }
+            }
 
             LOGGER.error("定时任务执行结束");
         } catch (Exception e) {
@@ -67,4 +122,18 @@ public class ReFreshOTAPriceTask implements Worker {
         }
     }
 
+    private static Jedis getJedis() {
+        return ReFreshOTAPriceTask.getConnectionFactory().getJedis();
+    }
+
+    private static MkJedisConnectionFactory getConnectionFactory() {
+        if (ReFreshOTAPriceTask.connectionFactory == null) {
+            synchronized (ReFreshOTAPriceTask.class) {
+                if (ReFreshOTAPriceTask.connectionFactory == null) {
+                    ReFreshOTAPriceTask.connectionFactory = AppUtils.getBean(MkJedisConnectionFactory.class);
+                }
+            }
+        }
+        return ReFreshOTAPriceTask.connectionFactory;
+    }
 }
