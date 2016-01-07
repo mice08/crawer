@@ -12,7 +12,7 @@ public class RoomType {
 
 	private Long count;
 
-	private String key;
+	private String roomtypeKey;
 
 	private String bedType;
 
@@ -80,44 +80,20 @@ public class RoomType {
 		this.id = id;
 	}
 
+	public Long getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
+
 	public String getHotelSourceId() {
 		return hotelSourceId;
 	}
 
 	public void setHotelSourceId(String hotelSourceId) {
 		this.hotelSourceId = hotelSourceId;
-	}
-
-	public String getHasTuangou() {
-		return hasTuangou;
-	}
-
-	public void setHasTuangou(String hasTuangou) {
-		this.hasTuangou = hasTuangou;
-	}
-
-	public String getRoominfoDesc() {
-		return roominfoDesc;
-	}
-
-	public void setRoominfoDesc(String roominfoDesc) {
-		this.roominfoDesc = roominfoDesc;
-	}
-
-	public Long getRoomOrderCount() {
-		return roomOrderCount;
-	}
-
-	public void setRoomOrderCount(Long roomOrderCount) {
-		this.roomOrderCount = roomOrderCount;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public Long getCount() {
@@ -128,12 +104,12 @@ public class RoomType {
 		this.count = count;
 	}
 
-	public Long getHotelId() {
-		return hotelId;
+	public String getRoomtypeKey() {
+		return roomtypeKey;
 	}
 
-	public void setHotelId(Long hotelId) {
-		this.hotelId = hotelId;
+	public void setRoomtypeKey(String roomtypeKey) {
+		this.roomtypeKey = roomtypeKey;
 	}
 
 	public String getBedType() {
@@ -141,7 +117,7 @@ public class RoomType {
 	}
 
 	public void setBedType(String bedType) {
-		this.bedType = bedType == null ? null : bedType.trim();
+		this.bedType = bedType;
 	}
 
 	public String getRoomName() {
@@ -149,7 +125,7 @@ public class RoomType {
 	}
 
 	public void setRoomName(String roomName) {
-		this.roomName = roomName == null ? null : roomName.trim();
+		this.roomName = roomName;
 	}
 
 	public String getRoomType() {
@@ -157,7 +133,7 @@ public class RoomType {
 	}
 
 	public void setRoomType(String roomType) {
-		this.roomType = roomType == null ? null : roomType.trim();
+		this.roomType = roomType;
 	}
 
 	public String getArea() {
@@ -165,7 +141,7 @@ public class RoomType {
 	}
 
 	public void setArea(String area) {
-		this.area = area == null ? null : area.trim();
+		this.area = area;
 	}
 
 	public String getNetworkPrice() {
@@ -181,7 +157,7 @@ public class RoomType {
 	}
 
 	public void setRoomCategory(String roomCategory) {
-		this.roomCategory = roomCategory == null ? null : roomCategory.trim();
+		this.roomCategory = roomCategory;
 	}
 
 	public String getRtArea() {
@@ -189,7 +165,7 @@ public class RoomType {
 	}
 
 	public void setRtArea(String rtArea) {
-		this.rtArea = rtArea == null ? null : rtArea.trim();
+		this.rtArea = rtArea;
 	}
 
 	public String getRtFloor() {
@@ -197,7 +173,7 @@ public class RoomType {
 	}
 
 	public void setRtFloor(String rtFloor) {
-		this.rtFloor = rtFloor == null ? null : rtFloor.trim();
+		this.rtFloor = rtFloor;
 	}
 
 	public String getRtBroadband() {
@@ -205,7 +181,7 @@ public class RoomType {
 	}
 
 	public void setRtBroadband(String rtBroadband) {
-		this.rtBroadband = rtBroadband == null ? null : rtBroadband.trim();
+		this.rtBroadband = rtBroadband;
 	}
 
 	public String getRtBedtype() {
@@ -213,7 +189,7 @@ public class RoomType {
 	}
 
 	public void setRtBedtype(String rtBedtype) {
-		this.rtBedtype = rtBedtype == null ? null : rtBedtype.trim();
+		this.rtBedtype = rtBedtype;
 	}
 
 	public String getRtAddbed() {
@@ -221,7 +197,7 @@ public class RoomType {
 	}
 
 	public void setRtAddbed(String rtAddbed) {
-		this.rtAddbed = rtAddbed == null ? null : rtAddbed.trim();
+		this.rtAddbed = rtAddbed;
 	}
 
 	public String getBath() {
@@ -229,7 +205,7 @@ public class RoomType {
 	}
 
 	public void setBath(String bath) {
-		this.bath = bath == null ? null : bath.trim();
+		this.bath = bath;
 	}
 
 	public String getWindow() {
@@ -237,7 +213,7 @@ public class RoomType {
 	}
 
 	public void setWindow(String window) {
-		this.window = window == null ? null : window.trim();
+		this.window = window;
 	}
 
 	public String getWifi() {
@@ -245,7 +221,7 @@ public class RoomType {
 	}
 
 	public void setWifi(String wifi) {
-		this.wifi = wifi == null ? null : wifi.trim();
+		this.wifi = wifi;
 	}
 
 	public Long getMaxCustomers() {
@@ -269,7 +245,7 @@ public class RoomType {
 	}
 
 	public void setCurrencySign(String currencySign) {
-		this.currencySign = currencySign == null ? null : currencySign.trim();
+		this.currencySign = currencySign;
 	}
 
 	public String getExtraBed() {
@@ -277,7 +253,7 @@ public class RoomType {
 	}
 
 	public void setExtraBed(String extraBed) {
-		this.extraBed = extraBed == null ? null : extraBed.trim();
+		this.extraBed = extraBed;
 	}
 
 	public String getOrderAll() {
@@ -285,7 +261,7 @@ public class RoomType {
 	}
 
 	public void setOrderAll(String orderAll) {
-		this.orderAll = orderAll == null ? null : orderAll.trim();
+		this.orderAll = orderAll;
 	}
 
 	public BigDecimal getMprice() {
@@ -301,7 +277,7 @@ public class RoomType {
 	}
 
 	public void setHasQuickCheckIn(String hasQuickCheckIn) {
-		this.hasQuickCheckIn = hasQuickCheckIn == null ? null : hasQuickCheckIn.trim();
+		this.hasQuickCheckIn = hasQuickCheckIn;
 	}
 
 	public String getHaveCoupons() {
@@ -309,7 +285,7 @@ public class RoomType {
 	}
 
 	public void setHaveCoupons(String haveCoupons) {
-		this.haveCoupons = haveCoupons == null ? null : haveCoupons.trim();
+		this.haveCoupons = haveCoupons;
 	}
 
 	public String getOuterShow() {
@@ -317,7 +293,7 @@ public class RoomType {
 	}
 
 	public void setOuterShow(String outerShow) {
-		this.outerShow = outerShow == null ? null : outerShow.trim();
+		this.outerShow = outerShow;
 	}
 
 	public String getDistrictName() {
@@ -325,7 +301,31 @@ public class RoomType {
 	}
 
 	public void setDistrictName(String districtName) {
-		this.districtName = districtName == null ? null : districtName.trim();
+		this.districtName = districtName;
+	}
+
+	public String getRoominfoDesc() {
+		return roominfoDesc;
+	}
+
+	public void setRoominfoDesc(String roominfoDesc) {
+		this.roominfoDesc = roominfoDesc;
+	}
+
+	public String getHasTuangou() {
+		return hasTuangou;
+	}
+
+	public void setHasTuangou(String hasTuangou) {
+		this.hasTuangou = hasTuangou;
+	}
+
+	public Long getRoomOrderCount() {
+		return roomOrderCount;
+	}
+
+	public void setRoomOrderCount(Long roomOrderCount) {
+		this.roomOrderCount = roomOrderCount;
 	}
 
 	public Date getCreateTime() {
@@ -343,4 +343,6 @@ public class RoomType {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+	
 }
