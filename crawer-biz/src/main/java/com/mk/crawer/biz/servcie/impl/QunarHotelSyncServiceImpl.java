@@ -137,7 +137,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             Hotel hotel=new Hotel();
             hotel.setCityName(cityName);
             hotel.setSourceId(hotelMap.get("id"));
-            hotel.setCityName(hotelMap.get("cityName"));
+
             if (hotelMap.get("distance")!=null)
                 hotel.setDistance(Long.valueOf(hotelMap.get("distance")));
             if (hotelMap.get("price")!=null)

@@ -255,7 +255,7 @@
     <build>
         <finalName>crawer</finalName>
     </build>
-<!--
+
     <repositories>
         <repository>
             <snapshots>
@@ -273,24 +273,7 @@
             <url>http://192.168.20.80:8081/mkrepo</url>
         </pluginRepository>
     </pluginRepositories>
--->
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
-        </pluginRepository>
-    </pluginRepositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -323,10 +306,6 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
-                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
-                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
             </properties>
         </profile>
         <profile>
@@ -349,10 +328,6 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
-                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
-                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
             </properties>
         </profile>
 
@@ -379,10 +354,6 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
-                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
-                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
             </properties>
         </profile>
 
@@ -407,10 +378,6 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
-                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
-                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
             </properties>
         </profile>
 
@@ -421,7 +388,7 @@
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>root</ots.jdbc.user>
                 <ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
@@ -436,10 +403,6 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
-                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
-                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
             </properties>
         </profile>
 
@@ -451,7 +414,7 @@
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <ots.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+                <ots.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>root</ots.jdbc.user>
                 <ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>

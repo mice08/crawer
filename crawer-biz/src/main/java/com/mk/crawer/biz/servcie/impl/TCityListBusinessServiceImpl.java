@@ -31,7 +31,7 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
                 return false;
             }
             String getStr = null;
-            getStr = HttpUtil.doGetNoProxy(url);
+            getStr = HttpUtil.doGet(url);
             if(StringUtils.isEmpty(getStr)){
                 return false;
             }
@@ -65,7 +65,7 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
         for (int j = 0; j <alphabetMap.length ; j++) {
             CityTypeEnum cityTypeEnum = CityTypeEnum.getByName(alphabetMap[j]);
             String cityType = cityTypeEnum.DEAFULT.getType();
-            if (cityTypeEnum.getType() != cityTypeEnum.DEAFULT.getType()){
+            if (cityTypeEnum == null){
                 cityType = cityTypeEnum.getType();
             }
             JSONArray cityJsonArray = jso.getJSONArray(alphabetMap[j]);

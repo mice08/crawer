@@ -89,29 +89,26 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
 
-		boolean isUpdateRequired = false;
 		try {
-			isUpdateRequired = persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
+			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
 
-		if (!isUpdateRequired) {
-			try {
-				persistHotelFacilities(hotelComb.getHotelfacilities());
-			} catch (Exception ex) {
-				String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
-				logger.error(errorMsg, ex);
-			}
+		try {
+			persistHotelFacilities(hotelComb.getHotelfacilities());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
 
-			try {
-				persistHotelSurround(hotelComb.getHotelSurrounds());
-			} catch (Exception ex) {
-				String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
-				logger.error(errorMsg, ex);
-			}
+		try {
+			persistHotelSurround(hotelComb.getHotelSurrounds());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
 		}
 
 		Date endTime = new Date();
@@ -499,7 +496,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		roomtype.setHasTuangou(typesafeGetDouble(roomComb.get("hasTuangou")).toString());
 
 		if (roomComb.containsKey("rtDescInfo") && roomComb.get("rtDescInfo") != null
-				&& Map.class.isAssignableFrom(roomComb.get("rtDescInfo").getClass())) {
+				&& roomComb.get("rtDescInfo").getClass().isAssignableFrom(Map.class)) {
 			Map<String, Object> rtDescInfo = (Map<String, Object>) roomComb.get("rtDescInfo");
 
 			roomtype.setOuterShow(typesafeGetString(rtDescInfo.get("outerShow")));
@@ -595,6 +592,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		return roomtypeComb;
 	}
+
 
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;

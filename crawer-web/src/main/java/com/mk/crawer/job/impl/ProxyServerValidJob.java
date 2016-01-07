@@ -14,7 +14,7 @@ public class ProxyServerValidJob implements Worker {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerValidJob.class);
 
-    @Scheduled(cron = "0/50 * * * * ? ")
+    @Scheduled(cron = "0 0/5 * * * ? ")
     @Override
     public void work() {
         try {
