@@ -5,12 +5,14 @@ import com.mk.crawer.biz.model.crawer.Hotel;
 import com.mk.crawer.biz.model.crawer.HotelExample;
 import com.mk.crawer.biz.servcie.IHotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by kirinli on 16/1/6.
  */
+@Service
 public class HotelService implements IHotelService{
     @Autowired
     private HotelMapper hotelMapper;

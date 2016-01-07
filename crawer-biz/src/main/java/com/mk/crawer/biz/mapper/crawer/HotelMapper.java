@@ -2,6 +2,8 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.Hotel;
 import com.mk.crawer.biz.model.crawer.HotelExample;
+
+
 import java.util.List;
 
 public interface HotelMapper {

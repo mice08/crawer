@@ -1,18 +1,10 @@
 package com.mk.framework.proxy.http;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
 
 /**
  * Created by 振涛 on 2016/1/6.
@@ -30,8 +22,7 @@ public class HttpUtil {
             LOGGER.info("开始第{}次请求。", count);
             try {
                 ProxyServer proxyServer = ProxyServerManager.random();
-                HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-                return HttpUtil.doGet(url, httpHost);
+                return HttpUtil.doGet(url, proxyServer);
             } catch (IOException e) {
                 LOGGER.error("请求出错：", e);
 
@@ -47,44 +38,69 @@ public class HttpUtil {
         return doGet(url, null);
     }
 
-    static String doGet(String url, HttpHost proxy) throws IOException {
-        String responseBodyStr = null;
+    static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+        LOGGER.info("发送请求：{}", urlStr);
 
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        StringBuffer stringBuffer = new StringBuffer();
 
-        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
-
-        HttpGet httpGet = new HttpGet(url);
-
-        if ( proxy != null ) {
-            RequestConfig config = RequestConfig.custom().setProxy(proxy).setConnectTimeout(Config.FETCH_TIMEOUT).build();
-            httpGet.setConfig(config);
-        }
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        HttpURLConnection httpUrlConn = null;
 
         try {
-            //执行get请求
-            HttpResponse httpResponse = closeableHttpClient.execute(httpGet);
+            URL url = new URL(urlStr);
 
-            //获取响应消息实体
-            HttpEntity entity = httpResponse.getEntity();
-
-            //判断响应实体是否为空
-            if (entity == null) {
-                LOGGER.warn("没有获取到请求数据。");
+            if ( proxyServer == null ) {
+                httpUrlConn = (HttpURLConnection) url.openConnection();
             } else {
-                responseBodyStr = EntityUtils.toString(entity);
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyServer.getIp(), proxyServer.getPort()));
+                httpUrlConn = (HttpURLConnection) url.openConnection(proxy);
+            }
+
+            httpUrlConn.setDoOutput(false);
+            httpUrlConn.setDoInput(true);
+            httpUrlConn.setUseCaches(false);
+
+            httpUrlConn.setConnectTimeout(Config.FETCH_TIMEOUT);
+            httpUrlConn.setReadTimeout(Config.FETCH_TIMEOUT);
+
+            httpUrlConn.setRequestMethod("GET");
+
+            httpUrlConn.connect();
+
+            //获取编码
+            String contentType = httpUrlConn.getHeaderField("Content-Type");
+            String charSet = "UTF-8";
+            if (!StringUtils.isEmpty(contentType)) {
+                if (contentType.indexOf("GBK") != -1) {
+                    charSet = "GBK";
+                } else if (contentType.indexOf("GB2312") != -1) {
+                    charSet = "GB2312";
+                }
+            }
+
+            // 将返回的输入流转换成字符串
+            inputStream = httpUrlConn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream, charSet);
+            bufferedReader = new BufferedReader(inputStreamReader);
+
+
+            String str;
+            while ((str = bufferedReader.readLine()) != null) {
+                stringBuffer.append(str);
             }
         } finally {
-            try {
-                //关闭流并释放资源
-                closeableHttpClient.close();
-            } catch (IOException e) {
-                LOGGER.error("关闭流并释放资源出错：", e);
-            }
+            if (httpUrlConn != null) httpUrlConn.disconnect();
+            if (bufferedReader != null) bufferedReader.close();
+            if (inputStreamReader != null) inputStreamReader.close();
+            if (inputStream != null) inputStream.close();
         }
 
+        String result = stringBuffer.toString();
+        LOGGER.info("获得响应：{}", stringBuffer.toString());
 
-        return responseBodyStr;
+        return result;
     }
 
     public static String urlEncoder(String url) {
@@ -98,7 +114,7 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        LOGGER.info(doGet("http://touch.qunar.com/h5/hotel/hotelcitylist"));
+        LOGGER.info(doGetNoProxy("http://bdapi.qunar.com/api/map.jsp?city=芒市&fromDate=2016-01-08&toDate=2016-01-09"));
     }
 
 }

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.HotelMapper" >
+<<<<<<< HEAD:crawer-biz/src/main/resources/sqlmap/crawer/HotelMapper.xml
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.Hotel" >
+=======
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.Hotel" >
+>>>>>>> dev_hoteldetail:crawer-biz/src/main/resources/sqlmap/crawer/HotelMapper.xml
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
     <result column="distance" property="distance" jdbcType="BIGINT" />
     <result column="price" property="price" jdbcType="DECIMAL" />
@@ -63,11 +68,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, city_name, distance, price, has_breakfast, image_count, has_fitness_room, comment_score, 
-    has_business_center, has_restaurant, hotel_stars, bpoint, gpoint, phone_number, hotel_brand, 
-    trading_area, is_web_free, dang_ci, hotel_name, hotel_address, image_id, has_meeting_or_banquet_space, 
-    has_indoor_pool, has_non_smoking_available, one_sentence, comment_count, hotel_area, 
-    short_name, create_time, update_time
+    id, source_id, city_name, distance, price, has_breakfast, image_count, has_fitness_room, 
+    comment_score, has_business_center, has_restaurant, hotel_stars, bpoint, gpoint, 
+    phone_number, hotel_brand, trading_area, is_web_free, dang_ci, hotel_name, hotel_address, 
+    image_id, has_meeting_or_banquet_space, has_indoor_pool, has_non_smoking_available, 
+    one_sentence, comment_count, hotel_area, short_name, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelExample" >
     select
@@ -94,37 +99,38 @@
     delete from t_ex_hotel
     where id = #{id,jdbcType=BIGINT}
   </delete>
-
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.Hotel" >
-    insert into t_ex_hotel (id, city_name, distance, 
-      price, has_breakfast, image_count,
-      has_fitness_room, comment_score, has_business_center, 
-      has_restaurant, hotel_stars, bpoint, 
-      gpoint, phone_number, hotel_brand, 
-      trading_area, is_web_free, dang_ci, 
-      hotel_name, hotel_address, image_id, 
-      has_meeting_or_banquet_space, has_indoor_pool, 
+    insert into t_ex_hotel (id, source_id, city_name, 
+      distance, price, has_breakfast, 
+      image_count, has_fitness_room, comment_score, 
+      has_business_center, has_restaurant, hotel_stars, 
+      bpoint, gpoint, phone_number, 
+      hotel_brand, trading_area, is_web_free, 
+      dang_ci, hotel_name, hotel_address, 
+      image_id, has_meeting_or_banquet_space, has_indoor_pool, 
       has_non_smoking_available, one_sentence, comment_count, 
       hotel_area, short_name, create_time, 
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{distance,jdbcType=BIGINT}, 
-      #{price,jdbcType=DECIMAL}, #{hasBreakfast,jdbcType=VARCHAR}, #{imageCount,jdbcType=BIGINT}, 
-      #{hasFitnessRoom,jdbcType=VARCHAR}, #{commentScore,jdbcType=DECIMAL}, #{hasBusinessCenter,jdbcType=VARCHAR}, 
-      #{hasRestaurant,jdbcType=VARCHAR}, #{hotelStars,jdbcType=BIGINT}, #{bpoint,jdbcType=VARCHAR}, 
-      #{gpoint,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{hotelBrand,jdbcType=VARCHAR}, 
-      #{tradingArea,jdbcType=VARCHAR}, #{isWebFree,jdbcType=VARCHAR}, #{dangCi,jdbcType=VARCHAR}, 
-      #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, #{imageId,jdbcType=VARCHAR}, 
-      #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR}, #{hasIndoorPool,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, 
+      #{distance,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{hasBreakfast,jdbcType=VARCHAR}, 
+      #{imageCount,jdbcType=BIGINT}, #{hasFitnessRoom,jdbcType=VARCHAR}, #{commentScore,jdbcType=DECIMAL}, 
+      #{hasBusinessCenter,jdbcType=VARCHAR}, #{hasRestaurant,jdbcType=VARCHAR}, #{hotelStars,jdbcType=BIGINT}, 
+      #{bpoint,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
+      #{hotelBrand,jdbcType=VARCHAR}, #{tradingArea,jdbcType=VARCHAR}, #{isWebFree,jdbcType=VARCHAR}, 
+      #{dangCi,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, 
+      #{imageId,jdbcType=VARCHAR}, #{hasMeetingOrBanquetSpace,jdbcType=VARCHAR}, #{hasIndoorPool,jdbcType=VARCHAR}, 
       #{hasNonSmokingAvailable,jdbcType=VARCHAR}, #{oneSentence,jdbcType=VARCHAR}, #{commentCount,jdbcType=BIGINT}, 
       #{hotelArea,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.Hotel" >
     insert into t_ex_hotel
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="sourceId != null" >
+        source_id,
       </if>
       <if test="cityName != null" >
         city_name,
@@ -218,6 +224,9 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=VARCHAR},
+      </if>
       <if test="cityName != null" >
         #{cityName,jdbcType=VARCHAR},
       </if>
@@ -307,17 +316,18 @@
       </if>
     </trim>
   </insert>
-
   <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelExample" resultType="java.lang.Integer" >
     select count(*) from t_ex_hotel
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.Hotel" >
     update t_ex_hotel
     <set >
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
       <if test="cityName != null" >
         city_name = #{cityName,jdbcType=VARCHAR},
       </if>
@@ -408,10 +418,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.Hotel" >
     update t_ex_hotel
-    set city_name = #{cityName,jdbcType=VARCHAR},
+    set source_id = #{sourceId,jdbcType=VARCHAR},
+      city_name = #{cityName,jdbcType=VARCHAR},
       distance = #{distance,jdbcType=BIGINT},
       price = #{price,jdbcType=DECIMAL},
       has_breakfast = #{hasBreakfast,jdbcType=VARCHAR},
