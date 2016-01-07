@@ -50,7 +50,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             String fromDate=DateUtils.getCertainDate(1);
             String toDate=DateUtils.getCertainDate(2);
             String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
-            String hotelResult=HttpUtils.get_data(url,"GET");
+            String hotelResult=HttpUtil.doGet(url);
 
             Map<String,String> urlMaps=getJsonList(hotelResult);
             if(urlMaps==null){
