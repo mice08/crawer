@@ -231,7 +231,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		if (dataNode.get("dinfo") != null && Map.class.isAssignableFrom(dataNode.get("dinfo").getClass())) {
 			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
 
-			if (dinfo.get("facilities") != null && Map.class.isAssignableFrom(dinfo.get("facilities").getClass())) {
+			if (dinfo.get("facilities") != null && List.class.isAssignableFrom(dinfo.get("facilities").getClass())) {
 				List<Map<String, Object>> facilities = (List<Map<String, Object>>) dinfo.get("facilities");
 
 				for (Map<String, Object> facility : facilities) {

@@ -10,8 +10,4 @@ public interface HotelSurroundMapper {
     int insertSelective(HotelSurround record);
 
     HotelSurround selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(HotelSurround record);
-
-    int updateByPrimaryKey(HotelSurround record);
 }

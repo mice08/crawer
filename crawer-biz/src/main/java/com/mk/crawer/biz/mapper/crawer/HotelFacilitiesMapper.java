@@ -10,10 +10,5 @@ public interface HotelFacilitiesMapper {
 
     int insertSelective(HotelFacilities record);
 
-
     HotelFacilities selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(HotelFacilities record);
-
-    int updateByPrimaryKey(HotelFacilities record);
 }

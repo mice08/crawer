@@ -15,7 +15,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, type, hotel_id, hotel_source_id, name, gpoint, distance, create_time,
+		id, type, hotel_id, hotel_source_id, surround_name, gpoint, distance, create_time,
 		update_time
 	</sql>
 
@@ -56,8 +56,8 @@
 			<if test="hotelSourceId != null">
 				hotel_source_id,
 			</if>
-			<if test="name != null">
-				name,
+			<if test="surroundName != null">
+				surround_name,
 			</if>
 			<if test="gpoint != null">
 				gpoint,
@@ -85,8 +85,8 @@
 			<if test="hotelSourceId != null">
 				#{hotelSourceId,jdbcType=VARCHAR},
 			</if>			
-			<if test="name != null">
-				#{name,jdbcType=VARCHAR},
+			<if test="surroundName != null">
+				#{surround_name,jdbcType=VARCHAR},
 			</if>
 			<if test="gpoint != null">
 				#{gpoint,jdbcType=VARCHAR},
@@ -102,36 +102,5 @@
 			</if>
 		</trim>
 	</insert>
-
-	<update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.HotelSurround">
-		update t_ex_hotel_surround
-		<set>
-			<if test="type != null">
-				type = #{type,jdbcType=VARCHAR},
-			</if>
-			<if test="hotelId != null">
-				hotel_id = #{hotelId,jdbcType=BIGINT},
-			</if>
-			<if test="hotelSourceId != null">
-				hotel_source_id = #{hotelSourceId,jdbcType=BIGINT},
-			</if>			
-			<if test="name != null">
-				name = #{name,jdbcType=VARCHAR},
-			</if>
-			<if test="gpoint != null">
-				gpoint = #{gpoint,jdbcType=VARCHAR},
-			</if>
-			<if test="distance != null">
-				distance = #{distance,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime,jdbcType=TIMESTAMP},
-			</if>
-		</set>
-		where id = #{id,jdbcType=BIGINT}
-	</update>
 
 </mapper>
