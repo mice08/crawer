@@ -56,4 +56,9 @@ public class HotelServiceImpl implements IHotelService{
     public int updateByPrimaryKey(Hotel record) {
         return hotelMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public List<Hotel> selectByCityName(String cityName) {
+        return hotelMapper.selectByCityName(cityName);
+    }
 }

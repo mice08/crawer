@@ -40,4 +40,8 @@ public class TaskService {
     public List<CityList> allCityList(){
         return TaskServiceManager.listAllCity();
     }
+
+
+
+
 }

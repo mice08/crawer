@@ -22,6 +22,7 @@ public class HttpUtil {
             LOGGER.info("开始第{}次请求。", count);
             try {
                 ProxyServer proxyServer = ProxyServerManager.random();
+                LOGGER.info("proxy:", proxyServer.getIp());
                 return HttpUtil.doGet(url, proxyServer);
             } catch (IOException e) {
                 LOGGER.error("请求出错：", e);
@@ -34,8 +35,16 @@ public class HttpUtil {
         }
     }
 
-    static String doGetNoProxy(String url) throws IOException {
-        return doGet(url, null);
+    public static String doGetNoProxy(String url)  {
+        String resp = null;
+        try {
+            resp = doGet(url, null);
+        } catch (IOException e) {
+            LOGGER.error("获取眯客的代理IP列表出错：", e);
+
+            e.printStackTrace();
+        }
+        return resp;
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
@@ -63,7 +72,7 @@ public class HttpUtil {
             httpUrlConn.setUseCaches(false);
 
             httpUrlConn.setConnectTimeout(Config.FETCH_TIMEOUT);
-            httpUrlConn.setReadTimeout(Config.FETCH_TIMEOUT);
+            httpUrlConn.setReadTimeout(Config.READ_TIMEOUT);
 
             httpUrlConn.setRequestMethod("GET");
 
