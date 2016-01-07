@@ -5,14 +5,14 @@ import com.google.gson.Gson;
 /**
  * Created by 振涛 on 2015/12/24.
  */
-class JSONUtil {
+public class JSONUtil {
 
-    static String toJson(Object src) {
+    public static String toJson(Object src) {
         Gson gson = new Gson();
         return gson.toJson(src);
     }
 
-    static <T> T fromJson(String json, Class<T> classOfT) {
+    public static <T> T fromJson(String json, Class<T> classOfT) {
         Gson gson = new Gson();
         return gson.fromJson(json, classOfT);
     }

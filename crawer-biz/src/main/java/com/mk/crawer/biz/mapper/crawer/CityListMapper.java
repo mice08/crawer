@@ -26,4 +26,5 @@ public interface CityListMapper {
 
     CityList selectByName(String cityName);
     CityList selectByCityCode(String cityCode);
+    public List<CityList> selectByCityType(String cityType);
 }

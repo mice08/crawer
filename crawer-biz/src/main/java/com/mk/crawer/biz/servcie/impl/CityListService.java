@@ -65,4 +65,9 @@ public class CityListService implements ICityListService {
     public CityList selectByCityCode(String cityCode) {
         return cityListMapper.selectByCityCode(cityCode);
     }
+
+    @Override
+    public List<CityList> selectByCityType(String cityType) {
+        return cityListMapper.selectByCityType(cityType);
+    }
 }

@@ -197,4 +197,12 @@
     where city_code = #{cityCode,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByCityType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_ex_citylist
+    where city_type = #{cityType,jdbcType=VARCHAR}
+  </select>
+
+
 </mapper>
