@@ -21,51 +21,57 @@
  	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd  
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
-  
-   <context:component-scan base-package="com.mk">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
-    <context:property-placeholder location="classpath:db.properties"/>
-    <bean id="umemberDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${umember.jdbc.driverClassName}"/>
-        <property name="url" value="${umember.jdbc.url}"/>
-        <property name="username" value="${umember.jdbc.username}"/>
-        <property name="password" value="${umember.jdbc.password}"/>
-    </bean>
 
-	<bean id="blackListDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${blacklist.jdbc.driverClassName}"/>
-		<property name="url" value="${blacklist.jdbc.url}"/>
-		<property name="username" value="${blacklist.jdbc.username}"/>
-		<property name="password" value="${blacklist.jdbc.password}"/>
+	<context:component-scan base-package="com.mk">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<context:property-placeholder location="classpath:db.properties" />
+	<bean id="umemberDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${umember.jdbc.driverClassName}" />
+		<property name="url" value="${umember.jdbc.url}" />
+		<property name="username" value="${umember.jdbc.username}" />
+		<property name="password" value="${umember.jdbc.password}" />
+	</bean>
+
+	<bean id="blackListDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${blacklist.jdbc.driverClassName}" />
+		<property name="url" value="${blacklist.jdbc.url}" />
+		<property name="username" value="${blacklist.jdbc.username}" />
+		<property name="password" value="${blacklist.jdbc.password}" />
 	</bean>
 
 	<bean id="umemberSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="umemberDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/umember/*.xml"/>
+		<property name="dataSource" ref="umemberDataSource" />
+		<property name="mapperLocations" value="classpath:/sqlmap/umember/*.xml" />
 
 	</bean>
 	<bean id="blackListSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="blackListDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/blacklist/*.xml"/>
+		<property name="dataSource" ref="blackListDataSource" />
+		<property name="mapperLocations" value="classpath:/sqlmap/blacklist/*.xml" />
 
 	</bean>
 
 
-    <bean id="umemberTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="umemberDataSource"/>
-    </bean>
+	<bean id="umemberTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="umemberDataSource" />
+	</bean>
 
-	<bean id="blackListTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="blackListDataSource"/>
+	<bean id="blackListTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="blackListDataSource" />
 	</bean>
 
 
 
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-    <tx:annotation-driven transaction-manager="umemberTransactionManager" proxy-target-class="true"/>
-<tx:advice id="txadvice" transaction-manager="umemberTransactionManager">
+	<aop:aspectj-autoproxy expose-proxy="true" />
+	<tx:annotation-driven transaction-manager="umemberTransactionManager"
+		proxy-target-class="true" />
+	<tx:advice id="txadvice" transaction-manager="umemberTransactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -81,8 +87,9 @@
 		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
 	</aop:config>
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-	<tx:annotation-driven transaction-manager="blackListTransactionManager" proxy-target-class="true"/>
+	<aop:aspectj-autoproxy expose-proxy="true" />
+	<tx:annotation-driven transaction-manager="blackListTransactionManager"
+		proxy-target-class="true" />
 	<tx:advice id="blackListTxadvice" transaction-manager="blackListTransactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
@@ -101,13 +108,13 @@
 
 
 	<bean name="umemberScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.umember"/>
+		<property name="basePackage" value="com.mk.crawer.biz.mapper.umember" />
 
 		<property name="sqlSessionFactoryBeanName" value="umemberSqlSessionFactory"></property>
 	</bean>
 
 	<bean name="blackListScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist"/>
+		<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist" />
 
 		<property name="sqlSessionFactoryBeanName" value="blackListSqlSessionFactory"></property>
 	</bean>

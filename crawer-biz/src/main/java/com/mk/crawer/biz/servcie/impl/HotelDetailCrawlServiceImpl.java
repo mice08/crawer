@@ -93,6 +93,17 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
+						List<HotelFacilities> hotelFacilities = parseDataNodeForHotelFacilities(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (hotelFacilities != null) {
+							hotelComb.setHotelfacilities(hotelFacilities);
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
+					try {
 						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
 								(Map<String, Object>) jsonNode);
 
@@ -121,6 +132,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<HotelFacilities> parseDataNodeForHotelFacilities(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
 		List<HotelFacilities> hotelFacilities = new ArrayList<HotelFacilities>();
@@ -168,7 +180,18 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			throws HotelDetailParseException {
 		List<HotelSurround> hotelSurrounds = new ArrayList<HotelSurround>();
 
-		Map<String, Object> x;
+		if (dataNode.get("traffic") != null && dataNode.get("traffic").getClass().isAssignableFrom(List.class)) {
+			List<Map<String, Object>> traffics = (List<Map<String, Object>>) dataNode.get("traffic");
+
+			for (Map<String, Object> traffic : traffics) {
+				HotelSurround hotelSurround = new HotelSurround();
+				hotelSurrounds.add(hotelSurround);
+
+				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
+				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
+				hotelSurround.setName(typesafeGetString(traffic.get("name")));
+			}
+		}
 
 		return hotelSurrounds;
 	}
