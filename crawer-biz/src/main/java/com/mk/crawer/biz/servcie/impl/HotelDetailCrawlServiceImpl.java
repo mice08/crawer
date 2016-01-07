@@ -491,7 +491,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 				if (vendor.get("availableRoomCountArr") != null
 						&& List.class.isAssignableFrom(vendor.get("availableRoomCountArr").getClass())) {
-					List<Long> availableRoomCounts = (List<Long>) vendor.get("availableRoomCountArr");
+					List<Double> availableRoomCounts = (List<Double>) vendor.get("availableRoomCountArr");
 
 					if (availableRoomCounts != null && availableRoomCounts.size() > 0) {
 						roomtypePrice.setAvailableRoomcount(
