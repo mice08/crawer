@@ -31,7 +31,7 @@ public class TCityListBusinessServiceImpl implements ITCityListBusinessService {
                 return false;
             }
             String getStr = null;
-            getStr = HttpUtil.doGet(url);
+            getStr = HttpUtil.doGetNoProxy(url);
             if(StringUtils.isEmpty(getStr)){
                 return false;
             }
