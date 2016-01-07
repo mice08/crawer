@@ -90,26 +90,29 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
 
+		boolean isUpdateRequired = false;
 		try {
-			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
+			isUpdateRequired = persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
 
-		try {
-			persistHotelFacilities(hotelComb.getHotelfacilities());
-		} catch (Exception ex) {
-			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
-			logger.error(errorMsg, ex);
-		}
+		if (!isUpdateRequired) {
+			try {
+				persistHotelFacilities(hotelComb.getHotelfacilities());
+			} catch (Exception ex) {
+				String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+				logger.error(errorMsg, ex);
+			}
 
-		try {
-			persistHotelSurround(hotelComb.getHotelSurrounds());
-		} catch (Exception ex) {
-			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
-			logger.error(errorMsg, ex);
+			try {
+				persistHotelSurround(hotelComb.getHotelSurrounds());
+			} catch (Exception ex) {
+				String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
+				logger.error(errorMsg, ex);
+			}
 		}
 
 		Date endTime = new Date();
@@ -224,25 +227,49 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	 * @param roomtypeCombs
 	 * @throws Exception
 	 */
-	private void persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
+	private boolean persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
+		boolean isUpdateRequired = false;
+
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
 			List<RoomTypePrice> roomtypePrices = roomtypeComb.getRoomtypePrices();
+			boolean isRoomtypeUpdateRequired = false;
 
 			try {
-				roomtypeMapper.insert(roomtype);
+				Map<String, Object> parameters = new HashMap<>();
+				parameters.put("roomtypeKey", roomtype.getRoomtypeKey());
+				parameters.put("hotelSourceId", roomtype.getHotelSourceId());
+
+				List<RoomType> roomtypes = roomtypeMapper.selectByKeys(parameters);
+				if (roomtypes != null && roomtypes.size() > 0) {
+					isUpdateRequired = true;
+					isRoomtypeUpdateRequired = true;
+				}
 			} catch (Exception ex) {
-				logger.error("failed to roomtypeMapper.insert", ex);
+				logger.warn(String.format("failed to detection duplication for roomtypeKey:%s; hotelSourceId:%s",
+						roomtype.getRoomtypeKey(), roomtype.getHotelSourceId()), ex);
 			}
 
-			if (roomtypeDescs != null) {
-				for (RoomTypeDesc roomtypeDesc : roomtypeDescs) {
-					try {
-						roomtypeDescMapper.insert(roomtypeDesc);
-					} catch (Exception ex) {
-						logger.error("failed to roomtypeDescMapper.insert", ex);
+			if (!isRoomtypeUpdateRequired) {
+				try {
+					roomtypeMapper.insert(roomtype);
+				} catch (Exception ex) {
+					logger.error("failed to roomtypeMapper.insert", ex);
+				}
+
+				if (roomtypeDescs != null) {
+					for (RoomTypeDesc roomtypeDesc : roomtypeDescs) {
+						try {
+							roomtypeDescMapper.insert(roomtypeDesc);
+						} catch (Exception ex) {
+							logger.error("failed to roomtypeDescMapper.insert", ex);
+						}
 					}
+				}
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("update roomtype %s", roomtype.getRoomtypeKey()));
 				}
 			}
 
@@ -256,6 +283,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				}
 			}
 		}
+
+		return isUpdateRequired;
 	}
 
 	@SuppressWarnings("unchecked")
