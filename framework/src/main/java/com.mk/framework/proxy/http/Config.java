@@ -14,7 +14,7 @@ class Config {
     /**
      * 通过API提取其他网站价格数据超时时间--单位：毫秒
      */
-    public static final Integer FETCH_TIMEOUT = 10000;
+    public static final Integer FETCH_TIMEOUT = 1500;
     /**
      * 检测其他网站是否将代理IP添加到该网站黑名单的网站地址
      */

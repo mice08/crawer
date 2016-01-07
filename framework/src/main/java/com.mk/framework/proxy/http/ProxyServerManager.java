@@ -46,19 +46,12 @@ class ProxyServerManager {
         }
     }
 
-    static boolean add(ProxyServer proxyServer) {
+    static Long add(ProxyServer proxyServer) {
         Jedis jedis = getJedis();
 
-        if ( check(proxyServer) ) {
-            jedis.sadd(
-                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer));
-
-            return true;
-        } else {
-            return false;
-        }
-
+        return jedis.sadd(
+                RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
+                JSONUtil.toJson(proxyServer));
     }
 
     static void remove(ProxyServer proxyServer) {
@@ -84,11 +77,9 @@ class ProxyServerManager {
 
     static boolean check(ProxyServer proxyServer) {
 
-        HttpHost proxy = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-
         for (String url : Config.TEST_URL) {
             try {
-                HttpUtil.doGet(url, proxy);
+                HttpUtil.doGet(url, proxyServer);
             } catch (IOException e) {
                 return false;
             }
