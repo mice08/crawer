@@ -1,4 +1,4 @@
-package com.mk.crawer.job;
+package com.mk.crawer.job.impl;
 
 import com.mk.crawer.biz.enums.CityTypeEnum;
 import com.mk.crawer.biz.model.crawer.CityList;

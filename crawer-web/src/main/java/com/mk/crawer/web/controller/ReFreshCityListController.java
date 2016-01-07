@@ -1,7 +1,7 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.job.TaskService;
+import com.mk.crawer.job.impl.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
