@@ -21,6 +21,7 @@
  	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd  
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+<<<<<<< HEAD
   
    <context:component-scan base-package="com.mk">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
@@ -57,13 +58,47 @@
 
 	<bean id="crawerTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="crawerDataSource"/>
+=======
+
+	<context:component-scan base-package="com.mk">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<context:property-placeholder location="classpath:db.properties" />
+
+	<bean id="crawerDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${crawler.jdbc.url}" />
+		<property name="username" value="${crawler.jdbc.username}" />
+		<property name="password" value="${crawler.jdbc.password}" />
+	</bean>
+
+	<bean id="crawerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="crawerDataSource" />
+		<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml" />
+
 	</bean>
 
 
+	<bean id="crawerTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="crawerDataSource" />
+>>>>>>> dev_hoteldetail
+	</bean>
+
+	<aop:aspectj-autoproxy expose-proxy="true" />
+
+<<<<<<< HEAD
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
     <tx:annotation-driven transaction-manager="otsTransactionManager" proxy-target-class="true"/>
 <tx:advice id="txadvice" transaction-manager="otsTransactionManager">
+=======
+	<tx:annotation-driven transaction-manager="crawerTransactionManager"
+		proxy-target-class="true" />
+	<tx:advice id="crawerTxadvice" transaction-manager="crawerTransactionManager">
+>>>>>>> dev_hoteldetail
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -75,10 +110,11 @@
 		</tx:attributes>
 	</tx:advice>
 	<aop:config expose-proxy="true">
-		<aop:pointcut id="txPointcut" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
+		<aop:pointcut id="crawerTxPointcut" expression="execution(* com.mk..service..*.*(..))" />
+		<aop:advisor advice-ref="crawerTxadvice" pointcut-ref="crawerTxPointcut" />
 	</aop:config>
 
+<<<<<<< HEAD
 	<tx:annotation-driven transaction-manager="crawerTransactionManager" proxy-target-class="true"/>
 	<tx:advice id="crawerTxadvice" transaction-manager="crawerTransactionManager">
 		<tx:attributes>
@@ -114,4 +150,12 @@
 		<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
 	</bean>
 
+=======
+	<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer" />
+
+		<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
+	</bean>
+
+>>>>>>> dev_hoteldetail
 </beans>

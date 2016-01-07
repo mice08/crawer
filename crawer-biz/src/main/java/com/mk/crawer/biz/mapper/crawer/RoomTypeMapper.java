@@ -16,8 +16,4 @@ public interface RoomTypeMapper {
     List<RoomType> selectByExample(RoomTypeExample example);
 
     RoomType selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(RoomType record);
-
-    int updateByPrimaryKey(RoomType record);
 }

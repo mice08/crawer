@@ -17,7 +17,4 @@ public interface RoomTypeFacilitiesMapper {
 
     RoomTypeFacilities selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(RoomTypeFacilities record);
-
-    int updateByPrimaryKey(RoomTypeFacilities record);
 }
