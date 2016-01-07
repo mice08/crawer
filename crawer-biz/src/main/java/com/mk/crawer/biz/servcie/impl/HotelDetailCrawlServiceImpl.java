@@ -451,8 +451,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		String roomtypeKey = typesafeGetString(roomComb.get("key"));
 
-		roomtype.setKey(typesafeGetString(roomComb.get("key")));
-		roomtype.setHotelSourceId(typesafeGetString(roomComb.get("key")));
+		roomtype.setRoomtypeKey(typesafeGetString(roomComb.get("key")));
+		roomtype.setHotelSourceId(hotelid);
 		roomtype.setCount(typesafeGetDouble(roomComb.get("count")).longValue());
 		roomtype.setRoomName(typesafeGetString(roomComb.get("roomName")));
 		roomtype.setRoomType(typesafeGetDouble(roomComb.get("roomType")).toString());
