@@ -377,6 +377,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				return new BigDecimal(0);
 			}
+		} else if (attribute != null && String.class.isAssignableFrom(attribute.getClass())) {
+			String attrVal = (String) attribute;
+
+			try {
+				return BigDecimal.valueOf(Double.parseDouble(attrVal));
+			} catch (Exception ex) {
+				return new BigDecimal(0);
+			}
 		}
 
 		return new BigDecimal(0);
