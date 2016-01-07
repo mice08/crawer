@@ -3,14 +3,24 @@ package com.mk.crawer.biz.model.crawer;
 import java.util.Date;
 
 public class Brands {
-    private   Long id;
-    private   Long  cityId;
-    private   String  cityUrl;
-    private   String  name;
-    private   String log;
-    private   Integer  count;
-    private   String  group;
+    private Long id;
+
+    private Long cityId;
+
+    private String cityUrl;
+
+    private String name;
+
+    private String groupType;
+
+    private String log;
+
+    private Long count;
+
+    private String group;
+
     private Date createTime;
+
     private Date updateTime;
 
     public Long getId() {
@@ -42,7 +52,15 @@ public class Brands {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(String groupType) {
+        this.groupType = groupType == null ? null : groupType.trim();
     }
 
     public String getLog() {
@@ -50,14 +68,14 @@ public class Brands {
     }
 
     public void setLog(String log) {
-        this.log = log;
+        this.log = log == null ? null : log.trim();
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
@@ -66,7 +84,7 @@ public class Brands {
     }
 
     public void setGroup(String group) {
-        this.group = group;
+        this.group = group == null ? null : group.trim();
     }
 
     public Date getCreateTime() {
