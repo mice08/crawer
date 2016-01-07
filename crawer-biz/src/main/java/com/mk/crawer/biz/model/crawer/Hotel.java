@@ -74,6 +74,14 @@ public class Hotel {
         this.id = id;
     }
 
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId == null ? null : sourceId.trim();
+    }
+
     public String getCityName() {
         return cityName;
     }
@@ -304,13 +312,5 @@ public class Hotel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
     }
 }

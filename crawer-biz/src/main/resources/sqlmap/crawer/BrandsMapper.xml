@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.crawer.CityListMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.CityList" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.BrandsMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.Brands" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
-    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="city_id" property="cityId" jdbcType="BIGINT" />
     <result column="city_url" property="cityUrl" jdbcType="VARCHAR" />
-    <result column="site_name" property="siteId" jdbcType="VARCHAR" />
-    <result column="city_type" property="cityType" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="group_type" property="groupType" jdbcType="VARCHAR" />
+    <result column="log" property="log" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="BIGINT" />
+    <result column="group" property="group" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -41,16 +43,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, city_code, city_name, city_url, site_name, city_type, create_time, update_time
+    id, city_id, city_url, `name`, group_type, log, `count`, `group`, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.CityListExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from t_ex_citylist
+    from t_ex_brands
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -61,43 +63,49 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_ex_citylist
+    from t_ex_brands
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_ex_citylist
+    delete from t_ex_brands
     where id = #{id,jdbcType=BIGINT}
   </delete>
-
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    insert into t_ex_citylist (id, city_code, city_name,
-      city_url, site_id, city_type,
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, 
-      #{cityUrl,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{cityType,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.Brands" >
+    insert into t_ex_brands (id, city_id, city_url, 
+      `name`, group_type, log,
+      `count`, `group`, create_time,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{cityId,jdbcType=BIGINT}, #{cityUrl,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{groupType,jdbcType=VARCHAR}, #{log,jdbcType=VARCHAR}, 
+      #{count,jdbcType=BIGINT}, #{group,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    insert into t_ex_citylist
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.Brands" >
+    insert into t_ex_brands
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="cityCode != null" >
-        city_code,
-      </if>
-      <if test="cityName != null" >
-        city_name,
+      <if test="cityId != null" >
+        city_id,
       </if>
       <if test="cityUrl != null" >
         city_url,
       </if>
-      <if test="siteId != null" >
-        site_id,
+      <if test="name != null" >
+        `name`,
       </if>
-      <if test="cityType != null" >
-        city_type,
+      <if test="groupType != null" >
+        group_type,
+      </if>
+      <if test="log != null" >
+        log,
+      </if>
+      <if test="count != null" >
+        `count`,
+      </if>
+      <if test="group != null" >
+        `group`,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -110,20 +118,26 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="cityCode != null" >
-        #{cityCode,jdbcType=VARCHAR},
-      </if>
-      <if test="cityName != null" >
-        #{cityName,jdbcType=VARCHAR},
+      <if test="cityId != null" >
+        #{cityId,jdbcType=BIGINT},
       </if>
       <if test="cityUrl != null" >
         #{cityUrl,jdbcType=VARCHAR},
       </if>
-      <if test="siteId != null" >
-        #{siteId,jdbcType=BIGINT},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
-      <if test="cityType != null" >
-        #{cityType,jdbcType=VARCHAR},
+      <if test="groupType != null" >
+        #{groupType,jdbcType=VARCHAR},
+      </if>
+      <if test="log != null" >
+        #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=BIGINT},
+      </if>
+      <if test="group != null" >
+        #{group,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -133,31 +147,35 @@
       </if>
     </trim>
   </insert>
-
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.CityListExample" resultType="java.lang.Integer" >
-    select count(*) from t_ex_citylist
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.BrandsExample" resultType="java.lang.Integer" >
+    select count(*) from t_ex_brands
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    update t_ex_citylist
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.Brands" >
+    update t_ex_brands
     <set >
-      <if test="cityCode != null" >
-        city_code = #{cityCode,jdbcType=VARCHAR},
-      </if>
-      <if test="cityName != null" >
-        city_name = #{cityName,jdbcType=VARCHAR},
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=BIGINT},
       </if>
       <if test="cityUrl != null" >
         city_url = #{cityUrl,jdbcType=VARCHAR},
       </if>
-      <if test="siteId != null" >
-        site_id = #{siteId,jdbcType=BIGINT},
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="cityType != null" >
-        city_type = #{cityType,jdbcType=VARCHAR},
+      <if test="groupType != null" >
+        group_type = #{groupType,jdbcType=VARCHAR},
+      </if>
+      <if test="log != null" >
+        log = #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        `count` = #{count,jdbcType=BIGINT},
+      </if>
+      <if test="group != null" >
+        `group` = #{group,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -168,14 +186,15 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.CityList" >
-    update t_ex_citylist
-    set city_code = #{cityCode,jdbcType=VARCHAR},
-      city_name = #{cityName,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.Brands" >
+    update t_ex_brands
+    set city_id = #{cityId,jdbcType=BIGINT},
       city_url = #{cityUrl,jdbcType=VARCHAR},
-      site_id = #{siteId,jdbcType=BIGINT},
-      city_type = #{cityType,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      group_type = #{groupType,jdbcType=VARCHAR},
+      log = #{log,jdbcType=VARCHAR},
+      `count` = #{count,jdbcType=BIGINT},
+      `group` = #{group,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
