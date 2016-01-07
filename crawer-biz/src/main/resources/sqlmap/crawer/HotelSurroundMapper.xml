@@ -37,7 +37,7 @@
 		surround_name, gpoint, distance)
 		values
 		(#{type,jdbcType=VARCHAR},
-		#{hotelId,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}
+		#{hotelId,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR},
 		#{surroundName,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR},
 		#{distance,jdbcType=VARCHAR})
 	</insert>

@@ -36,7 +36,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private HotelSurroundMapper hotelSurroundMapper;
-	
+
 	@Autowired
 	private HotelFacilitiesMapper hotelFacilitiesMapper;
 
@@ -59,6 +59,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.debug(invokeUrl);
 		}
 
+		Date beforeTime = new Date();
+
 		String jsonString = "";
 		try {
 			jsonString = HttpUtils.doPost(invokeUrl, new HashMap<String, String>());
@@ -77,21 +79,26 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
-		
+
 		try {
 			persistHotelFacilities(hotelComb.getHotelfacilities());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 		}
-		
+
 		try {
 			persistHotelSurround(hotelComb.getHotelSurrounds());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 		}
-		
+
+		Date endTime = new Date();
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("takes %s seconds to finish crawlling hotelid:%s",
+					DateUtils.diffSecond(beforeTime, endTime), hotelid));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -191,7 +198,6 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 	}
 
-	
 	/**
 	 * with no transaction intentionally,
 	 * <p>
