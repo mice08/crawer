@@ -1,7 +1,10 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.job.TaskService;
+import com.mk.crawer.biz.model.crawer.Hotel;
+import com.mk.crawer.biz.servcie.IHotelService;
+import com.mk.crawer.job.impl.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,8 @@ import java.util.Map;
 @RequestMapping(value = "/manager")
 public class ReFreshCityListController {
 
+    @Autowired
+    private IHotelService hotelService;
     @RequestMapping(value = "/removecitylist")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> remove() {
@@ -61,5 +66,19 @@ public class ReFreshCityListController {
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/listhotel")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> all(String cityname) {
+        List<Hotel> hotels = hotelService.selectByCityName(cityname);
+
+
+        HashMap hm = new HashMap();
+        String result = "请求成功";
+        boolean  success = true;
+        hm.put("result",result);
+        hm.put("success",success);
+        hm.put("hotels",hotels);
+        return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+    }
 
 }

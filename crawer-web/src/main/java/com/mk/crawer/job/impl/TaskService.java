@@ -1,25 +1,24 @@
-package com.mk.crawer.job;
+package com.mk.crawer.job.impl;
 
 import com.mk.crawer.biz.enums.CityTypeEnum;
+import com.mk.crawer.biz.mapper.crawer.CityMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.biz.servcie.ICityListService;
+import com.mk.framework.AppUtils;
 import com.mk.framework.proxy.http.JSONUtil;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by kirin on 2016/1/6.
  */
-@Service
+@Component
 public class TaskService {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TaskService.class);
 
-    @Autowired
-    public ICityListService cityListService;
+
     public static void removeCityList() {
         List<CityList> cityLists = TaskServiceManager.listAllCity();
         for (CityList cityList : cityLists) {
@@ -29,8 +28,8 @@ public class TaskService {
     }
 
     public  void reFreshCityList() {
-
-        List<CityList> cityLists = cityListService.selectByCityType(CityTypeEnum.DEAFULT.getType());
+        CityMapper cityMapper = AppUtils.getBean(CityMapper.class);
+        List<CityList> cityLists = cityMapper.selectByCityType(CityTypeEnum.DEAFULT.getType());
         for (CityList cityList : cityLists) {
             TaskServiceManager.add(cityList);
             LOGGER.info("添加城市：{}，已经有{}个城市了。", JSONUtil.toJson(cityList),  TaskServiceManager.count());

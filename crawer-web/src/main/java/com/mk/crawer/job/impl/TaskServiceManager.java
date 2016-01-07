@@ -1,4 +1,4 @@
-package com.mk.crawer.job;
+package com.mk.crawer.job.impl;
 
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.framework.AppUtils;
@@ -54,6 +54,7 @@ public class TaskServiceManager {
     static List<CityList> listAllCity() {
         Jedis jedis = null;
         try{
+            jedis = getJedis();
             Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWER_CITY_NAME_SET);
 
             List<CityList> cityLists = new LinkedList<>();

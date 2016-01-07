@@ -27,7 +27,7 @@ class ProxyServerManager {
         String jsonStr = null;
         Jedis jedis = null;
         try {
-             jedis = getJedis();
+            jedis = getJedis();
 
             jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
 
@@ -42,8 +42,8 @@ class ProxyServerManager {
             LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
 
             return proxyServer;
-        }finally {
-            if (null != jedis){
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -51,20 +51,23 @@ class ProxyServerManager {
 
     static Long add(ProxyServer proxyServer) {
         Jedis jedis = null;
+
+        Long count = null;
+
         try {
             jedis = getJedis();
-
-            return jedis.sadd(
+            count = jedis.sadd(
                     RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
-        }catch (Exception e){
-            throw e;
-        }finally {
-            if (null != jedis){
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
 
+        return count;
     }
 
     static void remove(ProxyServer proxyServer) {
@@ -101,13 +104,13 @@ class ProxyServerManager {
             return proxyServerList;
         }catch (Exception e){
             throw e;
-        }finally {
-            if (null != jedis){
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
-
     }
+
 
     static boolean check(ProxyServer proxyServer) {
 
