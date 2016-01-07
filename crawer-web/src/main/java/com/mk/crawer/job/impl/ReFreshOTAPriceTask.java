@@ -52,7 +52,9 @@ public class ReFreshOTAPriceTask implements Worker {
 
         private void done() {
             try {
+                LOGGER.info("开始刷新酒店:{}价格", hotelId);
                 hotelDetailCrawlService.crawl(hotelId);
+                LOGGER.info("结束刷新酒店:{}价格", hotelId);
             } catch (Exception e) {
                 LOGGER.error("价格刷新线程出错：", e);
             }
