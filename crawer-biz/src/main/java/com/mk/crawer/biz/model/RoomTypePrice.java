@@ -8,7 +8,11 @@ public class RoomTypePrice {
 
     private Long roomTypeId;
 
-    private Long roomId;
+    private String roomTypeKey;
+    
+    private Long hotelId;
+    
+    private String hotelSourceId;
 
     private BigDecimal price;
 
@@ -28,129 +32,136 @@ public class RoomTypePrice {
 
     private Integer availableRoomcount;
 
-    private Date crawerTime;
-
     private Date createTime;
 
     private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
-    }
+	public Long getRoomTypeId() {
+		return roomTypeId;
+	}
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
-    }
+	public void setRoomTypeId(Long roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
 
-    public Long getRoomId() {
-        return roomId;
-    }
+	public String getRoomTypeKey() {
+		return roomTypeKey;
+	}
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
+	public void setRoomTypeKey(String roomTypeKey) {
+		this.roomTypeKey = roomTypeKey;
+	}
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+	public Long getHotelId() {
+		return hotelId;
+	}
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
 
-    public BigDecimal getRealPrice() {
-        return realPrice;
-    }
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
 
-    public void setRealPrice(BigDecimal realPrice) {
-        this.realPrice = realPrice;
-    }
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
 
-    public BigDecimal getOriginPrice() {
-        return originPrice;
-    }
+	public BigDecimal getPrice() {
+		return price;
+	}
 
-    public void setOriginPrice(BigDecimal originPrice) {
-        this.originPrice = originPrice;
-    }
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 
-    public BigDecimal getShowPrice() {
-        return showPrice;
-    }
+	public BigDecimal getRealPrice() {
+		return realPrice;
+	}
 
-    public void setShowPrice(BigDecimal showPrice) {
-        this.showPrice = showPrice;
-    }
+	public void setRealPrice(BigDecimal realPrice) {
+		this.realPrice = realPrice;
+	}
 
-    public BigDecimal getOtaShowPrice() {
-        return otaShowPrice;
-    }
+	public BigDecimal getOriginPrice() {
+		return originPrice;
+	}
 
-    public void setOtaShowPrice(BigDecimal otaShowPrice) {
-        this.otaShowPrice = otaShowPrice;
-    }
+	public void setOriginPrice(BigDecimal originPrice) {
+		this.originPrice = originPrice;
+	}
 
-    public String getWrapperName() {
-        return wrapperName;
-    }
+	public BigDecimal getShowPrice() {
+		return showPrice;
+	}
 
-    public void setWrapperName(String wrapperName) {
-        this.wrapperName = wrapperName == null ? null : wrapperName.trim();
-    }
+	public void setShowPrice(BigDecimal showPrice) {
+		this.showPrice = showPrice;
+	}
 
-    public String getWrapperId() {
-        return wrapperId;
-    }
+	public BigDecimal getOtaShowPrice() {
+		return otaShowPrice;
+	}
 
-    public void setWrapperId(String wrapperId) {
-        this.wrapperId = wrapperId == null ? null : wrapperId.trim();
-    }
+	public void setOtaShowPrice(BigDecimal otaShowPrice) {
+		this.otaShowPrice = otaShowPrice;
+	}
 
-    public Integer getAllRoomCount() {
-        return allRoomCount;
-    }
+	public String getWrapperName() {
+		return wrapperName;
+	}
 
-    public void setAllRoomCount(Integer allRoomCount) {
-        this.allRoomCount = allRoomCount;
-    }
+	public void setWrapperName(String wrapperName) {
+		this.wrapperName = wrapperName;
+	}
 
-    public Integer getAvailableRoomcount() {
-        return availableRoomcount;
-    }
+	public String getWrapperId() {
+		return wrapperId;
+	}
 
-    public void setAvailableRoomcount(Integer availableRoomcount) {
-        this.availableRoomcount = availableRoomcount;
-    }
+	public void setWrapperId(String wrapperId) {
+		this.wrapperId = wrapperId;
+	}
 
-    public Date getCrawerTime() {
-        return crawerTime;
-    }
+	public Integer getAllRoomCount() {
+		return allRoomCount;
+	}
 
-    public void setCrawerTime(Date crawerTime) {
-        this.crawerTime = crawerTime;
-    }
+	public void setAllRoomCount(Integer allRoomCount) {
+		this.allRoomCount = allRoomCount;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Integer getAvailableRoomcount() {
+		return availableRoomcount;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setAvailableRoomcount(Integer availableRoomcount) {
+		this.availableRoomcount = availableRoomcount;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }

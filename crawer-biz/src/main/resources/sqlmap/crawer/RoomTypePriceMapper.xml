@@ -3,8 +3,10 @@
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper" >
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypePrice" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />    
     <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
-    <result column="room_id" property="roomId" jdbcType="BIGINT" />
+    <result column="room_type_key" property="roomTypeKey" jdbcType="VARCHAR" />    
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="real_price" property="realPrice" jdbcType="DECIMAL" />
     <result column="origin_price" property="originPrice" jdbcType="DECIMAL" />
@@ -18,35 +20,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+
   <sql id="Base_Column_List" >
     id, room_type_id, room_id, price, real_price, origin_price, show_price, ota_show_price, 
     wrapper_name, wrapper_id, all_room_count, available_roomcount, crawer_time, create_time, 
