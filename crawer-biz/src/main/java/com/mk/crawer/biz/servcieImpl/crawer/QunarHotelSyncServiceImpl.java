@@ -4,14 +4,24 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
 
-import com.mk.crawer.biz.model.crawer.Brands;
-import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
+import com.mk.crawer.biz.model.crawer.*;
+import com.mk.crawer.biz.servcie.BrandsService;
+import com.mk.crawer.biz.servcie.ICityListService;
+import com.mk.crawer.biz.servcie.IHotelService;
+import com.mk.crawer.biz.servcie.impl.CityListService;
+import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -20,242 +30,62 @@ import java.util.*;
 @Service
 public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     private static Logger logger = LoggerFactory.getLogger(QunarHotelSyncServiceImpl.class);
+    @Autowired
+    private ICityListService cityListService ;
+    @Autowired
+    private IHotelService hotelService ;
+    @Autowired
+    private BrandsService brandsService ;
 
     public Map<String,Object> qunarHotelSync(){
         Map<String,Object> resultMap=new HashMap<String,Object>();
-        String hotelResult="{" +
-                "\"info\": {" +
-                "\"cityurl\": \"zhongwei\"," +
-                "\"cityName\": \"中卫\"," +
-                "\"count\": 483," +
-                "\"fromDate\": \"2016-01-05\"," +
-                "\"toDate\": \"2016-01-06\"," +
-                "\"key\": \"\"," +
-                "\"brands\": {" +
-                "\"速8\": {" +
-                "\"name\": \"速8\"," +
-                "\"count\": 2," +
-                "\"group\": \"经济型\"," +
-                "\"logo\": \"https://source.qunarzz.com//site/images/brandlogo/square50/su8_0.png\"" +
-                "}" +
-                "}" +
-                "}," +
-                "\"hotels\": [" +
-                "{" +
-                "\"id\": \"zhongwei_133\"," +
-                "\"cityName\": \"\"," +
-                "\"distance\": 0," +
-                "\"price\": 262," +
-                "\"attrs\": {" +
-                "\"hasBreakfast\": \"Y\"," +
-                "\"imageCount\": \"0\"," +
-                "\"HasFitnessRoom\": \"\"," +
-                "\"CommentScore\": \"4.3\"," +
-                "\"HasBusinessCenter\": \"N\"," +
-                "\"HasRestaurant\": \"Y\"," +
-                "\"hotelStars\": \"0\"," +
-                "\"bpoint\": \"37.511486,105.201036\"," +
-                "\"gpoint\": \"37.50572,105.19446\"," +
-                "\"phoneNumber\": \"0955-3989666\"," +
-                "\"hotelBrand\": \"\"," +
-                "\"tradingArea\": \"中卫站\"," +
-                "\"isWebFree\": \"Y\"," +
-                "\"dangci\": \"4\"," +
-                "\"hotelName\": \"宁夏雷迪森国际饭店\"," +
-                "\"hotelAddress\": \"宁夏中卫市沙坡头区文昌南街文化广场东侧\"," +
-                "\"imageID\": \"https://userimg.qunarzz.com/imgs/201312/18/Z7-ECT9tOOuXj-h3Z76.jpg\"," +
-                "\"HasMeetingORBanquetSpace\": \"Y\"," +
-                "\"HasIndoorPool\": \"N\"," +
-                "\"HasNonSmokingAvailable\": \"N\"," +
-                "\"oneSentence\": \"\"," +
-                "\"CommentCount\": \"156\"," +
-                "\"hotelArea\": \"\"," +
-                "\"shortName\": \"\"" +
-                "}" +
-                "}," +
-                "{" +
-                "\"id\": \"zhongwei_12\"," +
-                "\"cityName\": \"\"," +
-                "\"distance\": 0," +
-                "\"price\": 120," +
-                "\"attrs\": {" +
-                "\"hasBreakfast\": \"\"," +
-                "\"imageCount\": \"0\"," +
-                "\"HasFitnessRoom\": \"\"," +
-                "\"CommentScore\": \"4.5\"," +
-                "\"HasBusinessCenter\": \"Y\"," +
-                "\"HasRestaurant\": \"Y\"," +
-                "\"hotelStars\": \"4\"," +
-                "\"bpoint\": \"37.521341341084,105.19712044138\"," +
-                "\"gpoint\": \"37.515614,105.19054\"," +
-                "\"phoneNumber\": \"0955-7017666\"," +
-                "\"hotelBrand\": \"\"," +
-                "\"tradingArea\": \"中卫站\"," +
-                "\"isWebFree\": \"Y\"," +
-                "\"dangci\": \"3\"," +
-                "\"hotelName\": \"中卫逸兴大酒店\"," +
-                "\"hotelAddress\": \"中卫市沙坡头区鼓楼北街2号\"," +
-                "\"imageID\": \"https://userimg.qunarzz.com/imgs/201211/22/Z7-ECTZ2D4VZaNtXZ76.jpg\"," +
-                "\"HasMeetingORBanquetSpace\": \"Y\"," +
-                "\"HasIndoorPool\": \"\"," +
-                "\"HasNonSmokingAvailable\": \"\"," +
-                "\"oneSentence\": \"地处中卫市鼓楼东街与鼓楼北街交汇处，步行可至中卫火车站、高庙。\"," +
-                "\"CommentCount\": \"713\"," +
-                "\"hotelArea\": \"\"," +
-                "\"shortName\": \"\"" +
-                "}" +
-                "}," +
-                "{" +
-                "\"id\": \"zhongwei_202\"," +
-                "\"cityName\": \"\"," +
-                "\"distance\": 0," +
-                "\"price\": 322," +
-                "\"attrs\": {" +
-                "\"hasBreakfast\": \"Y\"," +
-                "\"imageCount\": \"0\"," +
-                "\"HasFitnessRoom\": \"Y\"," +
-                "\"CommentScore\": \"4.6\"," +
-                "\"HasBusinessCenter\": \"Y\"," +
-                "\"HasRestaurant\": \"Y\"," +
-                "\"hotelStars\": \"0\"," +
-                "\"bpoint\": \"37.520997,105.211203\"," +
-                "\"gpoint\": \"37.515087,105.20469\"," +
-                "\"phoneNumber\": \"0955-7981111\"," +
-                "\"hotelBrand\": \"\"," +
-                "\"tradingArea\": \"中卫站\"," +
-                "\"isWebFree\": \"Y\"," +
-                "\"dangci\": \"4\"," +
-                "\"hotelName\": \"中卫优派莱斯酒店\"," +
-                "\"hotelAddress\": \"中卫市鼓楼东街创业城C20号\"," +
-                "\"imageID\": \"https://userimg.qunarzz.com/imgs/201407/18/KEO2vOK7Ru-cfxhLy76.jpg\"," +
-                "\"HasMeetingORBanquetSpace\": \"Y\"," +
-                "\"HasIndoorPool\": \"\"," +
-                "\"HasNonSmokingAvailable\": \"N\"," +
-                "\"oneSentence\": \"\"," +
-                "\"CommentCount\": \"226\"," +
-                "\"hotelArea\": \"\"," +
-                "\"shortName\": \"\"" +
-                "}" +
-                "}," +
-                "{" +
-                "\"id\": \"zhongwei_113\"," +
-                "\"cityName\": \"\"," +
-                "\"distance\": 0," +
-                "\"price\": 230," +
-                "\"attrs\": {" +
-                "\"hasBreakfast\": \"Y\"," +
-                "\"imageCount\": \"0\"," +
-                "\"HasFitnessRoom\": \"Y\"," +
-                "\"CommentScore\": \"4.5\"," +
-                "\"HasBusinessCenter\": \"Y\"," +
-                "\"HasRestaurant\": \"Y\"," +
-                "\"hotelStars\": \"0\"," +
-                "\"bpoint\": \"37.521669,105.217102\"," +
-                "\"gpoint\": \"37.515663,105.21062\"," +
-                "\"phoneNumber\": \"0955-7608888\"," +
-                "\"hotelBrand\": \"\"," +
-                "\"tradingArea\": \"中卫站\"," +
-                "\"isWebFree\": \"Y\"," +
-                "\"dangci\": \"3\"," +
-                "\"hotelName\": \"中卫中博大饭店\"," +
-                "\"hotelAddress\": \"宁夏中卫市鼓楼东街与文萃南路交汇处\"," +
-                "\"imageID\": \"https://userimg.qunarzz.com/imgs/201307/30/JhS1_thT2XKDP6KxJ76.jpg\"," +
-                "\"HasMeetingORBanquetSpace\": \"Y\"," +
-                "\"HasIndoorPool\": \"Y\"," +
-                "\"HasNonSmokingAvailable\": \"Y\"," +
-                "\"oneSentence\": \"\"," +
-                "\"CommentCount\": \"204\"," +
-                "\"hotelArea\": \"\"," +
-                "\"shortName\": \"\"" +
-                "}" +
-                "}," +
-                "{" +
-                "\"id\": \"zhongwei_97\"," +
-                "\"cityName\": \"\"," +
-                "\"distance\": 0," +
-                "\"price\": 108," +
-                "\"attrs\": {" +
-                "\"hasBreakfast\": \"N\"," +
-                "\"imageCount\": \"0\"," +
-                "\"HasFitnessRoom\": \"N\"," +
-                "\"CommentScore\": \"4.5\"," +
-                "\"HasBusinessCenter\": \"Y\"," +
-                "\"HasRestaurant\": \"Y\"," +
-                "\"hotelStars\": \"0\"," +
-                "\"bpoint\": \"37.519368761466,105.20540672929\"," +
-                "\"gpoint\": \"37.513546,105.19886\"," +
-                "\"phoneNumber\": \"0955-7064666\"," +
-                "\"hotelBrand\": \"\"," +
-                "\"tradingArea\": \"中卫站\"," +
-                "\"isWebFree\": \"Y\"," +
-                "\"dangci\": \"3\"," +
-                "\"hotelName\": \"天和时尚酒店\"," +
-                "\"hotelAddress\": \"宁夏中卫市沙坡头区鼓楼东街蔡桥路向南100米\"," +
-                "\"imageID\": \"https://userimg.qunarzz.com/imgs/201303/24/JhS1_tJBh70uP3U7J76.jpg\"," +
-                "\"HasMeetingORBanquetSpace\": \"Y\"," +
-                "\"HasIndoorPool\": \"N\"," +
-                "\"HasNonSmokingAvailable\": \"N\"," +
-                "\"oneSentence\": \"\"," +
-                "\"CommentCount\": \"575\"," +
-                "\"hotelArea\": \"\"," +
-                "\"shortName\": \"\"" +
-                "}" +
-                "}]" +
-                "}";
-        Map<String,String> urlMaps=getJsonList(hotelResult);
-        if(urlMaps==null){
-            resultMap.put("message","解析url 结果为null");
-            resultMap.put("SUCCESS", false);
-            Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                    "endTime=" + DateUtils.getDatetime()
-            );
-            logger.info("====================qunarHotelSync method end because url reslut is null====================");
-            return resultMap;
-        }
-        String info=urlMaps.get("info");
-        String hotels =urlMaps.get("hotels");
-        if(info==null||hotels==null){
-            resultMap.put("message","info is null || hotels is null");
-            resultMap.put("SUCCESS", false);
-            Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                    "info is null || hotels is nul=");
-            logger.info("====================qunarHotelSync method end because info is null || hotels is null====================");
-            return resultMap;
-        }
-        Map<String,String> infoMap=getJsonList(info);
-        if (infoMap==null){
-            resultMap.put("message","infoMap is null");
+        CityListExample cityListExample=new CityListExample();
+        List<CityList> cityLists=cityListService.selectByExample(cityListExample);
+        if (CollectionUtils.isEmpty(cityLists)){
+            resultMap.put("message","cityList is empty");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        CityList city =new CityList();
-        city.setCityUrl(infoMap.get("cityurl"));
-        city.setCityName(infoMap.get("cityName"));
-        if(infoMap.get("brands")!=null){
-            Map<String,String> brandsMap=getJsonList(infoMap.get("brands"));
-            if(brandsMap!=null){
-                for (String key:brandsMap.keySet()){
-                    Map<String,String> brandMap=getJsonList(key);
-                    Brands brands =new Brands();
-                    brands.setName(brandMap.get("name"));
-                    if (brandMap.get("count")!=null)
-                        brands.setCount(Integer.valueOf(brandMap.get("count")));
-                    brands.setGroup(brandMap.get("group"));
-                    brands.setLog(brandMap.get("logo"));
-                }
+        for (CityList city:cityLists){
+            String fromDate=DateUtils.getCertainDate(1);
+            String toDate=DateUtils.getCertainDate(2);
+            String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
+            String hotelResult=HttpUtils.get_data(url,"GET");
+
+            Map<String,String> urlMaps=getJsonList(hotelResult);
+            if(urlMaps==null){
+                logger.info("====================qunarHotelSync city={}  continue because url reslut is null====================",city.getCityName());
+                 continue;
             }
-            String brands=infoMap.get("brands");
+            if (urlMaps.get("error")!=null){
+                Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                        hotelResult
+                );
+                logger.info("====================qunarHotelSync method end because {}====================",hotelResult);
+                continue;
+            }
+            String info=urlMaps.get("info");
+            String hotels =urlMaps.get("hotels");
+            if(info==null||hotels==null){
+                Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                        "info is null || hotels is nul=");
+                logger.info("====================qunarHotelSync method end because info is null || hotels is null====================");
+                continue;
+            }
+            Map<String,String> infoMap=getJsonList(info);
+            if (infoMap==null){
+                logger.info("====================qunarHotelSync method end because infoMap is null====================");
+
+            }
+            if(infoMap.get("brands")!=null){
+                saveBrands(city,infoMap.get("brands"));
+            }
+            saveHotel(hotels);
         }
 
-        List<Object> hotelList=JsonUtils.jsonToList(hotels);
-        for(int i=0;i<hotelList.size();i++){
-            Map<String,String> hotelMap=JsonUtils.jsonToMap(hotelList.get(i).toString());
 
-        }
         resultMap.put("message","备份成功");
         resultMap.put("SUCCESS", true);
-        resultMap.put("Data", infoMap);
-        resultMap.put("Data1", hotelList);
         Cat.logEvent("doPriceDump", "去哪儿酒店信息同步", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
         );
@@ -263,11 +93,113 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 , DateUtils.getDatetime());
         return resultMap;
     }
+    public void saveBrands(CityList city,String brandsStr){
+        if(brandsStr!=null||city==null||city.getCityUrl()==null) {
+            return;
+        }
+        Map<String,String> brandsMap=getJsonList(brandsStr);
+        if(brandsMap!=null){
+            for (String key:brandsMap.keySet()){
+                Map<String,String> brandMap=getJsonList(brandsMap.get(key));
+                if (brandMap==null){
+                    continue;
+                }
+                Brands brands =new Brands();
+                brands.setName(brandMap.get("name"));
+                if (brandMap.get("count")!=null)
+                    brands.setCount(Long.valueOf(brandMap.get("count")));
+                brands.setGroup(brandMap.get("group"));
+                brands.setLog(brandMap.get("logo"));
+                brands.setCityUrl(city.getCityUrl());
+                BrandsExample brandsExample=new BrandsExample();
+                brandsExample.createCriteria().andCityUrlEqualTo(city.getCityUrl());
+                brandsExample.createCriteria().andNameEqualTo(brands.getName());
+                List<Brands> checkBrandsExist=brandsService.selectByExample(brandsExample);
+                if (CollectionUtils.isEmpty(checkBrandsExist)){
+                    brands.setCreateTime(new Date());
+                    brandsService.insert(brands);
+                }else {
+                    Brands existBrands=checkBrandsExist.get(0);
+                    brands.setId(existBrands.getId());
+                    brands.setUpdateTime(new Date());
+                    brandsService.updateByPrimaryKeySelective(brands);
+                }
+            }
+        }
+    }
+    public void saveHotel(String hotelStr){
+        List<Object> hotelList=JsonUtils.jsonToList(hotelStr);
+        for(int i=0;i<hotelList.size();i++){
+            Map<String,String> hotelMap=JsonUtils.jsonToMap(hotelList.get(i).toString());
+            if(hotelMap==null){
+                logger.info("====================hotelMap is null====================");
+                continue;
+            }
+            Hotel hotel=new Hotel();
+            hotel.setSourceId(hotelMap.get("id"));
+            hotel.setCityName(hotelMap.get("cityName"));
+            if (hotelMap.get("distance")!=null)
+                hotel.setDistance(Long.valueOf(hotelMap.get("distance")));
+            if (hotelMap.get("price")!=null)
+                hotel.setPrice(new BigDecimal(hotelMap.get("price")));
+            if (hotelMap.get("attrs")!=null){
+                Map<String,String> attrsMap=JsonUtils.jsonToMap(hotelMap.get("attrs"));
+                if (attrsMap==null){
+                    logger.info("====================attrsMap is null====================");
+                    continue;
+                }
+                hotel.setHasBreakfast(attrsMap.get("hasBreakfast"));
+                if(attrsMap.get("imageCount")!=null)
+                    hotel.setImageCount(Long.valueOf(attrsMap.get("imageCount")));
+                hotel.setHasFitnessRoom(attrsMap.get("HasFitnessRoom"));
+                if(attrsMap.get("imageCount")!=null)
+                    hotel.setCommentScore(new BigDecimal(attrsMap.get("CommentScore")));
+                hotel.setHasBusinessCenter(attrsMap.get("HasBusinessCenter"));
+                hotel.setHasRestaurant(attrsMap.get("HasRestaurant"));
+                if(attrsMap.get("hotelStars")!=null)
+                    hotel.setHotelStars(Long.valueOf(attrsMap.get("hotelStars")));
+                hotel.setBpoint(attrsMap.get("bpoint"));
+                hotel.setGpoint(attrsMap.get("gpoint"));
+                hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
+                hotel.setHotelBrand(attrsMap.get("hotelBrand"));
+                hotel.setTradingArea(attrsMap.get("tradingArea"));
+                hotel.setIsWebFree(attrsMap.get("isWebFree"));
+                hotel.setDangCi(attrsMap.get("dangci"));
+                hotel.setHotelName(attrsMap.get("hotelName"));
+                hotel.setHotelAddress(attrsMap.get("hotelAddress"));
+                hotel.setImageId(attrsMap.get("imageID"));
+                hotel.setHasMeetingOrBanquetSpace(attrsMap.get("HasMeetingORBanquetSpace"));
+                hotel.setHasIndoorPool(attrsMap.get("HasIndoorPool"));
+                hotel.setHasNonSmokingAvailable(attrsMap.get("HasNonSmokingAvailable"));
+                hotel.setOneSentence(attrsMap.get("oneSentence"));
+                hotel.setHotelArea(attrsMap.get("CommentCount"));
+                hotel.setShortName(attrsMap.get("shortName"));
+            }
+            HotelExample hotelExample = new HotelExample();
+            hotelExample.createCriteria().andSourceIdEqualTo(hotel.getSourceId());
+            List<Hotel> checkHotelExist=hotelService.selectByExample(hotelExample);
+            if(CollectionUtils.isEmpty(checkHotelExist)){
+                hotel.setCreateTime(new Date());
+                hotelService.insert(hotel);
+                logger.info("====================insert t_es_hotel values(source_id={},hotelName={})===================="
+                        ,hotel.getSourceId(),hotel.getHotelName());
+            }else {
+                Hotel existHotel=checkHotelExist.get(0);
+                hotel.setId(existHotel.getId());
+                hotel.setUpdateTime(new Date());
+                hotelService.updateByPrimaryKeySelective(hotel);
+                logger.info("====================update t_es_hotel values(source_id={},hotelName={})===================="
+                        ,hotel.getSourceId(),hotel.getHotelName());
+            }
+
+        }
+    }
     public Map<String,String> getJsonList(String value){
         Map<String,String> resultMap=new HashMap<String,String>();
         try {
             resultMap=JsonUtils.jsonToMap(value);
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
         return resultMap;
