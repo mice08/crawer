@@ -34,8 +34,6 @@ public class ReFreshOTAPriceTask implements Worker {
 
     @Autowired
     private IHotelService iHotelService;
-    @Autowired
-    private HotelDetailCrawlService hotelDetailCrawlService;
 
     class HotelInfoReFleshJob implements Runnable {
 
@@ -53,6 +51,7 @@ public class ReFreshOTAPriceTask implements Worker {
         private void done() {
             try {
                 LOGGER.info("开始刷新酒店:{}价格", hotelId);
+                HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
                 hotelDetailCrawlService.crawl(hotelId);
                 LOGGER.info("结束刷新酒店:{}价格", hotelId);
             } catch (Exception e) {
@@ -65,16 +64,17 @@ public class ReFreshOTAPriceTask implements Worker {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                EXECUTOR_100.shutdown();
-                EXECUTOR_1000.shutdown();
-                EXECUTOR_OTHER.shutdown();
+
+                EXECUTOR_100.shutdownNow();
+                EXECUTOR_1000.shutdownNow();
+                EXECUTOR_OTHER.shutdownNow();
                 LOGGER.info("价格刷新线程池关闭。");
             }
         });
     }
 
 
-    @Scheduled(cron = "0 0/30 * * * ? ")
+    @Scheduled(cron = "0/50 * * * * ? ")
     @Override
     public void work() {
         try {
