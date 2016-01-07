@@ -22,12 +22,23 @@ public class HttpUtil {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
 
     public static String doGet(String url) {
-        ProxyServer proxyServer = ProxyServerManager.random();
-        HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-        try {
-            return HttpUtil.doGet(url, httpHost);
-        } catch (IOException e) {
-            LOGGER.error("请求出错：", e);
+        return doGet(url, 1);
+    }
+
+    static String doGet(String url, int count) {
+        if ( count <= Config.FETCH_RETRY_TIMES ) {
+            LOGGER.info("开始第{}次请求。", count);
+            try {
+                ProxyServer proxyServer = ProxyServerManager.random();
+                HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
+                return HttpUtil.doGet(url, httpHost);
+            } catch (IOException e) {
+                LOGGER.error("请求出错：", e);
+
+                return doGet(url, ++count);
+            }
+        } else {
+            LOGGER.info("共进行了{}次请求，请求结束。", Config.FETCH_RETRY_TIMES);
             return null;
         }
     }
@@ -87,7 +98,7 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        doGetNoProxy("http://www.baidu.com");
+        LOGGER.info(doGet("http://touch.qunar.com/h5/hotel/hotelcitylist"));
     }
 
 }

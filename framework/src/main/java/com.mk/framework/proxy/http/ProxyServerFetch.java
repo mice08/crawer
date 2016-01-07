@@ -19,15 +19,34 @@ public class ProxyServerFetch {
         try {
             String ipListJSONStr = HttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
 
-            List proxyList = JSONUtil.fromJson(ipListJSONStr, List.class);
+            GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
-            for (Object o : proxyList) {
-                String proxy = String.valueOf(o);
-                String[] proxyTemp = proxy.split(":");
-
+            for (GBJProxy.Proxy proxy : gbjProxy.data) {
                 ProxyServer proxyServer = new ProxyServer();
-                proxyServer.setIp(proxyTemp[0]);
-                proxyServer.setPort(Integer.valueOf(proxyTemp[1]));
+                proxyServer.setIp(proxy.ip);
+                proxyServer.setPort(proxy.port);
+
+                proxyServerList.add(proxyServer);
+            }
+        } catch (IOException e) {
+            LOGGER.error("获取眯客的代理IP列表出错：", e);
+        }
+
+        return proxyServerList;
+    }
+
+    public static List<ProxyServer> byBill() {
+        List<ProxyServer> proxyServerList = new LinkedList<>();
+
+        try {
+            String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_LIST_URL);
+
+            GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
+
+            for (GBJProxy.Proxy proxy : gbjProxy.data) {
+                ProxyServer proxyServer = new ProxyServer();
+                proxyServer.setIp(proxy.ip);
+                proxyServer.setPort(proxy.port);
 
                 proxyServerList.add(proxyServer);
             }
@@ -39,7 +58,8 @@ public class ProxyServerFetch {
     }
 
     public static void main(String[] args) throws IOException {
-        List<ProxyServer> proxyServerList = byMike();
+//        List<ProxyServer> proxyServerList = byMike();
+        List<ProxyServer> proxyServerList = byBill();
         for (ProxyServer proxyServer : proxyServerList) {
             LOGGER.info("代理IP：{}", JSONUtil.toJson(proxyServer));
         }

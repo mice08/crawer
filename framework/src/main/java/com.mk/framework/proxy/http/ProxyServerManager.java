@@ -4,11 +4,13 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import org.apache.http.HttpHost;
+import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -16,14 +18,32 @@ import java.util.Set;
  */
 class ProxyServerManager {
 
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
+
+    private static final Random RANDOM = new Random();
+
     private static MkJedisConnectionFactory connectionFactory = null;
 
     static ProxyServer random() {
-        Jedis jedis = getJedis();
+        String jsonStr = null;
 
-        String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
+        try {
+            Jedis jedis = getJedis();
 
-        return JSONUtil.fromJson(jsonStr, ProxyServer.class);
+            jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
+
+            return JSONUtil.fromJson(jsonStr, ProxyServer.class);
+        } catch (Exception e) {
+            LOGGER.error("获取代理IP失败：", e);
+
+            List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
+
+            ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
+
+            LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
+
+            return proxyServer;
+        }
     }
 
     static boolean add(ProxyServer proxyServer) {
