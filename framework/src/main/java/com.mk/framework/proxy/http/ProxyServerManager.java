@@ -3,7 +3,6 @@ package com.mk.framework.proxy.http;
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
-import org.apache.http.HttpHost;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -25,10 +24,11 @@ class ProxyServerManager {
     private static MkJedisConnectionFactory connectionFactory = null;
 
     static ProxyServer random() {
+        Jedis jedis = null;
         String jsonStr = null;
 
         try {
-            Jedis jedis = getJedis();
+            jedis = getJedis();
 
             jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
 
@@ -43,33 +43,70 @@ class ProxyServerManager {
             LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
 
             return proxyServer;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
     static Long add(ProxyServer proxyServer) {
-        Jedis jedis = getJedis();
+        Jedis jedis = null;
+        Long count = null;
 
-        return jedis.sadd(
-                RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                JSONUtil.toJson(proxyServer));
+        try {
+            jedis = getJedis();
+            count = jedis.sadd(
+                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer));
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+
+        return count;
     }
 
     static void remove(ProxyServer proxyServer) {
-        Jedis jedis = getJedis();
-        jedis.srem(
-                RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                JSONUtil.toJson(proxyServer));
+        Jedis jedis = null;
+
+        try {
+            jedis = getJedis();
+            jedis.srem(
+                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer));
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
     }
 
     static List<ProxyServer> listProxyServer() {
-        Jedis jedis = getJedis();
-        Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
-
         List<ProxyServer> proxyServerList = new LinkedList<>();
 
-        for (String s : jsonStrList) {
-            ProxyServer proxyServer = JSONUtil.fromJson(s, ProxyServer.class);
-            proxyServerList.add(proxyServer);
+        Jedis jedis = null;
+
+        try {
+            jedis = getJedis();
+            Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
+
+
+            for (String s : jsonStrList) {
+                ProxyServer proxyServer = JSONUtil.fromJson(s, ProxyServer.class);
+                proxyServerList.add(proxyServer);
+            }
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
         }
 
         return proxyServerList;
@@ -89,9 +126,21 @@ class ProxyServerManager {
     }
 
     static Long count() {
-        Jedis jedis = getJedis();
+        Jedis jedis = null;
 
-        return jedis.scard(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
+        try {
+            jedis = getJedis();
+
+            return jedis.scard(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+
+        return null;
     }
 
     private static Jedis getJedis() {
