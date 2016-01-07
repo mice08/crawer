@@ -75,7 +75,7 @@
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.RoomType">
 		insert into t_ex_roomtype (
-		hotel_id, hotel_source_id, count, key, bed_type,
+		hotel_id, hotel_source_id, count, bed_type,
 		room_name, room_type,
 		area,
 		network_price, room_category, rt_area,
@@ -91,7 +91,6 @@
 		#{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR},
 		#{count,jdbcType=BIGINT},
-		#{key,jdbcType=VARCHAR},
 		#{bedType,jdbcType=VARCHAR},
 		#{roomName,jdbcType=VARCHAR},
 		#{roomType,jdbcType=VARCHAR},
