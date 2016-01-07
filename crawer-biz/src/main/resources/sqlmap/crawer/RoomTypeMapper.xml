@@ -38,6 +38,9 @@
 		<result column="outer_show" property="outerShow" jdbcType="VARCHAR" />
 		<result column="district_name" property="districtName"
 			jdbcType="VARCHAR" />
+		<result column="has_tuangou" property="hasTuangou" jdbcType="VARCHAR" />
+		<result column="roominfo_desc" property="roominfoDesc"
+			jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 	</resultMap>

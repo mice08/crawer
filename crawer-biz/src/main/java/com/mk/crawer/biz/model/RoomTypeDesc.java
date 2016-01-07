@@ -3,35 +3,34 @@ package com.mk.crawer.biz.model;
 import java.util.Date;
 
 public class RoomTypeDesc {
-    private Long id;
+	private Long id;
 
-    private String content;
+	private Long hotelId;
+	private String hotelSourceId;
 
-    private String title;
+	private Long roomTypeId;
 
-    private Long roomTypeId;
+	private String roomTypeKey;
 
-    private Long hotelId;
-    
-    private String roomTypeKey;
-    
-    private String hotelSourceId;
+	private String content;
 
-    private String type;
+	private String title;
 
-    private Date createTime;
+	private String type;
 
-    private Date updateTime;
+	private Date createTime;
 
-    public Long getId() {
-        return id;
-    }
+	private Date updateTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getRoomTypeKey() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getRoomTypeKey() {
 		return roomTypeKey;
 	}
 
@@ -48,58 +47,58 @@ public class RoomTypeDesc {
 	}
 
 	public String getContent() {
-        return content;
-    }
+		return content;
+	}
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
+	public void setContent(String content) {
+		this.content = content == null ? null : content.trim();
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
-    }
+	public Long getRoomTypeId() {
+		return roomTypeId;
+	}
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
-    }
+	public void setRoomTypeId(Long roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	public Long getHotelId() {
+		return hotelId;
+	}
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 }

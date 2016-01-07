@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.model.HotelDetailParseException;
 import com.mk.crawer.biz.model.HotelFacilities;
@@ -33,6 +34,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private RoomTypeMapper roomtypeMapper;
+
+	@Autowired
+	private RoomTypeDescMapper roomtypeDescMapper;
 
 	public void crawl(List<String> hotelIds, String city, String cityUrl) throws Exception {
 		Date day = new Date();
@@ -129,14 +133,33 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return hotelComb;
 	}
 
+	/**
+	 * with no transaction intentionally,
+	 * <p>
+	 * data may have integrity issue
+	 * 
+	 * @param roomtypeCombs
+	 * @throws Exception
+	 */
 	private void persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
+			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
 
 			try {
 				roomtypeMapper.insert(roomtype);
 			} catch (Exception ex) {
 				logger.error("failed to roomtypeMapper.insert", ex);
+			}
+
+			if (roomtypeDescs != null) {
+				for (RoomTypeDesc roomtypeDesc : roomtypeDescs) {
+					try {
+						roomtypeDescMapper.insert(roomtypeDesc);
+					} catch (Exception ex) {
+						logger.error("failed to roomtypeDescMapper.insert", ex);
+					}
+				}
 			}
 		}
 	}
@@ -287,6 +310,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		String roomtypeKey = typesafeGetString(roomComb.get("key"));
 
 		roomtype.setKey(typesafeGetString(roomComb.get("key")));
+		roomtype.setHotelSourceId(typesafeGetString(roomComb.get("key")));
 		roomtype.setCount(typesafeGetDouble(roomComb.get("count")).longValue());
 		roomtype.setRoomName(typesafeGetString(roomComb.get("roomName")));
 		roomtype.setRoomType(typesafeGetDouble(roomComb.get("roomType")).toString());

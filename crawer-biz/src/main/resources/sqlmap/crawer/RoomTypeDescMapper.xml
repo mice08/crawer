@@ -3,21 +3,22 @@
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper">
 	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeDesc">
 		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="content" property="content" jdbcType="VARCHAR" />
-		<result column="title" property="title" jdbcType="VARCHAR" />
-		<result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
-		<result column="room_type_key" property="roomTypeKey" jdbcType="VARCHAR" />
 		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
 		<result column="hotel_source_id" property="hotelSourceId"
 			jdbcType="VARCHAR" />
+		<result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
+		<result column="room_type_key" property="roomTypeKey" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, content, title, room_type_id, room_type_key, hotel_id,
-		hotel_source_id, type, create_time, update_time
+		id, hotel_id,
+		hotel_source_id, room_type_id,
+		room_type_key,content, title, type, create_time, update_time
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -36,20 +37,18 @@
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeDesc">
 		insert into t_ex_roomtype_desc
-		(id, content, title,
-		room_type_id, room_type_key, hotel_id,
-		hotel_source_id, type,
-		create_time, update_time)
+		(hotel_id,
+		hotel_source_id,
+		room_type_id, room_type_key,
+		content, title)
 		values
-		(#{id,jdbcType=BIGINT},
-		#{content,jdbcType=VARCHAR},
-		#{title,jdbcType=VARCHAR},
-		#{roomTypeId,jdbcType=BIGINT},
-		#{roomTypeKey,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT},
+		(
+		#{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR},
-		#{type,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{roomTypeId,jdbcType=BIGINT},
+		#{roomTypeKey,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeDesc">
 		insert into t_ex_roomtype_desc
