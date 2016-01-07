@@ -7,7 +7,7 @@
 		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
 		<result column="hotel_source_id" property="hotelSourceId"
 			jdbcType="VARCHAR" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="surround_name" property="surroundName" jdbcType="VARCHAR" />
 		<result column="gpoint" property="gpoint" jdbcType="VARCHAR" />
 		<result column="distance" property="distance" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -15,7 +15,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, type, hotel_id, name, gpoint, distance, create_time,
+		id, type, hotel_id, hotel_source_id, name, gpoint, distance, create_time,
 		update_time
 	</sql>
 
@@ -33,16 +33,13 @@
 	</delete>
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.HotelSurround">
 		insert into
-		t_ex_hotel_surround (id, type, hotel_id, hotel_source_id,
-		name, gpoint, distance,
-		create_time, update_time)
+		t_ex_hotel_surround (type, hotel_id, hotel_source_id,
+		surround_name, gpoint, distance)
 		values
-		(#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR},
+		(#{type,jdbcType=VARCHAR},
 		#{hotelId,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}
-		#{name,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR},
-		#{distance,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{surroundName,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR},
+		#{distance,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.HotelSurround">
 		insert into t_ex_hotel_surround

@@ -3,33 +3,49 @@ package com.mk.crawer.biz.model;
 import java.util.Date;
 
 public class HotelSurround {
-    private Long id;
+	private Long id;
 
-    private String type;
+	private String type;
 
-    private Long hotelId;
+	private Long hotelId;
 
-    private String hotelSourceId;
-    
-    private String name;
+	private String hotelSourceId;
 
-    private String gpoint;
+	private String surroundName;
 
-    private String distance;
+	private String gpoint;
 
-    private Date createTime;
+	private String distance;
 
-    private Date updateTime;
+	private Date createTime;
 
-    public Long getId() {
-        return id;
-    }
+	private Date updateTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getHotelSourceId() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Long getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public String getHotelSourceId() {
 		return hotelSourceId;
 	}
 
@@ -37,59 +53,44 @@ public class HotelSurround {
 		this.hotelSourceId = hotelSourceId;
 	}
 
-	public String getType() {
-        return type;
-    }
+	public String getSurroundName() {
+		return surroundName;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setSurroundName(String surroundName) {
+		this.surroundName = surroundName;
+	}
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	public String getGpoint() {
+		return gpoint;
+	}
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public void setGpoint(String gpoint) {
+		this.gpoint = gpoint;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getDistance() {
+		return distance;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public void setDistance(String distance) {
+		this.distance = distance;
+	}
 
-    public String getGpoint() {
-        return gpoint;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setGpoint(String gpoint) {
-        this.gpoint = gpoint == null ? null : gpoint.trim();
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public String getDistance() {
-        return distance;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public void setDistance(String distance) {
-        this.distance = distance == null ? null : distance.trim();
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

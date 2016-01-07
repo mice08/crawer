@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
+import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.model.HotelDetailParseException;
@@ -31,6 +33,12 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
 
 	private final Gson gson = new Gson();
+
+	@Autowired
+	private HotelSurroundMapper hotelSurroundMapper;
+	
+	@Autowired
+	private HotelFacilitiesMapper hotelFacilitiesMapper;
 
 	@Autowired
 	private RoomTypeMapper roomtypeMapper;
@@ -69,7 +77,21 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
-
+		
+		try {
+			persistHotelFacilities(hotelComb.getHotelfacilities());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+		
+		try {
+			persistHotelSurround(hotelComb.getHotelSurrounds());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -133,6 +155,43 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return hotelComb;
 	}
 
+	/**
+	 * with no transaction intentionally,
+	 * <p>
+	 * data may have integrity issue
+	 * 
+	 * @param hotelFacilities
+	 * @throws Exception
+	 */
+	private void persistHotelFacilities(List<HotelFacilities> hotelFacilities) throws Exception {
+		for (HotelFacilities hotelFacility : hotelFacilities) {
+			try {
+				hotelFacilitiesMapper.insert(hotelFacility);
+			} catch (Exception ex) {
+				logger.error("failed to hotelFacilitiesMapper.insert", ex);
+			}
+		}
+	}
+
+	/**
+	 * with no transaction intentionally,
+	 * <p>
+	 * data may have integrity issue
+	 * 
+	 * @param roomtypeCombs
+	 * @throws Exceptio
+	 */
+	private void persistHotelSurround(List<HotelSurround> hotelSurrounds) throws Exception {
+		for (HotelSurround hotelSurround : hotelSurrounds) {
+			try {
+				hotelSurroundMapper.insert(hotelSurround);
+			} catch (Exception ex) {
+				logger.error("failed to hotelSurroundMapper.insert", ex);
+			}
+		}
+	}
+
+	
 	/**
 	 * with no transaction intentionally,
 	 * <p>
@@ -221,7 +280,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
-				hotelSurround.setName(typesafeGetString(traffic.get("name")));
+				hotelSurround.setSurroundName(typesafeGetString(traffic.get("name")));
 			}
 		}
 

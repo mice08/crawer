@@ -14,6 +14,7 @@
 			jdbcType="BIGINT" />
 		<result column="oversea_sort" property="overseaSort" jdbcType="BIGINT" />
 		<result column="color" property="color" jdbcType="BIGINT" />
+		<result column="icon_big_url" property="iconBigUrl" jdbcType="VARCHAR" />
 		<result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
 		<result column="display" property="display" jdbcType="VARCHAR" />
 		<result column="item" property="item" jdbcType="VARCHAR" />
@@ -24,7 +25,8 @@
 		id, hotel_id, hotel_source_id, short_name, type, field,
 		low_star_sort,
 		high_star_sort,
-		oversea_sort, color, icon_url, display,
+		oversea_sort, color, icon_big_url,
+		icon_url, display,
 		item, create_time, update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -41,21 +43,24 @@
 	</delete>
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.HotelFacilities">
 		insert into
-		t_ex_hotel_facilities (id, hotel_id,hotel_source_id,
+		t_ex_hotel_facilities (hotel_id,hotel_source_id,
 		short_name, type,
 		field,
 		low_star_sort, high_star_sort, oversea_sort,
-		color, icon_url,
+		color, icon_big_url,
+		icon_url,
 		display,
 		item, create_time, update_time
 		)
-		values (#{id,jdbcType=BIGINT},
+		values
+		(
 		#{hotelId,jdbcType=BIGINT},#{hotel_source_id,jdbcType=VARCHAR},
 		#{shortName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
 		#{field,jdbcType=VARCHAR},
 		#{lowStarSort,jdbcType=BIGINT},
 		#{highStarSort,jdbcType=BIGINT}, #{overseaSort,jdbcType=BIGINT},
-		#{color,jdbcType=BIGINT}, #{iconUrl,jdbcType=VARCHAR},
+		#{color,jdbcType=BIGINT},
+		#{iconBigUrl,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR},
 		#{display,jdbcType=VARCHAR},
 		#{item,jdbcType=VARCHAR},
 		#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -72,7 +77,7 @@
 			</if>
 			<if test="hotelSourceId != null">
 				hotel_source_id,
-			</if>			
+			</if>
 			<if test="shortName != null">
 				short_name,
 			</if>
@@ -119,7 +124,7 @@
 			</if>
 			<if test="hotelSourceId != null">
 				#{hotelSourceId,jdbcType=VARCHAR},
-			</if>			
+			</if>
 			<if test="shortName != null">
 				#{shortName,jdbcType=VARCHAR},
 			</if>
