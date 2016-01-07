@@ -18,22 +18,21 @@ public class HttpUtil {
     }
 
     static String doGet(String url, int count) {
-//        if ( count <= Config.FETCH_RETRY_TIMES ) {
-//            LOGGER.info("开始第{}次请求。", count);
-//            try {
-//                ProxyServer proxyServer = ProxyServerManager.random();
-//                LOGGER.info("proxy:", proxyServer.getIp());
-//                return HttpUtil.doGet(url, proxyServer);
-//            } catch (IOException e) {
-//                LOGGER.error("请求出错：", e);
-//
-//                return doGet(url, ++count);
-//            }
-//        } else {
-//            LOGGER.info("共进行了{}次请求，请求结束。", Config.FETCH_RETRY_TIMES);
-//            return null;
-//        }
-        return doGetNoProxy(url);
+        if ( count <= Config.FETCH_RETRY_TIMES ) {
+            LOGGER.info("开始第{}次请求。", count);
+            try {
+                ProxyServer proxyServer = ProxyServerManager.random();
+                LOGGER.info("proxy:", proxyServer.getIp());
+                return HttpUtil.doGet(url, proxyServer);
+            } catch (IOException e) {
+                LOGGER.error("请求出错：", e);
+
+                return doGet(url, ++count);
+            }
+        } else {
+            LOGGER.info("共进行了{}次请求，请求结束。", Config.FETCH_RETRY_TIMES);
+            return null;
+        }
     }
 
     public static String doGetNoProxy(String url)  {
