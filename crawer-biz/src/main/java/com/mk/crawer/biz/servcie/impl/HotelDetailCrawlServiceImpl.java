@@ -276,6 +276,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			if (roomtypePrices != null) {
 				for (RoomTypePrice roomtypePrice : roomtypePrices) {
 					try {
+						if (isRoomtypeUpdateRequired) {
+							roomtypePrice.setUpdateTime(new Date());
+						}
 						roomtypePriceMapper.insert(roomtypePrice);
 					} catch (Exception ex) {
 						logger.error("failed to roomtypePriceMapper.insert", ex);

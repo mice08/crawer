@@ -55,7 +55,7 @@
 		show_price,
 		ota_show_price, wrapper_name,
 		wrapper_id, all_room_count,
-		available_roomcount
+		available_roomcount, update_time
 		)
 		values
 		(#{roomTypeId,jdbcType=BIGINT},
@@ -69,7 +69,8 @@
 		#{wrapperName,jdbcType=VARCHAR},
 		#{wrapperId,jdbcType=VARCHAR},
 		#{allRoomCount,jdbcType=INTEGER},
-		#{availableRoomcount,jdbcType=INTEGER}
+		#{availableRoomcount,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP}
 		)
 	</insert>
 
