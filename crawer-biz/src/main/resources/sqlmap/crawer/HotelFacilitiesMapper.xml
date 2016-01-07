@@ -41,7 +41,7 @@
 		t_ex_hotel_facilities
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.mk.crawer.biz.model.HotelFacilities">
+	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelFacilities">
 		insert into
 		t_ex_hotel_facilities (hotel_id,hotel_source_id,
 		short_name, type,
@@ -65,7 +65,7 @@
 		#{item,jdbcType=VARCHAR}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.HotelFacilities">
+	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelFacilities">
 		insert into t_ex_hotel_facilities
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">

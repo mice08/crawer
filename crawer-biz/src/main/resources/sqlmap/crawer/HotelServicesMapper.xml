@@ -50,7 +50,7 @@
     id, hotel_id, short_name, type, field, low_star_sort, high_star_sort, oversea_sort, 
     color, icon_url, display, item, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelServicesExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelServices" >
     select
     <if test="distinct" >
       distinct
@@ -181,7 +181,7 @@
     </trim>
   </insert>
 
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelServicesExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelServices" resultType="java.lang.Integer" >
     select count(*) from t_ex_hotel_services
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

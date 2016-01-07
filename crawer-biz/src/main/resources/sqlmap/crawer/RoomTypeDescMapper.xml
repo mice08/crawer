@@ -43,7 +43,7 @@
   <sql id="Base_Column_List" >
     id, content, title, room_type_id, hotel_id, type, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeDescExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeDesc" >
     select
     <if test="distinct" >
       distinct
@@ -134,7 +134,7 @@
     </trim>
   </insert>
 
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeDescExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeDesc" resultType="java.lang.Integer" >
     select count(*) from t_ex_roomtype_desc
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

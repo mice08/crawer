@@ -1,13 +1,9 @@
 package com.mk.crawer.biz.servcie.impl;
 
 import com.mk.crawer.biz.mapper.crawer.BrandsMapper;
-import com.mk.crawer.biz.mapper.crawer.CityListMapper;
 import com.mk.crawer.biz.model.crawer.Brands;
 import com.mk.crawer.biz.model.crawer.BrandsExample;
-import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.biz.model.crawer.CityListExample;
 import com.mk.crawer.biz.servcie.BrandsService;
-import com.mk.crawer.biz.servcie.ICityListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +12,7 @@ import java.util.List;
 /**
  * Created by kangxiaolong on 16/1/7.
  */
-@Service
+@Service("brandsService")
 public class BrandsServiceImpl implements BrandsService {
     @Autowired
     private BrandsMapper brandsMapper;

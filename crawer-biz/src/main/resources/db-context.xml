@@ -102,11 +102,7 @@
 		<property name="sqlSessionFactoryBeanName" value="otsSqlSessionFactory"></property>
 	</bean>
 
-	<bean name="blackListScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist"/>
 
-		<property name="sqlSessionFactoryBeanName" value="blackListSqlSessionFactory"></property>
-	</bean>
 
 	<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer"/>
