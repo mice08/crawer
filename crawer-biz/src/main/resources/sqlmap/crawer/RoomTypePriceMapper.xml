@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.RoomTypePriceMapper" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper" >
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypePrice" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
@@ -52,21 +52,6 @@
     wrapper_name, wrapper_id, all_room_count, available_roomcount, crawer_time, create_time, 
     update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypePriceExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    from t_ex_roomtype_price
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -188,12 +173,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypePriceExample" resultType="java.lang.Integer" >
-    select count(*) from t_ex_roomtype_price
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypePrice" >
     update t_ex_roomtype_price
     <set >

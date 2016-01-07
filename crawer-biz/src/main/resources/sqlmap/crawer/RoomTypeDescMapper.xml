@@ -1,178 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.RoomTypeDescMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeDesc" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
-    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    id, content, title, room_type_id, hotel_id, type, create_time, update_time
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypeDescExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    from t_ex_roomtype_desc
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_ex_roomtype_desc
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_ex_roomtype_desc
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeDesc" >
-    insert into t_ex_roomtype_desc (id, content, title, 
-      room_type_id, hotel_id, type, 
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{roomTypeId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeDesc" >
-    insert into t_ex_roomtype_desc
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-      <if test="title != null" >
-        title,
-      </if>
-      <if test="roomTypeId != null" >
-        room_type_id,
-      </if>
-      <if test="hotelId != null" >
-        hotel_id,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="roomTypeId != null" >
-        #{roomTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="hotelId != null" >
-        #{hotelId,jdbcType=BIGINT},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeDescExample" resultType="java.lang.Integer" >
-    select count(*) from t_ex_roomtype_desc
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypeDesc" >
-    update t_ex_roomtype_desc
-    <set >
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="roomTypeId != null" >
-        room_type_id = #{roomTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="hotelId != null" >
-        hotel_id = #{hotelId,jdbcType=BIGINT},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypeDesc" >
-    update t_ex_roomtype_desc
-    set content = #{content,jdbcType=VARCHAR},
-      title = #{title,jdbcType=VARCHAR},
-      room_type_id = #{roomTypeId,jdbcType=BIGINT},
-      hotel_id = #{hotelId,jdbcType=BIGINT},
-      type = #{type,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper">
+	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeDesc">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
+		<result column="room_type_key" property="roomTypeKey" jdbcType="VARCHAR" />
+		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+		<result column="hotel_source_id" property="hotelSourceId"
+			jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, content, title, room_type_id, room_type_key, hotel_id,
+		hotel_source_id, type, create_time, update_time
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from t_ex_roomtype_desc
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		t_ex_roomtype_desc
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeDesc">
+		insert into t_ex_roomtype_desc
+		(id, content, title,
+		room_type_id, room_type_key, hotel_id,
+		hotel_source_id, type,
+		create_time, update_time)
+		values
+		(#{id,jdbcType=BIGINT},
+		#{content,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{roomTypeId,jdbcType=BIGINT},
+		#{roomTypeKey,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT},
+		#{hotelSourceId,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeDesc">
+		insert into t_ex_roomtype_desc
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="roomTypeId != null">
+				room_type_id,
+			</if>
+			<if test="romoTypeKey != null">
+				room_type_key,
+			</if>
+			<if test="hotelId != null">
+				hotel_id,
+			</if>
+			<if test="hotelSourceId != null">
+				hotel_source_id,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="roomTypeId != null">
+				#{roomTypeId,jdbcType=BIGINT},
+			</if>
+			<if test="roomTypeKey != null">
+				#{roomTypeKey,jdbcType=VARCHAR},
+			</if>
+			<if test="hotelId != null">
+				#{hotelId,jdbcType=BIGINT},
+			</if>
+			<if test="hotelSourceId != null">
+				#{hotelSourceId,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
 </mapper>

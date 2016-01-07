@@ -1,11 +1,8 @@
 package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.HotelFacilities;
-import com.mk.crawer.biz.model.RoomTypeFacilitiesExample;
-import java.util.List;
 
 public interface HotelFacilitiesMapper {
-    int countByExample(RoomTypeFacilitiesExample example);
 
     int deleteByPrimaryKey(Long id);
 
@@ -13,7 +10,6 @@ public interface HotelFacilitiesMapper {
 
     int insertSelective(HotelFacilities record);
 
-    List<HotelFacilities> selectByExample(RoomTypeFacilitiesExample example);
 
     HotelFacilities selectByPrimaryKey(Long id);
 

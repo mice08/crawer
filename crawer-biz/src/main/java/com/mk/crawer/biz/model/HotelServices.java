@@ -7,6 +7,8 @@ public class HotelServices {
 
     private Long hotelId;
 
+    private String hotelSourceId;
+    
     private String shortName;
 
     private String type;
@@ -55,7 +57,15 @@ public class HotelServices {
         this.shortName = shortName == null ? null : shortName.trim();
     }
 
-    public String getType() {
+    public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
+
+	public String getType() {
         return type;
     }
 
