@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,17 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private RoomTypeDescMapper roomtypeDescMapper;
 
+	@Override
+	public void crawl(String hotelId, String city, String cityUrl) throws Exception {
+		List<String> hotelIds = new ArrayList<String>();
+		if (!StringUtils.isBlank(hotelId)) {
+			hotelIds.add(hotelId);
+		}
+
+		this.crawl(hotelIds, city, cityUrl);
+	}
+
+	@Override
 	public void crawl(List<String> hotelIds, String city, String cityUrl) throws Exception {
 		Date day = new Date();
 		String strCurDay = DateUtils.getStringFromDate(day, DateUtils.FORMATSHORTDATETIME);
@@ -308,6 +320,45 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
+		if (dataNode.get("park") != null && List.class.isAssignableFrom(dataNode.get("park").getClass())) {
+			List<Map<String, Object>> parks = (List<Map<String, Object>>) dataNode.get("park");
+
+			for (Map<String, Object> park : parks) {
+				HotelSurround hotelSurround = new HotelSurround();
+				hotelSurrounds.add(hotelSurround);
+
+				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
+				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
+				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
+			}
+		}
+
+		if (dataNode.get("restaurant") != null && List.class.isAssignableFrom(dataNode.get("restaurant").getClass())) {
+			List<Map<String, Object>> restaurants = (List<Map<String, Object>>) dataNode.get("restaurant");
+
+			for (Map<String, Object> restaurant : restaurants) {
+				HotelSurround hotelSurround = new HotelSurround();
+				hotelSurrounds.add(hotelSurround);
+
+				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
+				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
+				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
+			}
+		}
+
+		if (dataNode.get("ent") != null && List.class.isAssignableFrom(dataNode.get("ent").getClass())) {
+			List<Map<String, Object>> ents = (List<Map<String, Object>>) dataNode.get("ent");
+
+			for (Map<String, Object> ent : ents) {
+				HotelSurround hotelSurround = new HotelSurround();
+				hotelSurrounds.add(hotelSurround);
+
+				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
+				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
+				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
+			}
+		}
+
 		return hotelSurrounds;
 	}
 
@@ -374,6 +425,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			try {
 				return BigDecimal.valueOf(attrVal);
+			} catch (Exception ex) {
+				return new BigDecimal(0);
+			}
+		} else if (attribute != null && String.class.isAssignableFrom(attribute.getClass())) {
+			String attrVal = (String) attribute;
+
+			try {
+				return BigDecimal.valueOf(Double.parseDouble(attrVal));
 			} catch (Exception ex) {
 				return new BigDecimal(0);
 			}
@@ -471,6 +530,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				roomtypePrices.add(roomtypePrice);
 
 				roomtypePrice.setPrice(typesafeGetBigDecimal(vendor.get("price")));
+				roomtypePrice.setOprice(typesafeGetBigDecimal(vendor.get("oprice")));
 				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
 				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(vendor.get("originPrice")));
 				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPriceInt")));
