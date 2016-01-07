@@ -377,6 +377,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				return new BigDecimal(0);
 			}
+		} else if (attribute != null && String.class.isAssignableFrom(attribute.getClass())) {
+			String attrVal = (String) attribute;
+
+			try {
+				return BigDecimal.valueOf(Double.parseDouble(attrVal));
+			} catch (Exception ex) {
+				return new BigDecimal(0);
+			}
 		}
 
 		return new BigDecimal(0);
@@ -471,6 +479,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				roomtypePrices.add(roomtypePrice);
 
 				roomtypePrice.setPrice(typesafeGetBigDecimal(vendor.get("price")));
+				roomtypePrice.setOprice(typesafeGetBigDecimal(vendor.get("oprice")));
 				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
 				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(vendor.get("originPrice")));
 				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPriceInt")));

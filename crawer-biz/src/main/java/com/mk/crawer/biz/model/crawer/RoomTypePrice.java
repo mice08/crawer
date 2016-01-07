@@ -15,6 +15,8 @@ public class RoomTypePrice {
 	private String hotelSourceId;
 
 	private BigDecimal price;
+	
+	private BigDecimal oprice;
 
 	private BigDecimal realPrice;
 
@@ -74,6 +76,14 @@ public class RoomTypePrice {
 
 	public void setHotelSourceId(String hotelSourceId) {
 		this.hotelSourceId = hotelSourceId;
+	}
+
+	public BigDecimal getOprice() {
+		return oprice;
+	}
+
+	public void setOprice(BigDecimal oprice) {
+		this.oprice = oprice;
 	}
 
 	public BigDecimal getPrice() {
