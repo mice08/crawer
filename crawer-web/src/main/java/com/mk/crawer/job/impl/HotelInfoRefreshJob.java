@@ -4,6 +4,7 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 Jedis jedis = null;
 
                 try {
-                    if ( GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.get() <= JOB_LIMIT ) {
+                    if ( GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.incrementAndGet() <= JOB_LIMIT ) {
 
                         jedis = getJedis();
 
@@ -52,15 +53,9 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         if (!StringUtils.isEmpty(jsonStr)) {
                             HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
-
-                            GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.incrementAndGet();
                         }
                     } else {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            LOGGER.error("^_^！睡觉失败...", e);
-                        }
+                        ThreadUtil.sleep(1000);
                     }
                 } catch (Exception e) {
                     LOGGER.error("刷新酒店价格任务执行出错：", e);
