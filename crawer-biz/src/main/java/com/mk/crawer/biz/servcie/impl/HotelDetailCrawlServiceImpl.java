@@ -27,7 +27,7 @@ import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
 import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 
 @Service
 public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
@@ -80,7 +80,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		String jsonString = "";
 		try {
-			jsonString = HttpUtils.doPost(invokeUrl, new HashMap<String, String>());
+			jsonString = HttpUtil.doGet(invokeUrl);
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to post with url %s", invokeUrl);
 			logger.error(errorMsg, ex);
@@ -592,7 +592,6 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		return roomtypeComb;
 	}
-
 
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;

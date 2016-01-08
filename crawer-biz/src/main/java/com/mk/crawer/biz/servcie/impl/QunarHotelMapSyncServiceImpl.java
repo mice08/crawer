@@ -7,6 +7,7 @@ import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -145,7 +146,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             return resultMap;
         }
         saveQunarHotel(hotels,city.getCityName());
-        int count=Integer.valueOf(infoMap.get("count"));
+        int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
             for (int i=1;i<=count/len;i++){
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
@@ -186,7 +187,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             logger.info("dataMaps == null return");
             return null;
         }
-        String hotels =urlMaps.get("hotels");
+        String hotels =dataMaps.get("hotels");
         if(hotels==null){
             logger.info("hotes == null return");
             return null;
@@ -305,7 +306,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 QunarHotel existHotel=checkHotelExist.get(0);
                 qunarHotel.setId(existHotel.getId());
                 qunarHotel.setUpdateTime(new Date());
-                qunarHotelService.updateByPrimaryKeySelective(qunarHotel);
+                //qunarHotelService.updateByPrimaryKeySelective(qunarHotel);
                 logger.info("====================update t_qunar_hotel values(source_id={},hotelName={})===================="
                         ,qunarHotel.getSourceId(),qunarHotel.getHotelName());
             }
@@ -351,7 +352,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 +"&len="+len
                 +"&tpl="+tpl;
         String url=Constant.qunar_map_hostlist+"?"+pramas;
-        return HttpUtil.doGet(url);
+        return HttpUtils.get_data(url,"GET");
     }
     public Map<String,String> getJsonList(String value){
         Map<String,String> resultMap=new HashMap<String,String>();
