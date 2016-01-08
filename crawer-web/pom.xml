@@ -252,6 +252,21 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.3.5</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.easyproject</groupId>
+			<artifactId>easyocr</artifactId>
+			<version>3.0.4-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.easyproject</groupId>
+			<artifactId>easyocr</artifactId>
+			<version>3.0.4-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.easyproject</groupId>
+			<artifactId>easyocr</artifactId>
+			<version>3.0.4-RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>
