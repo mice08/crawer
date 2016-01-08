@@ -23,7 +23,6 @@ public class ProxyServerAddJob implements Worker {
             LOGGER.error("定时任务执行结束");
         } catch (Exception e) {
             LOGGER.error("定时任务执行出错：", e);
-            e.printStackTrace();
         }
     }
 
