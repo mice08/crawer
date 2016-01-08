@@ -86,13 +86,6 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     public Map<String,Object> doSync(CityList city){
 
         Map<String,Object> resultMap=new HashMap<String,Object>();
-        CityListExample cityListExample=new CityListExample();
-        List<CityList> cityLists=cityListService.selectByExample(cityListExample);
-        if (city==null){
-            resultMap.put("message","city is empty");
-            resultMap.put("SUCCESS", false);
-            return resultMap;
-        }
         String fromDate=DateUtils.getCertainDate(1);
         String toDate=DateUtils.getCertainDate(2);
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
@@ -101,7 +94,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         Map<String,String> urlMaps=getJsonList(hotelResult);
         if(urlMaps==null){
             logger.info("====================qunarHotelSync city={}  continue because url reslut is null====================",city.getCityName());
-            resultMap.put("message","urlMaps is noll");
+            resultMap.put("message","urlMaps is null");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
