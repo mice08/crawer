@@ -58,8 +58,6 @@ public class HttpUtil {
             resp = doGet(url, null);
         } catch (IOException e) {
             LOGGER.error("请求出错：", e);
-
-            e.printStackTrace();
         }
         return resp;
     }

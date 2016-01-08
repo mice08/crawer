@@ -32,7 +32,7 @@ public class ProxyServerFetch {
                 }
             }
         };
-        thread.setDaemon(false);
+        thread.setDaemon(true);
         thread.start();
     }
 
