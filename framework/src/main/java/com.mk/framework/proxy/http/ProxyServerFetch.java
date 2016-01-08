@@ -32,7 +32,7 @@ public class ProxyServerFetch {
                 }
             }
         };
-        thread.setDaemon(true);
+        thread.setDaemon(false);
         thread.start();
     }
 
@@ -51,6 +51,7 @@ public class ProxyServerFetch {
             proxyServerList.add(proxyServer);
         }
 
+        BY_MIKE.clear();
         BY_MIKE.addAll(proxyServerList);
     }
 
@@ -69,6 +70,7 @@ public class ProxyServerFetch {
             proxyServerList.add(proxyServer);
         }
 
+        BY_BILL.clear();
         BY_BILL.addAll(proxyServerList);
     }
 
@@ -81,8 +83,8 @@ public class ProxyServerFetch {
     }
 
     public static void main(String[] args) throws IOException {
-//        List<ProxyServer> proxyServerList = byMike();
-        List<ProxyServer> proxyServerList = byBill();
+        List<ProxyServer> proxyServerList = byMike();
+//        List<ProxyServer> proxyServerList = byBill();
 //        List<ProxyServer> proxyServerList = byMikeBI();
         for (ProxyServer proxyServer : proxyServerList) {
             LOGGER.info("代理IP：{}", JSONUtil.toJson(proxyServer));
