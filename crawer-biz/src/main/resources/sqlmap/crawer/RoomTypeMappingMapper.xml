@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.RoomTypeMappingMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeMapping" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypeMappingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="ots_room_type_id" property="otsRoomTypeId" jdbcType="BIGINT" />
     <result column="ex_room_type_id" property="exRoomTypeId" jdbcType="BIGINT" />
@@ -39,7 +39,7 @@
   <sql id="Base_Column_List" >
     id, ots_room_type_id, ex_room_type_id, valid
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypeMappingExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMappingExample" >
     select
     <if test="distinct" >
       distinct
@@ -64,13 +64,13 @@
     delete from ots_ex_room_type_mapping
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     insert into ots_ex_room_type_mapping (id, ots_room_type_id, ex_room_type_id, 
       valid)
     values (#{id,jdbcType=BIGINT}, #{otsRoomTypeId,jdbcType=BIGINT}, #{exRoomTypeId,jdbcType=BIGINT}, 
       #{valid,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     insert into ots_ex_room_type_mapping
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -101,13 +101,13 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeMappingExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMappingExample" resultType="java.lang.Integer" >
     select count(*) from ots_ex_room_type_mapping
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     update ots_ex_room_type_mapping
     <set >
       <if test="otsRoomTypeId != null" >
@@ -122,11 +122,21 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     update ots_ex_room_type_mapping
     set ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
       ex_room_type_id = #{exRoomTypeId,jdbcType=BIGINT},
       valid = #{valid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryRoomTypeMapping" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
+    select  *  from  ots_ex_room_type_mapping  where  valid = 'T'
+    <if test="otsRoomTypeId != null" >
+      and  ots_room_type_id = #{otsRoomTypeId}
+    </if>
+    <if test="otsHotelName != null" >
+      and  ex_room_type_id = #{otsHotelName}
+    </if>
+  </select>
 </mapper>

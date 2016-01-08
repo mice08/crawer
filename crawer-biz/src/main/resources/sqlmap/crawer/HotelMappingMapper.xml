@@ -41,23 +41,9 @@
   <sql id="Base_Column_List" >
     id, ots_hotel_id, ots_hotel_name, ex_hotel_id, ex_hotel_name, valid
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelMappingExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    from ots_ex_hotel_mapping
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from ots_ex_hotel_mapping
     where id = #{id,jdbcType=BIGINT}
@@ -117,13 +103,13 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.HotelMappingExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelMappingExample" resultType="java.lang.Integer" >
     select count(*) from ots_ex_hotel_mapping
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.HotelMapping" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
     update ots_ex_hotel_mapping
     <set >
       <if test="otsHotelId != null" >
@@ -144,7 +130,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.HotelMapping" >
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
     update ots_ex_hotel_mapping
     set ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
       ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
@@ -153,4 +139,23 @@
       valid = #{valid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryHotelMapping" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
+    select *  from ots_ex_hotel_mapping  where  valid = 'T'
+    <if test="otsHotelId != null" >
+       and  ots_hotel_id = #{otsHotelId}
+    </if>
+    <if test="otsHotelName != null" >
+      and  ots_hotel_name = #{otsHotelName}
+    </if>
+    <if test="exHotelId != null" >
+      and  ex_hotel_id = #{exHotelId}
+    </if>
+    <if test="exHotelName != null" >
+      and  ex_hotel_name = #{exHotelName}
+    </if>
+    <if test="id != null" >
+      and  id = #{id}
+    </if>
+  </select>
 </mapper>
