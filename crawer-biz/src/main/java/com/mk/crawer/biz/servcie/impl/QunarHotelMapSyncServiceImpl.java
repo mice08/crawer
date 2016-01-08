@@ -63,6 +63,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         logger.info("====================qunarHotelMapSync beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
         CityListExample cityListExample=new CityListExample();
+        cityListExample.createCriteria().andCityTypeEqualTo("-1");
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
         if (CollectionUtils.isEmpty(cityLists)){
             resultMap.put("message","cityList is empty");
