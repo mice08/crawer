@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.RoomTypeMappingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.RoomTypeMapping" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ots_room_type_id" property="otsRoomTypeId" jdbcType="BIGINT" />
+    <result column="ex_room_type_id" property="exRoomTypeId" jdbcType="BIGINT" />
+    <result column="valid" property="valid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, ots_room_type_id, ex_room_type_id, valid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.RoomTypeMappingExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from ots_ex_room_type_mapping
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ots_ex_room_type_mapping
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ots_ex_room_type_mapping
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+    insert into ots_ex_room_type_mapping (id, ots_room_type_id, ex_room_type_id, 
+      valid)
+    values (#{id,jdbcType=BIGINT}, #{otsRoomTypeId,jdbcType=BIGINT}, #{exRoomTypeId,jdbcType=BIGINT}, 
+      #{valid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+    insert into ots_ex_room_type_mapping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="otsRoomTypeId != null" >
+        ots_room_type_id,
+      </if>
+      <if test="exRoomTypeId != null" >
+        ex_room_type_id,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="otsRoomTypeId != null" >
+        #{otsRoomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="exRoomTypeId != null" >
+        #{exRoomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.RoomTypeMappingExample" resultType="java.lang.Integer" >
+    select count(*) from ots_ex_room_type_mapping
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+    update ots_ex_room_type_mapping
+    <set >
+      <if test="otsRoomTypeId != null" >
+        ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="exRoomTypeId != null" >
+        ex_room_type_id = #{exRoomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.RoomTypeMapping" >
+    update ots_ex_room_type_mapping
+    set ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
+      ex_room_type_id = #{exRoomTypeId,jdbcType=BIGINT},
+      valid = #{valid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
