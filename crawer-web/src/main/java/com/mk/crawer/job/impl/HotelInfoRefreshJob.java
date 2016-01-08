@@ -53,7 +53,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                             HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
 
-                            GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.getAndDecrement();
+                            GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.incrementAndGet();
                         }
                     } else {
                         try {
