@@ -238,7 +238,11 @@
         </dependency>
 
 
-
+        <dependency>
+            <groupId>cn.easyproject</groupId>
+            <artifactId>easyocr</artifactId>
+            <version>3.0.4-RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -255,6 +259,24 @@
     <build>
         <finalName>crawer</finalName>
     </build>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>public</id>
+            <name>Public Repositories</name>
+            <url>http://192.168.20.80:8081/mkrepo</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>Public Repositories</name>
+            <url>http://192.168.20.80:8081/mkrepo</url>
+        </pluginRepository>
+    </pluginRepositories>
 <!--
     <repositories>
         <repository>
@@ -263,24 +285,6 @@
             </snapshots>
             <id>public</id>
             <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo</url>
-        </pluginRepository>
-    </pluginRepositories>
--->
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>public</id>
-            <name>Public Repositories</name>
             <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
@@ -291,6 +295,7 @@
             <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
         </pluginRepository>
     </pluginRepositories>
+    -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -440,6 +445,7 @@
                 <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
                 <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k={s7mpp(e</qunar.codeapi>
             </properties>
         </profile>
 
@@ -470,6 +476,7 @@
                 <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
                 <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
             </properties>
         </profile>
     </profiles>
