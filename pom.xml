@@ -259,7 +259,6 @@
     <build>
         <finalName>crawer</finalName>
     </build>
-<<<<<
     <!--
         <repositories>
             <repository>
