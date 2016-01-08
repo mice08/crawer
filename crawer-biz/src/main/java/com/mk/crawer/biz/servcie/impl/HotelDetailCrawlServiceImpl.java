@@ -496,7 +496,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		roomtype.setHasTuangou(typesafeGetDouble(roomComb.get("hasTuangou")).toString());
 
 		if (roomComb.containsKey("rtDescInfo") && roomComb.get("rtDescInfo") != null
-				&& roomComb.get("rtDescInfo").getClass().isAssignableFrom(Map.class)) {
+				&& Map.class.isAssignableFrom(roomComb.get("rtDescInfo").getClass())) {
 			Map<String, Object> rtDescInfo = (Map<String, Object>) roomComb.get("rtDescInfo");
 
 			roomtype.setOuterShow(typesafeGetString(rtDescInfo.get("outerShow")));
