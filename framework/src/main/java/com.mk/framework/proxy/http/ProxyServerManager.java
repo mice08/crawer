@@ -161,6 +161,37 @@ class ProxyServerManager {
 
     }
 
+    static void addBadServer(ProxyServer proxyServer) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.sadd(
+                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer)
+            );
+        }catch (Exception e){
+            throw e;
+        }finally {
+            if (null != jedis){
+                jedis.close();
+            }
+        }
+    }
+
+    static Long countBadServer() {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.scard(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
+        }catch (Exception e){
+            throw e;
+        }finally {
+            if (null != jedis){
+                jedis.close();
+            }
+        }
+    }
+
     private static Jedis getJedis() {
         return ProxyServerManager.getConnectionFactory().getJedis();
     }
