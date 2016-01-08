@@ -238,7 +238,11 @@
         </dependency>
 
 
-
+        <dependency>
+            <groupId>cn.easyproject</groupId>
+            <artifactId>easyocr</artifactId>
+            <version>3.0.4-RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -256,23 +260,27 @@
         <finalName>crawer</finalName>
     </build>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo</url>
-        </pluginRepository>
-    </pluginRepositories>
+        <repositories>
+            <repository>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+                <id>public</id>
+                <name>Public Repositories</name>
+                <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
+                <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>public</id>
+                <name>Public Repositories</name>
+                <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
+                <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+            </pluginRepository>
+        </pluginRepositories>
+
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -403,6 +411,11 @@
                 <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
                 <weChat.web.scope>snsapi_login</weChat.web.scope>
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+                <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
+                <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
+                <qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
+                <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
             </properties>
         </profile>
 
@@ -433,6 +446,7 @@
                 <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
                 <qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
             </properties>
         </profile>
     </profiles>

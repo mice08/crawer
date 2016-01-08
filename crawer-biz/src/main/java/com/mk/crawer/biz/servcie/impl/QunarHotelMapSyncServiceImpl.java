@@ -7,6 +7,7 @@ import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         logger.info("====================qunarHotelMapSync beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
         CityListExample cityListExample=new CityListExample();
+        cityListExample.createCriteria().andCityTypeEqualTo("-1");
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
         if (CollectionUtils.isEmpty(cityLists)){
             resultMap.put("message","cityList is empty");
@@ -350,7 +352,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 +"&len="+len
                 +"&tpl="+tpl;
         String url=Constant.qunar_map_hostlist+"?"+pramas;
-        return HttpUtil.doGet(url);
+        return HttpUtils.get_data(url,"GET");
     }
     public Map<String,String> getJsonList(String value){
         Map<String,String> resultMap=new HashMap<String,String>();
