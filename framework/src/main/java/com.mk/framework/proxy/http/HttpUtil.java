@@ -17,6 +17,8 @@ public class HttpUtil {
         return doGet(url, 1);
     }
 
+
+
     static String doGet(String url, int count) {
         if ( count <= Config.FETCH_RETRY_TIMES ) {
 
@@ -55,7 +57,7 @@ public class HttpUtil {
         return resp;
     }
 
-    static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+     public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
         LOGGER.info("发送请求：{}", urlStr);
 
         StringBuffer stringBuffer = new StringBuffer();

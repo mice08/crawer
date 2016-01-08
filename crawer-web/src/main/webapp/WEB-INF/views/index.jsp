@@ -12,6 +12,24 @@
 </head>
 <body>
 <h1>Hello, crawler</h1>
+<table>
+    <tr>
+        <td>ip</td>
+        <td>验证码</td>
+        <td>输入</td>
+    </tr>
+    <%
+
+    %>
+    <tr>
+        <td>
+            <div class="ip" name=""></div>
+        </td>
+        <td>
+            <img src="<%%>">
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>
