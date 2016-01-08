@@ -16,7 +16,6 @@ public class ProxyServerJob {
         for (ProxyServer proxyServer : proxyServerList) {
             if ( !ProxyServerManager.check(proxyServer) ) {
                 ProxyServerManager.remove(proxyServer);
-                LOGGER.info("移除：{}，还有{}个代理IP。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
             }
         }
     }
@@ -26,7 +25,6 @@ public class ProxyServerJob {
         for (ProxyServer proxyServer : proxyServerList) {
             if ( !ProxyServerManager.isExist(proxyServer) ) {
                 ProxyServerManager.add(proxyServer);
-                LOGGER.info("添加：{}，有{}个代理IP了。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
             }
         }
     }

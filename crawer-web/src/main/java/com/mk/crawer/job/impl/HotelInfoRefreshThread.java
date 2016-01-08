@@ -63,7 +63,7 @@ public class HotelInfoRefreshThread implements Runnable {
 
             LOGGER.info("结束刷新酒店:{}价格", hotelId);
         } catch (Exception e) {
-            LOGGER.error("价格刷新线程出错：", e);
+            LOGGER.error("刷新酒店:{}价格出错。", hotelId);
         } finally {
             GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.decrementAndGet();
         }
