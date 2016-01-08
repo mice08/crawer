@@ -1,8 +1,13 @@
 package com.mk.crawer.web.controller;
 
-import com.mk.crawer.biz.model.ots.HotelDetail;
-import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.framework.UrlUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.mk.crawer.biz.model.ots.HotelDetail;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import com.mk.framework.MkJedisConnectionFactory;
+import com.mk.framework.UrlUtils;
+
+import redis.clients.jedis.Jedis;
 
 @Controller
 public class HomeController {
@@ -26,6 +31,9 @@ public class HomeController {
 
 	@Autowired
 	private HotelDetailCrawlService hotelDetailService;
+
+	@Autowired
+	private MkJedisConnectionFactory mkFactory;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
@@ -41,7 +49,6 @@ public class HomeController {
 	public ResponseEntity<Map<String, Object>> hoteldetail(HttpServletRequest request, HotelDetail hotelDetail) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
-
 		List<String> hotelIdList = new ArrayList<String>();
 		hotelIdList.add(hotelDetail.getHotelIds());
 
@@ -52,6 +59,27 @@ public class HomeController {
 		}
 
 		result.put("check", "123");
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/queryproxies", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> queryProxies(HttpServletRequest request) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+		Jedis jedis = mkFactory.getJedis();
+
+		try {
+			String jsonStr = jedis.srandmember("crawer_proxy_server_pool_set");
+			result.put("json", jsonStr);
+		} catch (Exception ex) {
+			logger.error(ex);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
+		}
+
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
