@@ -24,7 +24,7 @@ class ProxyServerManager {
     private static MkJedisConnectionFactory connectionFactory = null;
 
     static ProxyServer random() {
-        String jsonStr = null;
+        String jsonStr;
         Jedis jedis = null;
         try {
             jedis = getJedis();

@@ -32,7 +32,7 @@ import com.mk.crawer.biz.utils.HttpUtils;
 @Service
 public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
-	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?city=%s&cityUrl=%s&checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
+	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
 
 	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
 
@@ -54,24 +54,23 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private RoomTypeDescMapper roomtypeDescMapper;
 
 	@Override
-	public void crawl(String hotelId, String city, String cityUrl) throws Exception {
+	public void crawl(String hotelId) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
 		if (!StringUtils.isBlank(hotelId)) {
 			hotelIds.add(hotelId);
 		}
 
-		this.crawl(hotelIds, city, cityUrl);
+		this.crawl(hotelIds);
 	}
 
 	@Override
-	public void crawl(List<String> hotelIds, String city, String cityUrl) throws Exception {
+	public void crawl(List<String> hotelIds) throws Exception {
 		Date day = new Date();
 		String strCurDay = DateUtils.getStringFromDate(day, DateUtils.FORMATSHORTDATETIME);
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
-		String invokeUrl = String.format(hotelDetailUrl, city, cityUrl, strCurDay, strNextDay,
-				String.format("%s_%s", cityUrl, hotelid));
+		String invokeUrl = String.format(hotelDetailUrl, strCurDay, strNextDay, hotelid);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(invokeUrl);
@@ -224,31 +223,58 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	 * @param roomtypeCombs
 	 * @throws Exception
 	 */
-	private void persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
+	private boolean persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
+		boolean isUpdateRequired = false;
+
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
 			List<RoomTypePrice> roomtypePrices = roomtypeComb.getRoomtypePrices();
+			boolean isRoomtypeUpdateRequired = false;
 
 			try {
-				roomtypeMapper.insert(roomtype);
+				Map<String, Object> parameters = new HashMap<>();
+				parameters.put("roomtypeKey", roomtype.getRoomtypeKey());
+				parameters.put("hotelSourceId", roomtype.getHotelSourceId());
+
+				List<RoomType> roomtypes = roomtypeMapper.selectByKeys(parameters);
+				if (roomtypes != null && roomtypes.size() > 0) {
+					isUpdateRequired = true;
+					isRoomtypeUpdateRequired = true;
+				}
 			} catch (Exception ex) {
-				logger.error("failed to roomtypeMapper.insert", ex);
+				logger.warn(String.format("failed to detection duplication for roomtypeKey:%s; hotelSourceId:%s",
+						roomtype.getRoomtypeKey(), roomtype.getHotelSourceId()), ex);
 			}
 
-			if (roomtypeDescs != null) {
-				for (RoomTypeDesc roomtypeDesc : roomtypeDescs) {
-					try {
-						roomtypeDescMapper.insert(roomtypeDesc);
-					} catch (Exception ex) {
-						logger.error("failed to roomtypeDescMapper.insert", ex);
+			if (!isRoomtypeUpdateRequired) {
+				try {
+					roomtypeMapper.insert(roomtype);
+				} catch (Exception ex) {
+					logger.error("failed to roomtypeMapper.insert", ex);
+				}
+
+				if (roomtypeDescs != null) {
+					for (RoomTypeDesc roomtypeDesc : roomtypeDescs) {
+						try {
+							roomtypeDescMapper.insert(roomtypeDesc);
+						} catch (Exception ex) {
+							logger.error("failed to roomtypeDescMapper.insert", ex);
+						}
 					}
+				}
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("update roomtype %s", roomtype.getRoomtypeKey()));
 				}
 			}
 
 			if (roomtypePrices != null) {
 				for (RoomTypePrice roomtypePrice : roomtypePrices) {
 					try {
+						if (isRoomtypeUpdateRequired) {
+							roomtypePrice.setUpdateTime(new Date());
+						}
 						roomtypePriceMapper.insert(roomtypePrice);
 					} catch (Exception ex) {
 						logger.error("failed to roomtypePriceMapper.insert", ex);
@@ -256,6 +282,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				}
 			}
 		}
+
+		return isUpdateRequired;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -564,6 +592,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		return roomtypeComb;
 	}
+
 
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;

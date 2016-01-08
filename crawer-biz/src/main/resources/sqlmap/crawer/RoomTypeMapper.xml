@@ -70,6 +70,14 @@
 		where id = #{id,jdbcType=BIGINT}
 	</select>
 
+	<select id="selectByKeys" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from t_ex_roomtype
+		where roomtype_key = #{roomtypeKey,jdbcType=VARCHAR} AND hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR}
+	</select>
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		t_ex_roomtype

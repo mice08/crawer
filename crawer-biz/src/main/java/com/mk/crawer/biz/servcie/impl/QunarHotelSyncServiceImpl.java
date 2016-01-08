@@ -36,20 +36,33 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     @Autowired
     private BrandsService brandsService ;
     public Map<String,Object> hotelSyncByCity(String cityName){
+        Cat.logEvent("hotelSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================hotelSyncByCity beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
         CityListExample cityListExample=new CityListExample();
         cityListExample.createCriteria().andCityNameEqualTo(cityName);
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
         if (CollectionUtils.isEmpty(cityLists)){
+            logger.info("====================hotelSyncByCity cityLists because is empty====================");
             resultMap.put("message","cityList is empty");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
         CityList city=cityLists.get(0);
         resultMap=doSync(city);
+        Cat.logEvent("hotelSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
+                "endTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================hotelSyncByCity endTime={}====================",DateUtils.getDatetime());
         return resultMap;
     }
     public Map<String,Object> qunarHotelSync(){
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
         CityListExample cityListExample=new CityListExample();
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
@@ -59,16 +72,19 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             return resultMap;
         }
         for (CityList city:cityLists) {
-            resultMap=doSync(city);
+            doSync(city);
         }
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                "endTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync method endTime={}===================="
+                , DateUtils.getDatetime());
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
         return resultMap;
     }
     public Map<String,Object> doSync(CityList city){
-        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                "beginTime=" + DateUtils.getDatetime()
-        );
-        logger.info("====================qunarHotelSync beginTime {}====================","beginTime=" + DateUtils.getDatetime());
-        continue;
+
         Map<String,Object> resultMap=new HashMap<String,Object>();
         CityListExample cityListExample=new CityListExample();
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
@@ -77,51 +93,45 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        for (CityList city:cityLists){
-            String fromDate=DateUtils.getCertainDate(1);
-            String toDate=DateUtils.getCertainDate(2);
-            String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
-            String hotelResult=HttpUtil.doGetNoProxy(url);
+        String fromDate=DateUtils.getCertainDate(1);
+        String toDate=DateUtils.getCertainDate(2);
+        String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
+        String hotelResult=HttpUtil.doGetNoProxy(url);
 
-            Map<String,String> urlMaps=getJsonList(hotelResult);
-            if(urlMaps==null){
-                logger.info("====================qunarHotelSync city={}  continue because url reslut is null====================",city.getCityName());
-                continue;
-            }
-            if (urlMaps.get("error")!=null){
-                Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                        hotelResult
-                );
-                logger.info("====================qunarHotelSync method end because {}====================",hotelResult);
-                continue;
-            }
-            String info=urlMaps.get("info");
-            String hotels =urlMaps.get("hotels");
-            if(info==null||hotels==null){
-                Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                        "info is null || hotels is nul=");
-                logger.info("====================qunarHotelSync method end because info is null || hotels is null====================");
-                continue;
-            }
-            Map<String,String> infoMap=getJsonList(info);
-            if (infoMap==null){
-                logger.info("====================qunarHotelSync method end because infoMap is null====================");
-
-            }
-            if(infoMap.get("brands")!=null){
-                saveBrands(city,infoMap.get("brands"));
-            }
-            saveHotel(hotels,city.getCityName());
+        Map<String,String> urlMaps=getJsonList(hotelResult);
+        if(urlMaps==null){
+            logger.info("====================qunarHotelSync city={}  continue because url reslut is null====================",city.getCityName());
+            resultMap.put("message","urlMaps is noll");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
         }
 
+        String info=urlMaps.get("info");
+        String hotels =urlMaps.get("hotels");
+        if(info==null||hotels==null){
+            Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                    "info is null || hotels is null");
+            logger.info("====================qunarHotelSync method end because info is null || hotels is null====================");
+            resultMap.put("message","info is null || hotels is nul");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        Map<String,String> infoMap=getJsonList(info);
+        if (infoMap==null){
+            logger.info("====================qunarHotelSync method end because infoMap is null====================");
+            resultMap.put("message","infoMap");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        if(infoMap.get("brands")!=null){
+            saveBrands(city,infoMap.get("brands"));
+        }
+        saveHotel(hotels,city.getCityName());
 
-        resultMap.put("message","备份成功");
+
+        resultMap.put("message","保存成功");
         resultMap.put("SUCCESS", true);
-        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
-                "endTime=" + DateUtils.getDatetime()
-        );
-        logger.info("====================qunarHotelSync method end time{}===================="
-                , DateUtils.getDatetime());
+
         return resultMap;
     }
 
@@ -170,7 +180,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             Hotel hotel=new Hotel();
             hotel.setCityName(cityName);
             hotel.setSourceId(hotelMap.get("id"));
-            hotel.setCityName(hotelMap.get("cityName"));
+
             if (hotelMap.get("distance")!=null)
                 hotel.setDistance(Long.valueOf(hotelMap.get("distance")));
             if (hotelMap.get("price")!=null)

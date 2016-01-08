@@ -46,7 +46,7 @@ public class HomeController {
 		hotelIdList.add(hotelDetail.getHotelIds());
 
 		try {
-			hotelDetailService.crawl(hotelIdList, hotelDetail.getCity(), hotelDetail.getCityUrl());
+			hotelDetailService.crawl(hotelIdList);
 		} catch (Exception ex) {
 			logger.error("failed to do hotelDetailService.crawl", ex);
 		}
