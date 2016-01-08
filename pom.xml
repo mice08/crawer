@@ -429,9 +429,9 @@
                 <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
                 <qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
                 <qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
-                <qunar.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.hostlist>
+                <qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
-                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k={s7mpp(e</qunar.codeapi>
+                <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
             </properties>
         </profile>
 
