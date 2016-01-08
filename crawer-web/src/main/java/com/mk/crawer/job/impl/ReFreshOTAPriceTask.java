@@ -14,9 +14,12 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 import redis.clients.jedis.Jedis;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,6 +67,7 @@ public class ReFreshOTAPriceTask implements Worker {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
+
                 EXECUTOR_100.shutdownNow();
                 EXECUTOR_1000.shutdownNow();
                 EXECUTOR_OTHER.shutdownNow();
