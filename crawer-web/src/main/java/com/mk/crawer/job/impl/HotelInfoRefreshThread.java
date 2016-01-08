@@ -5,6 +5,7 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -39,11 +40,7 @@ public class HotelInfoRefreshThread implements Runnable {
 
             LOGGER.info("开始刷新酒店:{}价格", hotelId);
 
-            Integer sleepTime = RANDOM.nextInt(10000);
-            if ( sleepTime < 100 ) {
-                sleepTime = 100;
-            }
-            Thread.sleep(sleepTime);
+            ThreadUtil.randomSleep(500, 10000);
 
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 

@@ -25,31 +25,24 @@ class ProxyServerManager {
     private static MkJedisConnectionFactory connectionFactory = null;
 
     static ProxyServer random() {
-        String jsonStr;
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
+        List<ProxyServer> proxyServerList = null;
 
-            jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
-
-            if (StringUtils.isEmpty(jsonStr)) {
-                throw new IllegalArgumentException("无法从Redis里面获取到代理IP");
-            }
-
-            return JSONUtil.fromJson(jsonStr, ProxyServer.class);
-        } catch (Exception e) {
-            List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
-
-            ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
-
-            LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
-
-            return proxyServer;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
+        while (proxyServerList ==null || proxyServerList.size()==0) {
+            ThreadUtil.randomSleep(1000, 5000);
+            try {
+                proxyServerList = ProxyServerFetch.byBill();
+            } catch (Exception e) {
+                proxyServerList = ProxyServerFetch.byMike();
             }
         }
+
+        ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
+
+        while (!check(proxyServer)) {
+            proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
+        }
+
+        return proxyServer;
     }
 
     static Long add(ProxyServer proxyServer) {
@@ -137,16 +130,20 @@ class ProxyServerManager {
 
 
     static boolean check(ProxyServer proxyServer) {
-
-        for (String url : Config.TEST_URL) {
-            try {
-                HttpUtil.doGet(url, proxyServer);
-            } catch (IOException e) {
-                return false;
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            return !jedis.sismember(
+                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer)
+            );
+        }catch (Exception e){
+            throw e;
+        }finally {
+            if (null != jedis){
+                jedis.close();
             }
         }
-
-        return true;
     }
 
     static Long count() {

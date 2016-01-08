@@ -35,15 +35,16 @@ public class HttpUtil {
             try {
                 String result = HttpUtil.doGet(url, proxyServer);
 
-                if ( StringUtils.isEmpty(result) || result.length() < 100 ) {
-                    throw new IOException("响应内容为：" + result);
+                if ( StringUtils.isEmpty(result)  ) {
+                    throw new IOException("响应内容为空");
+                } else if ( result.length() < 100 ) {
+                    ProxyServerManager.addBadServer(proxyServer);
+                    throw new IOException(result);
                 }
 
                 return result;
             } catch (IOException e) {
-                ProxyServerManager.addBadServer(proxyServer);
-                ProxyServerManager.remove(proxyServer);
-                LOGGER.warn("代理失效：{}, 可用代理{}个，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.count(), ProxyServerManager.countBadServer());
+                LOGGER.warn("代理失效：{}，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.countBadServer());
                 return doGet(url, ++count);
             }
         } else {
@@ -63,7 +64,7 @@ public class HttpUtil {
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        ThreadUtil.sleep(3000);
+        ThreadUtil.randomSleep(1000, 5000);
 
         LOGGER.info("发送请求：{}", urlStr);
 
