@@ -110,8 +110,15 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        String info=urlMaps.get("info");
-        String hotels =urlMaps.get("hotels");
+        Map<String,String> dataMaps=getJsonList(data);
+        if(dataMaps==null){
+            logger.info("====================city={}  continue because dataMaps reslut is null====================",city.getCityName());
+            resultMap.put("message","dataMaps is noll");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        String info=dataMaps.get("info");
+        String hotels = dataMaps.get("hotels");
         if(info==null||hotels==null){
             Cat.logEvent("qunarHotelMapSync", "去哪儿酒店信息同步", Event.SUCCESS,
                     "city="+city.getCityName()+"info=null&hotels=null");
@@ -171,6 +178,11 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         String data=urlMaps.get("data");
         if(data==null){
             logger.info("data == null return");
+            return null;
+        }
+        Map<String,String> dataMaps=getJsonList(data);
+        if(dataMaps==null){
+            logger.info("dataMaps == null return");
             return null;
         }
         String hotels =urlMaps.get("hotels");
@@ -338,7 +350,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 +"&len="+len
                 +"&tpl="+tpl;
         String url=Constant.qunar_map_hostlist+"?"+pramas;
-        return HttpUtil.doGetNoProxy(url);
+        return HttpUtil.doGet(url);
     }
     public Map<String,String> getJsonList(String value){
         Map<String,String> resultMap=new HashMap<String,String>();
