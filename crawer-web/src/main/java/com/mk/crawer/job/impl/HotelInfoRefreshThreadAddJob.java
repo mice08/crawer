@@ -29,7 +29,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
     @Autowired
     private IHotelService iHotelService;
 
-    @Scheduled(cron = "0 20 16 * * ? ")
+    @Scheduled(cron = "0 0 11 * * ? ")
     @Override
     public void work() {
         try {

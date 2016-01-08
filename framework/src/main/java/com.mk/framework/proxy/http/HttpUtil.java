@@ -1,10 +1,19 @@
 package com.mk.framework.proxy.http;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by 振涛 on 2016/1/6.
@@ -32,9 +41,9 @@ public class HttpUtil {
 
                 return result;
             } catch (IOException e) {
+                ProxyServerManager.addBadServer(proxyServer);
                 ProxyServerManager.remove(proxyServer);
-                LOGGER.info("请求出错，移除代理:{}，还有{}个代理。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
-
+                LOGGER.warn("代理失效：{}, 可用代理{}个，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.count(), ProxyServerManager.countBadServer());
                 return doGet(url, ++count);
             }
         } else {
@@ -56,77 +65,63 @@ public class HttpUtil {
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+        ThreadUtil.sleep(3000);
+
         LOGGER.info("发送请求：{}", urlStr);
 
-        StringBuffer stringBuffer = new StringBuffer();
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        HttpURLConnection httpUrlConn = null;
+        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
-        try {
-            URL url = new URL(urlStr);
+        HttpGet httpGet = new HttpGet(urlStr);
 
-            if ( proxyServer == null ) {
-                httpUrlConn = (HttpURLConnection) url.openConnection();
-            } else {
-                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyServer.getIp(), proxyServer.getPort()));
-                httpUrlConn = (HttpURLConnection) url.openConnection(proxy);
-            }
+        httpGet.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        httpGet.addHeader("Accept-Encoding", "gzip, deflate, sdch");
+        httpGet.addHeader("Accept-Language", "zh-CN,zh;q=0.8");
+        httpGet.addHeader("Cache-Control", "max-age=0");
+        httpGet.addHeader("Connection", "keep-alive");
+        httpGet.addHeader("DNT", "1");
+        httpGet.addHeader("Host", "pad.qunar.com");
+        httpGet.addHeader("Upgrade-Insecure-Requests", "1");
+        httpGet.addHeader("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53");
 
-            httpUrlConn.setDoOutput(false);
-            httpUrlConn.setDoInput(true);
-            httpUrlConn.setUseCaches(false);
-
-            httpUrlConn.setConnectTimeout(Config.FETCH_TIMEOUT);
-            httpUrlConn.setReadTimeout(Config.READ_TIMEOUT);
-
-            httpUrlConn.setRequestMethod("GET");
-
-            httpUrlConn.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            httpUrlConn.addRequestProperty("Accept-Encoding", "gzip, deflate, sdch");
-            httpUrlConn.addRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
-            httpUrlConn.addRequestProperty("Cache-Control", "max-age=0");
-            httpUrlConn.addRequestProperty("Connection", "keep-alive");
-            httpUrlConn.addRequestProperty("DNT", "1");
-            httpUrlConn.addRequestProperty("Host", "pad.qunar.com");
-            httpUrlConn.addRequestProperty("Upgrade-Insecure-Requests", "1");
-            httpUrlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53");
-
-            httpUrlConn.connect();
-
-            //获取编码
-            String contentType = httpUrlConn.getHeaderField("Content-Type");
-            String charSet = "UTF-8";
-            if (!StringUtils.isEmpty(contentType)) {
-                if (contentType.indexOf("GBK") != -1) {
-                    charSet = "GBK";
-                } else if (contentType.indexOf("GB2312") != -1) {
-                    charSet = "GB2312";
-                }
-            }
-
-            // 将返回的输入流转换成字符串
-            inputStream = httpUrlConn.getInputStream();
-            inputStreamReader = new InputStreamReader(inputStream, charSet);
-            bufferedReader = new BufferedReader(inputStreamReader);
+        RequestConfig config;
+        if (proxyServer != null) {
+            LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
+            HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
+            config = RequestConfig
+                    .custom()
+                    .setProxy(httpHost)
+                    .setConnectTimeout(Config.READ_TIMEOUT)
+                    .build();
+        } else {
+            config = RequestConfig
+                    .custom()
+                    .setConnectTimeout(Config.READ_TIMEOUT)
+                    .build();
+        }
+        httpGet.setConfig(config);
 
 
-            String str;
-            while ((str = bufferedReader.readLine()) != null) {
-                stringBuffer.append(str);
-            }
-        } finally {
-            if (httpUrlConn != null) httpUrlConn.disconnect();
-            if (bufferedReader != null) bufferedReader.close();
-            if (inputStreamReader != null) inputStreamReader.close();
-            if (inputStream != null) inputStream.close();
+        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
+
+        HttpEntity httpEntity = closeableHttpResponse.getEntity();
+
+        String contentType= httpEntity.getContentType().getValue();
+
+        String result;
+
+        if ( contentType.contains("GBK") ) {
+            result = EntityUtils.toString(httpEntity, "GBK");
+        } else if ( contentType.contains("GB2312") ) {
+            result = EntityUtils.toString(httpEntity, "GB2312");
+        } else if ( contentType.contains("UTF-8") ) {
+            result = EntityUtils.toString(httpEntity, "UTF-8");
+        } else {
+            result = EntityUtils.toString(httpEntity, "GBK");
         }
 
-        String result = stringBuffer.toString();
-        LOGGER.info("获得响应：{}", stringBuffer.toString());
-
+        LOGGER.info("获得响应：{}", result);
         return result;
     }
 
@@ -141,7 +136,8 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        LOGGER.info(doGet("http://bdapi.qunar.com/api/map.jsp?city=芒市&fromDate=2016-01-08&toDate=2016-01-09"));
+//        LOGGER.info(doGet("http://1212.ip138.com/ic.asp"));
+        LOGGER.info(doGet("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
     }
 
 }
