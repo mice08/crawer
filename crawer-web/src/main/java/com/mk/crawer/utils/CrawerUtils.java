@@ -3,10 +3,8 @@ package com.mk.crawer.utils;
 import com.mk.framework.UrlUtils;
 import com.mk.framework.proxy.http.ProxyServer;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -62,4 +60,43 @@ public class CrawerUtils {
         }
         return fileName;
     }
+
+
+
+
+    public static String postChallageCode(ProxyServer proxyServer, String code) {
+        Properties prop = System.getProperties();
+        try {
+            String url = UrlUtils.getUrl("qunar.challageapi") + code;
+
+            URL httpUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) httpUrl.openConnection();
+            conn.setDoOutput(true);
+            conn.setConnectTimeout(10000);
+            conn.setRequestMethod("get");
+
+            if (proxyServer != null) {
+                prop.put("http.proxyHost", proxyServer.getIp());
+                prop.put("http.proxyPort", "" + proxyServer.getPort());
+            }
+            conn.connect();
+
+            //返回
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String result = reader.readLine();
+            if (proxyServer != null) {
+                prop.remove("http.proxyHost");
+                prop.remove("http.proxyPort");
+            }
+            return result.trim();
+        } catch (Exception e) {
+
+            if (proxyServer != null) {
+                prop.remove("http.proxyHost");
+                prop.remove("http.proxyPort");
+            }
+            return null;
+        }
+    }
 }
+

@@ -1,21 +1,12 @@
 package com.mk.crawer.web.controller;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import cn.easyproject.easyocr.EasyOCR;
+import cn.easyproject.easyocr.ImageType;
+import com.mk.crawer.biz.model.ots.HotelDetail;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import com.mk.crawer.utils.CrawerUtils;
+import com.mk.framework.MkJedisConnectionFactory;
+import com.mk.framework.UrlUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,15 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.mk.crawer.biz.model.ots.HotelDetail;
-import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.framework.MkJedisConnectionFactory;
-import com.mk.framework.UrlUtils;
-
-import cn.easyproject.easyocr.EasyOCR;
-import cn.easyproject.easyocr.ImageType;
 import redis.clients.jedis.Jedis;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController {
