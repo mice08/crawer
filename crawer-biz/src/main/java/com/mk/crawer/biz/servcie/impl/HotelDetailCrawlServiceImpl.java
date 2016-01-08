@@ -32,7 +32,7 @@ import com.mk.crawer.biz.utils.HttpUtils;
 @Service
 public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
-	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?city=%s&cityUrl=%s&checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
+	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
 
 	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
 
@@ -54,24 +54,23 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private RoomTypeDescMapper roomtypeDescMapper;
 
 	@Override
-	public void crawl(String hotelId, String city, String cityUrl) throws Exception {
+	public void crawl(String hotelId) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
 		if (!StringUtils.isBlank(hotelId)) {
 			hotelIds.add(hotelId);
 		}
 
-		this.crawl(hotelIds, city, cityUrl);
+		this.crawl(hotelIds);
 	}
 
 	@Override
-	public void crawl(List<String> hotelIds, String city, String cityUrl) throws Exception {
+	public void crawl(List<String> hotelIds) throws Exception {
 		Date day = new Date();
 		String strCurDay = DateUtils.getStringFromDate(day, DateUtils.FORMATSHORTDATETIME);
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
-		String invokeUrl = String.format(hotelDetailUrl, city, cityUrl, strCurDay, strNextDay,
-				String.format("%s_%s", cityUrl, hotelid));
+		String invokeUrl = String.format(hotelDetailUrl, strCurDay, strNextDay, hotelid);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(invokeUrl);
@@ -90,29 +89,26 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
 
-		boolean isUpdateRequired = false;
 		try {
-			isUpdateRequired = persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
+			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
 
-		if (!isUpdateRequired) {
-			try {
-				persistHotelFacilities(hotelComb.getHotelfacilities());
-			} catch (Exception ex) {
-				String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
-				logger.error(errorMsg, ex);
-			}
+		try {
+			persistHotelFacilities(hotelComb.getHotelfacilities());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
 
-			try {
-				persistHotelSurround(hotelComb.getHotelSurrounds());
-			} catch (Exception ex) {
-				String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
-				logger.error(errorMsg, ex);
-			}
+		try {
+			persistHotelSurround(hotelComb.getHotelSurrounds());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
 		}
 
 		Date endTime = new Date();
@@ -596,6 +592,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		return roomtypeComb;
 	}
+
 
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;

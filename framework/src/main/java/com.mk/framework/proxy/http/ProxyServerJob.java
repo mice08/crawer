@@ -24,8 +24,10 @@ public class ProxyServerJob {
     public static void fetchAndAdd() {
         List<ProxyServer> proxyServerList = ProxyServerFetch.byBill();
         for (ProxyServer proxyServer : proxyServerList) {
-            ProxyServerManager.add(proxyServer);
-            LOGGER.info("添加：{}，有{}个代理IP了。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
+            if ( !ProxyServerManager.isExist(proxyServer) ) {
+                ProxyServerManager.add(proxyServer);
+                LOGGER.info("添加：{}，有{}个代理IP了。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
+            }
         }
     }
 

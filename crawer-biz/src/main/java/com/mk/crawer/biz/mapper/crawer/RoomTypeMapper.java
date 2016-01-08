@@ -13,7 +13,6 @@ public interface RoomTypeMapper {
 	int insertSelective(RoomType record);
 
 	RoomType selectByPrimaryKey(Long id);
-	
+
 	List<RoomType> selectByKeys(Map<String, Object> parameters);
-	
 }

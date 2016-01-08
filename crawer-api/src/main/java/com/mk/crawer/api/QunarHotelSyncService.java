@@ -8,4 +8,5 @@ import java.util.Map;
  */
 public interface QunarHotelSyncService {
     public Map<String,Object> qunarHotelSync();
+    public Map<String,Object> hotelSyncByCity(String cityName);
 }

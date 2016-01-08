@@ -14,7 +14,7 @@ public class ProxyServerAddJob implements Worker {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerAddJob.class);
 
-    @Scheduled(cron = "0/5 * * * * ? ")
+    @Scheduled(cron = "0 0/5 * * * ? ")
     @Override
     public void work() {
         try {
@@ -23,7 +23,6 @@ public class ProxyServerAddJob implements Worker {
             LOGGER.error("定时任务执行结束");
         } catch (Exception e) {
             LOGGER.error("定时任务执行出错：", e);
-            e.printStackTrace();
         }
     }
 

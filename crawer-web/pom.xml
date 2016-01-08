@@ -16,6 +16,12 @@
 
 	<dependencies>
 		<dependency>
+		<groupId>cn.easyproject</groupId>
+		<artifactId>easyocr</artifactId>
+		<version>3.0.4-RELEASE</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.mk</groupId>
 			<artifactId>crawer-api</artifactId>
 			<version>1.0-SNAPSHOT</version>
