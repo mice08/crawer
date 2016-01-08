@@ -4,6 +4,7 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
@@ -31,10 +32,12 @@ class ProxyServerManager {
 
             jsonStr = jedis.srandmember(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
 
+            if (StringUtils.isEmpty(jsonStr)) {
+                throw new IllegalArgumentException("无法从Redis里面获取到代理IP");
+            }
+
             return JSONUtil.fromJson(jsonStr, ProxyServer.class);
         } catch (Exception e) {
-            LOGGER.error("获取代理IP失败：", e);
-
             List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
 
             ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
