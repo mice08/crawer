@@ -9,8 +9,6 @@ import java.util.List;
  */
 public class ProxyServerJob {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerJob.class);
-
     public static void validAndRemove() {
         List<ProxyServer> proxyServerList = ProxyServerManager.listProxyServer();
         for (ProxyServer proxyServer : proxyServerList) {
