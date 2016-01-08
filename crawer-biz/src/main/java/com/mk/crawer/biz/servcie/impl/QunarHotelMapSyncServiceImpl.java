@@ -146,7 +146,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             return resultMap;
         }
         saveQunarHotel(hotels,city.getCityName());
-        int count=Integer.valueOf(infoMap.get("count"));
+        int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
             for (int i=1;i<=count/len;i++){
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
@@ -306,7 +306,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 QunarHotel existHotel=checkHotelExist.get(0);
                 qunarHotel.setId(existHotel.getId());
                 qunarHotel.setUpdateTime(new Date());
-                qunarHotelService.updateByPrimaryKeySelective(qunarHotel);
+                //qunarHotelService.updateByPrimaryKeySelective(qunarHotel);
                 logger.info("====================update t_qunar_hotel values(source_id={},hotelName={})===================="
                         ,qunarHotel.getSourceId(),qunarHotel.getHotelName());
             }
