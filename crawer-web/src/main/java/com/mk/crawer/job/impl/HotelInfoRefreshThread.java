@@ -47,7 +47,7 @@ public class HotelInfoRefreshThread implements Runnable {
 
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 
-            //hotelDetailCrawlService.crawl(hotelId);
+            hotelDetailCrawlService.crawl(hotelId);
 
             Jedis jedis = null;
 
