@@ -70,6 +70,27 @@ class ProxyServerManager {
         return count;
     }
 
+    static boolean isExist(ProxyServer proxyServer) {
+        Jedis jedis = null;
+
+        boolean flag = false;
+
+        try {
+            jedis = getJedis();
+            flag = jedis.sismember(
+                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer));
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+
+        return flag;
+    }
+
     static void remove(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {

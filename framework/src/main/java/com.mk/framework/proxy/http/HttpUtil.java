@@ -19,13 +19,21 @@ public class HttpUtil {
 
     static String doGet(String url, int count) {
         if ( count <= Config.FETCH_RETRY_TIMES ) {
+
             LOGGER.info("开始第{}次请求。", count);
+
+            ProxyServer proxyServer = ProxyServerManager.random();
             try {
-                ProxyServer proxyServer = ProxyServerManager.random();
-                LOGGER.info("proxy:", proxyServer.getIp());
-                return HttpUtil.doGet(url, proxyServer);
+                String result = HttpUtil.doGet(url, proxyServer);
+
+                if ( StringUtils.isEmpty(result) || result.length() < 100 ) {
+                    throw new IOException("响应内容为：" + result);
+                }
+
+                return result;
             } catch (IOException e) {
-                LOGGER.error("请求出错：", e);
+                ProxyServerManager.remove(proxyServer);
+                LOGGER.info("请求出错，移除代理:{}，还有{}个代理。", JSONUtil.toJson(proxyServer), ProxyServerManager.count());
 
                 return doGet(url, ++count);
             }
@@ -75,6 +83,16 @@ public class HttpUtil {
             httpUrlConn.setReadTimeout(Config.READ_TIMEOUT);
 
             httpUrlConn.setRequestMethod("GET");
+
+            httpUrlConn.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            httpUrlConn.addRequestProperty("Accept-Encoding", "gzip, deflate, sdch");
+            httpUrlConn.addRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
+            httpUrlConn.addRequestProperty("Cache-Control", "max-age=0");
+            httpUrlConn.addRequestProperty("Connection", "keep-alive");
+            httpUrlConn.addRequestProperty("DNT", "1");
+            httpUrlConn.addRequestProperty("Host", "pad.qunar.com");
+            httpUrlConn.addRequestProperty("Upgrade-Insecure-Requests", "1");
+            httpUrlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53");
 
             httpUrlConn.connect();
 
