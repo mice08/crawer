@@ -187,7 +187,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             logger.info("dataMaps == null return");
             return null;
         }
-        String hotels =urlMaps.get("hotels");
+        String hotels =dataMaps.get("hotels");
         if(hotels==null){
             logger.info("hotes == null return");
             return null;
