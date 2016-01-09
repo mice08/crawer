@@ -24,7 +24,6 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
-    private static final Integer JOB_WAITING_QUEUE_SIZE_LIMIT = 1000;
 
     private static final ThreadPoolExecutor EXECUTOR_100 = (ThreadPoolExecutor) Executors.newFixedThreadPool(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT, new HotelInfoRefreshThreadFactory());
 //    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(Config.HOT_CITY_1000_CONCURRENCY_THREAD_COUNT);
@@ -76,7 +75,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
-                        if ( EXECUTOR_100.getPoolSize() <= JOB_WAITING_QUEUE_SIZE_LIMIT ) {
+                        if ( EXECUTOR_100.getPoolSize() < EXECUTOR_100.getCorePoolSize() ) {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } else {
                             ThreadUtil.sleep(1000);
