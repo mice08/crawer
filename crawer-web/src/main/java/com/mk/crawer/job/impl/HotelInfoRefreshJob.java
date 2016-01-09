@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -23,18 +24,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
-//    private static final ExecutorService EXECUTOR_100 = Executors.newFixedThreadPool(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT);
+    private static final Integer JOB_WAITING_QUEUE_SIZE_LIMIT = 1000;
+
+    private static final ThreadPoolExecutor EXECUTOR_100 = (ThreadPoolExecutor) Executors.newFixedThreadPool(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT, new HotelInfoRefreshThreadFactory());
 //    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(Config.HOT_CITY_1000_CONCURRENCY_THREAD_COUNT);
 //    private static final ExecutorService EXECUTOR_OTHER = Executors.newFixedThreadPool(Config.NO_HOT_CITY_CONCURRENCY_THREAD_COUNT);
-
-    private static final ThreadPoolExecutor EXECUTOR_100 =
-            new ThreadPoolExecutor(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
-                    100,
-                    60,
-                    TimeUnit.SECONDS,
-                    new ArrayBlockingQueue<Runnable>(1000),
-                    new HotelInfoRefreshThreadFactory(),
-                    new ThreadPoolExecutor.CallerRunsPolicy());
 
     private static volatile boolean addJobEnable = true;
 
@@ -46,21 +40,17 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
         public HotelInfoRefreshThreadFactory() {
             SecurityManager s = System.getSecurityManager();
-            group = (s != null)? s.getThreadGroup() :
-                    Thread.currentThread().getThreadGroup();
-            namePrefix = "pool-" +
-                    poolNumber.getAndIncrement() +
-                    "-thread-";
+            group = (s != null)? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            namePrefix = "pool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r,
-                    namePrefix + threadNumber.getAndIncrement(),
-                    0);
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
             t.setDaemon(true);
-            if (t.getPriority() != Thread.NORM_PRIORITY)
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
+            }
             return t;
         }
     }
@@ -85,7 +75,12 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
-                        EXECUTOR_100.execute(hotelInfoRefreshThread);
+
+                        if ( EXECUTOR_100.getPoolSize() <= JOB_WAITING_QUEUE_SIZE_LIMIT ) {
+                            EXECUTOR_100.execute(hotelInfoRefreshThread);
+                        } else {
+                            ThreadUtil.sleep(1000);
+                        }
                     }
                 } catch (Exception e) {
                     LOGGER.error("刷新酒店价格任务执行出错：", e);
@@ -107,7 +102,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 addJobEnable = false;
                 LOGGER.info("停止添加任务");
                 EXECUTOR_100.shutdown();
-                LOGGER.info("关闭线程池");
+                LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
     }
