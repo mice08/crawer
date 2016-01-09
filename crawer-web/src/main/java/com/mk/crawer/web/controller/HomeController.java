@@ -1,10 +1,7 @@
 package com.mk.crawer.web.controller;
 
-import cn.easyproject.easyocr.EasyOCR;
-import cn.easyproject.easyocr.ImageType;
 import com.mk.crawer.biz.model.ots.HotelDetail;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.crawer.utils.CrawerUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.UrlUtils;
 import org.apache.log4j.Logger;
@@ -83,29 +80,7 @@ public class HomeController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getcode", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> getCode(HttpSession httpSession) {
-		HashMap<String, Object> result = new HashMap<String, Object>();
 
-		String rst1 = "";
-		String rst2 = "";
-		try {
-
-			String imgPath = CrawerUtils.downloadChallageCode(null);
-			EasyOCR e=new EasyOCR();
-
-			rst1 = e.discernAndAutoCleanImage(imgPath, ImageType.CAPTCHA_HOLLOW_CHAR);
-			rst2 = e.discernAndAutoCleanImage(imgPath, ImageType.CAPTCHA_INTERFERENCE_LINE);
-					;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		result.put("code1", rst1);
-		result.put("code2", rst2);
-		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-	}
 
 
 

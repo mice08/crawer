@@ -22,8 +22,8 @@ public class HotelInfoRefreshJob implements InitializingBean {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
     private static final ExecutorService EXECUTOR_100 = Executors.newFixedThreadPool(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT);
-    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(Config.HOT_CITY_1000_CONCURRENCY_THREAD_COUNT);
-    private static final ExecutorService EXECUTOR_OTHER = Executors.newFixedThreadPool(Config.NO_HOT_CITY_CONCURRENCY_THREAD_COUNT);
+//    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(Config.HOT_CITY_1000_CONCURRENCY_THREAD_COUNT);
+//    private static final ExecutorService EXECUTOR_OTHER = Executors.newFixedThreadPool(Config.NO_HOT_CITY_CONCURRENCY_THREAD_COUNT);
 
     private static final Integer JOB_LIMIT = 1000;
 

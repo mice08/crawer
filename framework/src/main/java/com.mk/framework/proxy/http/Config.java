@@ -25,11 +25,11 @@ class Config {
     /**
      * 眯客自己的代理IP列表资源地址
      */
-    public static final String IMIKE_PROXY_IP_LIST_URL = "http://zetas-app.oss-cn-shanghai.aliyuncs.com/ip.json";
+    public static final String IMIKE_PROXY_IP_LIST_URL = "http://dev-bypass.imike.cn/ip.json";
     /**
      * 付费IP代理提取地址
      */
-    public static final String BILL_PROXY_IP_LIST_URL = "http://api.goubanjia.com/api/get.shtml?order=7fad4d177bdcd13da3ae957aef770bd5&num=200&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=1&an1=1&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=0&seprator=%0D%0A";
+    public static final String BILL_PROXY_IP_LIST_URL = "http://api.goubanjia.com/api/get.shtml?order=7fad4d177bdcd13da3ae957aef770bd5&num=10000&carrier=0&protocol=1&an1=1&an2=2&sp1=1&sp2=2&sp3=3&sort=1&rettype=0&seprator=%0D%0A&f_loc=1&f_anoy=1&f_speed=1";
     /**
      * 眯客BI提供的代理提取地址
      */

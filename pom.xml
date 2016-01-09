@@ -222,6 +222,12 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-classworlds</artifactId>
             <version>2.2.2</version>
@@ -267,16 +273,16 @@
                 </snapshots>
                 <id>public</id>
                 <name>Public Repositories</name>
-                <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
-                <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+                <!--  <url>http://192.168.20.80:8081/mkrepo</url>-->
+                  <url>http://10.4.4.228:8081/nexus/content/repositories/releases/</url>
             </repository>
         </repositories>
         <pluginRepositories>
             <pluginRepository>
                 <id>public</id>
                 <name>Public Repositories</name>
-                <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
-                <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+                <!-- <url>http://192.168.20.80:8081/mkrepo</url>-->
+                 <url>http://10.4.4.228:8081/nexus/content/repositories/releases/</url>
             </pluginRepository>
         </pluginRepositories>
 
@@ -447,6 +453,7 @@
                 <qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
                 <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+                <qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
             </properties>
         </profile>
     </profiles>
