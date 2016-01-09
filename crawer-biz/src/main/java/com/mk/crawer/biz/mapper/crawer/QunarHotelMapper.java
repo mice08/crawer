@@ -2,7 +2,9 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
+
 import java.util.List;
+import java.util.Map;
 
 public interface QunarHotelMapper {
     int countByExample(QunarHotelExample example);
@@ -20,4 +22,5 @@ public interface QunarHotelMapper {
     int updateByPrimaryKeySelective(QunarHotel record);
 
     int updateByPrimaryKey(QunarHotel record);
+    List<Map<String,String>> seletAllHotelCity();
 }

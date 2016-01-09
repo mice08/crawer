@@ -2,14 +2,17 @@ package com.mk.crawer.biz.servcie.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.model.crawer.*;
-import com.mk.crawer.biz.servcie.*;
+import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.model.crawer.CityListExample;
+import com.mk.crawer.biz.model.crawer.QunarHotel;
+import com.mk.crawer.biz.model.crawer.QunarHotelExample;
+import com.mk.crawer.biz.servcie.ICityListService;
+import com.mk.crawer.biz.servcie.QunarHotelMapSyncService;
+import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
-import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +74,19 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+        /*
         for (CityList city:cityLists) {
             doSync(city);
+        }*/
+
+        List hasCrawleCityList = qunarHotelService.seletAllHotelCity();
+
+        for (CityList cityList : cityLists) {
+            if (hasCrawleCityList.contains(cityList.getCityName())){
+                logger.info("##=====================城市{}的酒店之前爬取过,略过====================",cityList.getCityName());
+                continue;
+            }
+            doSync(cityList);
         }
         Cat.logEvent("qunarHotelMapSync", "去哪儿酒店信息同步", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
