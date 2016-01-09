@@ -5,6 +5,7 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -39,18 +40,16 @@ public class HotelInfoRefreshThread implements Runnable {
 
             LOGGER.info("开始刷新酒店:{}价格", hotelId);
 
-            Integer sleepTime = RANDOM.nextInt(10000);
-            if ( sleepTime < 100 ) {
-                sleepTime = 100;
-            }
-            Thread.sleep(sleepTime);
+            ThreadUtil.randomSleep(500, 10000);
 
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 
             hotelDetailCrawlService.crawl(hotelId);
 
+            /**
+             * 价格刷新成功，移除任务
+             */
             Jedis jedis = null;
-
             try {
                 jedis = getJedis();
 
@@ -61,9 +60,9 @@ public class HotelInfoRefreshThread implements Runnable {
                 }
             }
 
-            LOGGER.info("结束刷新酒店:{}价格", hotelId);
+            LOGGER.info("结束刷新酒店:{}价格，还剩{}家酒店的价格需要刷新。", hotelId, jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
         } catch (Exception e) {
-            LOGGER.error("价格刷新线程出错：", e);
+            LOGGER.error("刷新酒店:{}价格出错。", hotelId);
         } finally {
             GlobalValues.HOTEL_INFO_REFRESH_JOB_COUNT.decrementAndGet();
         }
