@@ -11,7 +11,9 @@ import com.mk.crawer.biz.servcie.QunarHotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kirinli on 16/1/6.
@@ -58,6 +60,15 @@ public class QunarHotelServiceImpl implements QunarHotelService {
     @Override
     public int updateByPrimaryKey(QunarHotel record) {
         return qunarHotelMapper.updateByPrimaryKey(record);
+    }
+    @Override
+    public List<String>  seletAllHotelCity(){
+        List<String> cityList = new ArrayList<>();
+        List<Map<String, String>> result = qunarHotelMapper.seletAllHotelCity();
+        for (Map<String, String> stringMap : result) {
+            cityList.add(stringMap.get("city_name"));
+        }
+        return cityList;
     }
 
 }

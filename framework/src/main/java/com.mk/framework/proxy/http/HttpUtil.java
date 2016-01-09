@@ -26,6 +26,8 @@ public class HttpUtil {
         return doGet(url, 1);
     }
 
+
+
     static String doGet(String url, int count) {
         if ( count <= Config.FETCH_RETRY_TIMES ) {
 

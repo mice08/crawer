@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-class ProxyServerManager {
+public class ProxyServerManager {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
 
@@ -43,6 +43,34 @@ class ProxyServerManager {
         }
 
         return proxyServer;
+    }
+
+    public  static ProxyServer randomBlock() {
+        String jsonStr;
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+
+            jsonStr = jedis.srandmember(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
+
+            if (StringUtils.isEmpty(jsonStr)) {
+                throw new IllegalArgumentException("无法从Redis里面获取到代理IP");
+            }
+
+            return JSONUtil.fromJson(jsonStr, ProxyServer.class);
+        } catch (Exception e) {
+            List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
+
+            ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
+
+            LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
+
+            return proxyServer;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
     }
 
     static Long add(ProxyServer proxyServer) {
@@ -104,6 +132,25 @@ class ProxyServerManager {
 
 
     }
+
+   public static void removeBlock(ProxyServer proxyServer) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.srem(
+                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer));
+        }catch (Exception e){
+            throw e;
+        }finally {
+            if (null != jedis){
+                jedis.close();
+            }
+        }
+
+
+    }
+
 
     static List<ProxyServer> listProxyServer() {
         Jedis jedis = null;
@@ -178,7 +225,7 @@ class ProxyServerManager {
         }
     }
 
-    static Long countBadServer() {
+    public  static Long countBadServer() {
         Jedis jedis = null;
         try {
             jedis = getJedis();

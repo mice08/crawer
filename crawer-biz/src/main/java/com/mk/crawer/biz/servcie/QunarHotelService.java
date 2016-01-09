@@ -1,7 +1,5 @@
 package com.mk.crawer.biz.servcie;
 
-import com.mk.crawer.biz.model.crawer.Brands;
-import com.mk.crawer.biz.model.crawer.BrandsExample;
 import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 
@@ -23,4 +21,5 @@ public interface QunarHotelService {
     int updateByPrimaryKeySelective(QunarHotel record);
 
     int updateByPrimaryKey(QunarHotel record);
+    List<String>  seletAllHotelCity();
 }

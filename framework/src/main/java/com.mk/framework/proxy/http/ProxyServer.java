@@ -3,24 +3,24 @@ package com.mk.framework.proxy.http;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-class ProxyServer {
+public class ProxyServer {
 
     private String ip;
 
     private Integer port;
 
-    String getIp() {
+    public String getIp() {
         return ip;
     }
 
-    void setIp(String ip) {
+    public void setIp(String ip) {
         this.ip = ip;
     }
 
-    Integer getPort() {
+    public Integer getPort() {
         return port;
     }
-
+    public
      void setPort(Integer port) {
         this.port = port;
     }
