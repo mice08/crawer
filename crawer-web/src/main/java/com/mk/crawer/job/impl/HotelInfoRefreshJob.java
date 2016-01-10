@@ -79,6 +79,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         if ( EXECUTOR_100.getPoolSize() < EXECUTOR_100.getCorePoolSize() ) {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } else {
+                            LOGGER.info("++###############线程池满了,睡眠####EXECUTOR_100.getPoolSize() {}#####EXECUTOR_100.getCorePoolSize() {}####",EXECUTOR_100.getPoolSize(),EXECUTOR_100.getCorePoolSize());
                             ThreadUtil.sleep(1000);
                         }
                     }
