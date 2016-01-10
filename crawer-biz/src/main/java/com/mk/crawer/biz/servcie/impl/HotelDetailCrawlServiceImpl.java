@@ -20,7 +20,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
 
-	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
+	private final org.slf4j.Logger logger  = org.slf4j.LoggerFactory.getLogger(HotelDetailCrawlServiceImpl.class);
 
 	private final Gson gson = new Gson();
 
@@ -51,11 +51,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Override
 	public void crawl(List<String> hotelIds) throws Exception {
+
 		Date day = new Date();
 		String strCurDay = DateUtils.getStringFromDate(day, DateUtils.FORMATSHORTDATETIME);
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
+		logger.info("++++++++++++++++++++++++bengin crawl hotel"+ hotelid+ " ++++++++++++++++++");
 		String invokeUrl = String.format(hotelDetailUrl, strCurDay, strNextDay, hotelid);
 
 		if (logger.isDebugEnabled()) {
@@ -212,6 +214,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private boolean persistRoomtypeCombs(List<RoomTypeCombination> roomtypeCombs) throws Exception {
 		boolean isUpdateRequired = false;
 
+
 		for (RoomTypeCombination roomtypeComb : roomtypeCombs) {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
@@ -222,6 +225,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("roomtypeKey", roomtype.getRoomtypeKey());
 				parameters.put("hotelSourceId", roomtype.getHotelSourceId());
+				logger.info("_________________start crawl roomtype"+ roomtype.getHotelSourceId() + "______________________");
 
 				List<RoomType> roomtypes = roomtypeMapper.selectByKeys(parameters);
 				if (roomtypes != null && roomtypes.size() > 0) {

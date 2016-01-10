@@ -28,10 +28,17 @@
 	<context:property-placeholder location="classpath:db.properties"/>
 	<bean id="otsDataSource"  class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<property name="initialSize" value="25" />
-		<property name="maxActive" value="500" />
-		<property name="maxWait" value="60000" />
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
 		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
 		<property name="testOnBorrow" value="true" />
 		<property name="validationQuery" value="SELECT 1" />
 		<property name="url" value="${ots.jdbc.urls}"/>
@@ -41,12 +48,19 @@
 
 	<bean id="crawerDataSource"  class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<property name="initialSize" value="25" />
-		<property name="maxActive" value="500" />
-		<property name="maxWait" value="60000" />
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
 		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+
 		<property name="testOnBorrow" value="true" />
-		<property name="validationQuery" value="SELECT 1" />
 		<property name="url" value="${crawler.jdbc.url}"/>
 		<property name="username" value="${crawler.jdbc.username}"/>
 		<property name="password" value="${crawler.jdbc.password}"/>
