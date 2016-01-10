@@ -75,6 +75,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
+                        LOGGER.info("--###########################刷新酒店价格："+hotelInfoRefreshThread.getHotelId() );
                         if ( EXECUTOR_100.getPoolSize() < EXECUTOR_100.getCorePoolSize() ) {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } else {
