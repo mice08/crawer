@@ -10,6 +10,7 @@ import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ import java.util.Set;
 @Component
 public class HotelInfoRefreshThreadAddJob implements Worker {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
+    private static final Logger LOGGER =  LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
 
    // @Autowired
     //private IHotelService iHotelService;
@@ -54,12 +55,15 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
                     if (qunarHotelService == null){
                         qunarHotelService = AppUtils.getBean(QunarHotelService.class);
                     }
+                    LOGGER.info("*******************刷新城市缓存{} ***************",city.getCityName());
 
                     List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
                     if (hotelList != null){
                         for (QunarHotel hotel : hotelList) {
                             HotelInfoRefreshThread hotelInfoRefreshThread = new HotelInfoRefreshThread();
                             hotelInfoRefreshThread.setHotelId(hotel.getSourceId());
+                            LOGGER.info("*******************加入酒店属性缓存队列{} ***************",hotel.getHotelName());
+
                             jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(hotelInfoRefreshThread));
                         }
                     }
