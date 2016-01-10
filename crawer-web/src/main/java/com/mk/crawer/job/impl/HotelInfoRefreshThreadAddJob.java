@@ -1,9 +1,9 @@
 package com.mk.crawer.job.impl;
 
 import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.biz.model.crawer.Hotel;
-import com.mk.crawer.biz.model.crawer.HotelExample;
-import com.mk.crawer.biz.servcie.IHotelService;
+import com.mk.crawer.biz.model.crawer.QunarHotel;
+import com.mk.crawer.biz.model.crawer.QunarHotelExample;
+import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.Worker;
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
@@ -26,8 +26,10 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
 
+   // @Autowired
+    //private IHotelService iHotelService;
     @Autowired
-    private IHotelService iHotelService;
+    private QunarHotelService qunarHotelService;
 
     @Scheduled(cron = "0 10 0 * * ? ")
     @Override
@@ -46,16 +48,22 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
                 for (String s : jsonStrSet) {
                     CityList city = JSONUtil.fromJson(s, CityList.class);
 
-                    HotelExample hotelExample = new HotelExample();
+                    QunarHotelExample hotelExample = new QunarHotelExample();
                     hotelExample.createCriteria().andCityNameEqualTo(city.getCityName());
 
-                    List<Hotel> hotelList = iHotelService.selectByExample(hotelExample);
-
-                    for (Hotel hotel : hotelList) {
-                        HotelInfoRefreshThread hotelInfoRefreshThread = new HotelInfoRefreshThread();
-                        hotelInfoRefreshThread.setHotelId(hotel.getSourceId());
-                        jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(hotelInfoRefreshThread));
+                    if (qunarHotelService == null){
+                        qunarHotelService = AppUtils.getBean(QunarHotelService.class);
                     }
+
+                    List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
+                    if (hotelList != null){
+                        for (QunarHotel hotel : hotelList) {
+                            HotelInfoRefreshThread hotelInfoRefreshThread = new HotelInfoRefreshThread();
+                            hotelInfoRefreshThread.setHotelId(hotel.getSourceId());
+                            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(hotelInfoRefreshThread));
+                        }
+                    }
+
                 }
             }
             finally {
@@ -73,6 +81,9 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
         }
     }
 
+    public void doJob(){
+        work();
+    }
     private static Jedis getJedis() {
         return AppUtils.getBean(MkJedisConnectionFactory.class).getJedis();
     }

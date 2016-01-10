@@ -1,6 +1,7 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.job.impl.HotelInfoRefreshThreadAddJob;
 import com.mk.crawer.job.impl.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +62,17 @@ public class ReFreshCityListController {
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/refreshhotel")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> refreshHotel() {
+
+       new HotelInfoRefreshThreadAddJob().doJob();
+        HashMap hm = new HashMap();
+        String result = "请求成功";
+        boolean  success = true;
+        hm.put("result",result);
+        hm.put("success",success);
+        return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+    }
 
 }
