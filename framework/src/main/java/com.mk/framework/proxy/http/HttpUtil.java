@@ -98,21 +98,11 @@ public class HttpUtil {
 
         HttpEntity httpEntity = closeableHttpResponse.getEntity();
 
-        String contentType= httpEntity.getContentType().getValue();
+        byte[] bytes = EntityUtils.toByteArray(httpEntity);
 
-        String result;
+        String charset = CharsetDetector.guessEncoding(bytes);
 
-        if ( contentType.contains("GBK") ) {
-            result = EntityUtils.toString(httpEntity, "GBK");
-        } else if ( contentType.contains("GB2312") ) {
-            result = EntityUtils.toString(httpEntity, "GB2312");
-        } else if ( contentType.contains("UTF-8") ) {
-            result = EntityUtils.toString(httpEntity, "UTF-8");
-        } else if ( contentType.contains("application/json") ){
-            result = EntityUtils.toString(httpEntity, "UTF-8");
-        } else {
-            result = EntityUtils.toString(httpEntity, "GBK");
-        }
+        String result = new String(bytes, charset);
 
         LOGGER.info("获得响应：{}", result);
         return result;
@@ -129,8 +119,9 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-//        LOGGER.info(doGet("http://1212.ip138.com/ic.asp"));
-        LOGGER.info(doGet("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
+        LOGGER.info(doGetNoProxy("http://1212.ip138.com/ic.asp"));
+//        LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
+//        LOGGER.info(doGetNoProxy("http://www.xueshandai.com/"));
     }
 
 }
