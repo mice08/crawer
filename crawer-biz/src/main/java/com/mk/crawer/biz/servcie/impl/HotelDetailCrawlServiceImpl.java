@@ -20,7 +20,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	private final String hotelDetailUrl = "http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=%s&checkOutDate=%s&keywords=&location=&seq=%s&clickNum=0&isLM=0&type=0";
 
-	private final Logger logger = Logger.getLogger(HotelDetailCrawlServiceImpl.class);
+	private final org.slf4j.Logger logger  = org.slf4j.LoggerFactory.getLogger(HotelDetailCrawlServiceImpl.class);
 
 	private final Gson gson = new Gson();
 

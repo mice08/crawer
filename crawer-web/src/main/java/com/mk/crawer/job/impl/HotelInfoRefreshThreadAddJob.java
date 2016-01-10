@@ -10,7 +10,6 @@ import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ import java.util.Set;
 @Component
 public class HotelInfoRefreshThreadAddJob implements Worker {
 
-    private static final Logger LOGGER =  LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
+    private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
 
    // @Autowired
     //private IHotelService iHotelService;
