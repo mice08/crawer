@@ -19,8 +19,9 @@
 </head>
 <body>
 <h1>Hello, crawler</h1>
-<form action="/" method="post" name="fm" id="fm">
+<form action="/crawer" method="post" name="fm" id="fm">
     <input type="hidden" id="channgeCodeValue" name="channgeCodeValue">
+    <input type="hidden" id="unblockresult" name="unblockresult">
 </form>
 <div class="tipfiled">
     <p id="tip"></p>
@@ -62,7 +63,7 @@
             }
         %>
         <td>验证码</td>
-        <td><img src="<%=imgurl%>"></td>
+        <td><img src="crawer/<%=imgurl%>"></td>
     </tr>
     <tr>
         <td>输入</td>
@@ -90,15 +91,22 @@
                 }
                 cookieInfo+=";Domain=.qunar.com;Path=/;";
                 String resp = CrawerUtils.postChallageCode(proxyServer,challageCode, cookieInfo);%>
+                alert("<%=resp %>");
                 document.getElementById("tip").value = <%=resp %>
                 <%
                  JSONObject  json = JSON.parseObject(resp);
 
                  if (json!= null && json.getInteger("code") != -1){
                     ProxyServerManager.removeBlock(proxyServer);
+                    System.out.println("******************************解封 "+proxyServer.getIp() +"成功!******************" );
            %>
                 alert("解封<%=proxyServer.getIp()%>成功! ")
-        <%}
+        <%      }else if(json!= null &&json.getInteger("code") == -1 ){
+
+            System.out.println("******************************解封 "+proxyServer.getIp() +"失败!******************" );
+        %>
+        alert("解封<%=proxyServer.getIp()%>失败! ")
+          <%  }
         }
         %>
 
