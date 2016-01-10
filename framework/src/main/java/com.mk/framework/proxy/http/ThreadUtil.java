@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class ThreadUtil {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ThreadUtil.class);
 
     private static final Random RANDOM = new Random();
 
