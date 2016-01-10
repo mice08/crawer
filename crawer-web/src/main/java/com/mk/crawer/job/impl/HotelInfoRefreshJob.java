@@ -75,7 +75,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
-                        if ( EXECUTOR_100.getPoolSize() < EXECUTOR_100.getCorePoolSize() ) {
+                        if ( EXECUTOR_100.getActiveCount() < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } else {
                             ThreadUtil.sleep(1000);
