@@ -42,7 +42,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         public HotelInfoRefreshThreadFactory() {
             SecurityManager s = System.getSecurityManager();
             group = (s != null)? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            namePrefix = "pool-" + poolNumber.getAndIncrement() + "-thread-";
+            namePrefix = "hotel price refresh pool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         @Override
