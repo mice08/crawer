@@ -1,7 +1,5 @@
 package com.mk.framework.proxy.http;
 
-import org.slf4j.Logger;
-
 import java.util.List;
 
 /**
