@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="ots_hotel_id" property="otsHotelId" jdbcType="BIGINT" />
     <result column="ots_hotel_name" property="otsHotelName" jdbcType="VARCHAR" />
-    <result column="ex_hotel_id" property="exHotelId" jdbcType="BIGINT" />
+    <result column="ex_hotel_id" property="exHotelId" jdbcType="VARCHAR" />
     <result column="ex_hotel_name" property="exHotelName" jdbcType="VARCHAR" />
     <result column="valid" property="valid" jdbcType="CHAR" />
   </resultMap>
@@ -57,7 +57,7 @@
       ex_hotel_id, ex_hotel_name, valid
       )
     values (#{id,jdbcType=BIGINT}, #{otsHotelId,jdbcType=BIGINT}, #{otsHotelName,jdbcType=VARCHAR}, 
-      #{exHotelId,jdbcType=BIGINT}, #{exHotelName,jdbcType=VARCHAR}, #{valid,jdbcType=CHAR}
+      #{exHotelId,jdbcType=VARCHAR}, #{exHotelName,jdbcType=VARCHAR}, #{valid,jdbcType=CHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
@@ -93,7 +93,7 @@
         #{otsHotelName,jdbcType=VARCHAR},
       </if>
       <if test="exHotelId != null" >
-        #{exHotelId,jdbcType=BIGINT},
+        #{exHotelId,jdbcType=VARCHAR},
       </if>
       <if test="exHotelName != null" >
         #{exHotelName,jdbcType=VARCHAR},
@@ -119,7 +119,7 @@
         ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
       </if>
       <if test="exHotelId != null" >
-        ex_hotel_id = #{exHotelId,jdbcType=BIGINT},
+        ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
       </if>
       <if test="exHotelName != null" >
         ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
@@ -134,7 +134,7 @@
     update ots_ex_hotel_mapping
     set ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
       ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
-      ex_hotel_id = #{exHotelId,jdbcType=BIGINT},
+      ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
       ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
       valid = #{valid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
