@@ -56,7 +56,7 @@ public class HotelInfoRefreshThread implements Runnable {
                 }
             }
 
-            LOGGER.info("结束刷新酒店:{}价格，还剩{}家酒店的价格需要刷新。", hotelId, jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
+            LOGGER.info("结束刷新酒店{}的价格，还剩{}家酒店的价格需要刷新。", hotelId, jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
         } catch (Exception e) {
             LOGGER.error("刷新酒店:{}价格出错。", hotelId);
         }
