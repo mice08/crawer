@@ -37,28 +37,38 @@ public class HotelMappingController {
     public ResponseEntity<Map<String,Object>> addHotelMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
 
-        String  otsHotelId = request.getParameter("otsHotelId");
+        String  otsHotelId = request.getParameter("otsotelid");
         if(StringUtils.isEmpty(otsHotelId)){
             success = false;
-            code = "-2";
-            result = "otsHotelId不能为空";
+            errcode = "-2";
+            errmsg = "otsHotelId不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        String  otsHotelName  = request.getParameter("otsHotelName");
-        String  exHotelId  = request.getParameter("exHotelId");
+        String  otsHotelName  = request.getParameter("otshotelname");
+        String  exHotelId  = request.getParameter("exhotelid");
 
         if(StringUtil.isEmpty(exHotelId)){
             success = false;
-            code = "-2";
-            result = "exHotelId不能为空";
+            errcode = "-2";
+            errmsg = "exHotelId不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        String  exHotelName  = request.getParameter("exHotelName");
+        String  exHotelName  = request.getParameter("exhotelname");
 
         HotelMapping  hotelMapping = new HotelMapping();
         hotelMapping.setOtsHotelId(Long.parseLong(otsHotelId));
@@ -70,12 +80,12 @@ public class HotelMappingController {
         hotelMappingBusinessService.insert(hotelMapping);
 
         success = true;
-        result = "操作成功";
-        code ="1";
+        errmsg = "操作成功";
+        errcode ="1";
 
         hm.put("success",success);
-        hm.put("result",result);
-        hm.put("code",code);
+        hm.put("errmsg",errmsg);
+        hm.put("errcode",errcode);
 
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
@@ -85,21 +95,21 @@ public class HotelMappingController {
     public ResponseEntity<Map<String,Object>> updateHotelMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
         String  id = request.getParameter("id");
 
         if(StringUtils.isEmpty(id)){
             success = false;
-            code = "-2";
-            result = "id不能为空";
+            errcode = "-2";
+            errmsg = "id不能为空";
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        String  otsHotelId = request.getParameter("otsHotelId");
-        String  otsHotelName  = request.getParameter("otsHotelName");
-        String  exHotelId  = request.getParameter("exHotelId");
-        String  exHotelName  = request.getParameter("exHotelName");
+        String  otsHotelId = request.getParameter("otshotelid");
+        String  otsHotelName  = request.getParameter("otshotelname");
+        String  exHotelId  = request.getParameter("exhotelid");
+        String  exHotelName  = request.getParameter("exhotelname");
 
         boolean bl = false;
 
@@ -125,25 +135,33 @@ public class HotelMappingController {
             if(bl){
                 hotelMappingBusinessService.update(hotelMapping);
                 success = true;
-                result = "操作成功";
-                code ="1";
+                errmsg = "操作成功";
+                errcode ="1";
             }else{
+
                 success = false;
-                result = "请输入正确的参数";
-                code ="-3";
+                errmsg = "请输入正确的参数";
+                errcode ="-3";
+                hm.put("success",success);
+                hm.put("errmsg",errmsg);
+                hm.put("errcode",errcode);
+
                 return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.BAD_REQUEST);
             }
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.BAD_REQUEST);
 
         }finally{
             hm.put("success",success);
-            hm.put("result",result);
-            hm.put("code",code);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
 
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
         }
@@ -154,33 +172,48 @@ public class HotelMappingController {
     public ResponseEntity<Map<String,Object>> deleteHotelMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String errmsg = "";
+        String errcode ="1";
 
         String  id = request.getParameter("id");
 
         if(StringUtils.isEmpty(id)){
             success = false;
-            code = "-2";
-            result = "id不能为空";
+            errcode = "-2";
+            errmsg = "id不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         try {
+
             hotelMappingBusinessService.deleteByPrimaryKey(Long.parseLong(id));
             success = true;
-            result = "操作成功";
-            code ="1";
+            errmsg = "操作成功";
+            errcode ="1";
+
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }finally{
 
             hm.put("success",success);
-            hm.put("result",result);
-            hm.put("code",code);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+
         }
     }
 
@@ -189,14 +222,14 @@ public class HotelMappingController {
     public ResponseEntity<Map<String,Object>> queryHotelMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
         String  id = request.getParameter("id");
-        String  otsHotelId = request.getParameter("otsHotelId");
-        String  otsHotelName  = request.getParameter("otsHotelName");
-        String  exHotelId  = request.getParameter("exHotelId");
-        String  exHotelName  = request.getParameter("exHotelName");
+        String  otsHotelId = request.getParameter("otshotelid");
+        String  otsHotelName  = request.getParameter("otshotelname");
+        String  exHotelId  = request.getParameter("exhotelid");
+        String  exHotelName  = request.getParameter("exhotelname");
 
         HashMap  parme = new HashMap();
 
@@ -224,18 +257,26 @@ public class HotelMappingController {
         try {
             list =  hotelMappingBusinessService.queryHotelMapping(parme);
             success = true;
-            result = "操作成功";
-            code ="1";
+            errmsg = "操作成功";
+            errcode ="1";
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+
+            hm.put("success", success);
+            hm.put("list",new ArrayList());
+            hm.put("size",0);
+            hm.put("errcode",errcode);
+
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }finally{
             hm.put("success",success);
             hm.put("list",list);
             hm.put("size",list.size());
-            hm.put("code",code);
+            hm.put("errcode",errcode);
 
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
         }
