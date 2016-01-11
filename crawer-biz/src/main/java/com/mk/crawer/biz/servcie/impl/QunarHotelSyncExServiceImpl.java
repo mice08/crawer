@@ -193,23 +193,19 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
                 hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
                 hotel.setHotelBrand(attrsMap.get("hotelBrand"));
                 hotel.setShortName(attrsMap.get("shortName"));
+                hotel.setOneSentence(attrsMap.get("oneSentence"));
 
             }
             QunarHotelExample hotelExample = new QunarHotelExample();
             hotelExample.createCriteria().andSourceIdEqualTo(hotel.getSourceId());
             List<QunarHotel> checkHotelExist=qunarHotelService.selectByExample(hotelExample);
-            if(CollectionUtils.isEmpty(checkHotelExist)){
-                hotel.setCreateTime(new Date());
-                qunarHotelService.insert(hotel);
-                logger.info("====================insert t_qunar_hotel values(source_id={},hotelName={})===================="
-                        ,hotel.getSourceId(),hotel.getHotelName());
-            }else {
+            if(!CollectionUtils.isEmpty(checkHotelExist)){
                 QunarHotel existHotel=checkHotelExist.get(0);
                 hotel.setId(existHotel.getId());
                 hotel.setUpdateTime(new Date());
                 qunarHotelService.updateByPrimaryKeySelective(hotel);
-                logger.info("====================update t_qunar_hotel values(source_id={},hotelName={})===================="
-                        ,hotel.getSourceId(),hotel.getHotelName());
+                logger.info("====================update t_qunar_hotel values(source_id={})===================="
+                        ,hotel.getSourceId());
             }
 
         }
