@@ -235,6 +235,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				logger.warn(String.format("failed to detection duplication for roomtypeKey:%s; hotelSourceId:%s",
 						roomtype.getRoomtypeKey(), roomtype.getHotelSourceId()), ex);
+				
+				isUpdateRequired = true;
+				isRoomtypeUpdateRequired = true;				
 			}
 
 			if (!isRoomtypeUpdateRequired) {
