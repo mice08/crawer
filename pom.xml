@@ -274,8 +274,8 @@
                 <id>public</id>
                 <name>Public Repositories</name>
                   <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
-                  <!--<url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>-->
-                  <url>http://repository.sonatype.org/content/groups/public/</url>
+                  <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+                  <!--<url>http://repository.sonatype.org/content/groups/public/</url>-->
             </repository>
         </repositories>
         <pluginRepositories>
@@ -283,8 +283,8 @@
                 <id>public</id>
                 <name>Public Repositories</name>
                  <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
-                 <!--<url>http://10.10.144.74:8081/nexus/contentgit/repositories/releases/</url>-->
-                 <url>http://repository.sonatype.org/content/groups/public/</url>
+                 <url>http://10.10.144.74:8081/nexus/contentgit/repositories/releases/</url>
+                 <!--<url>http://repository.sonatype.org/content/groups/public/</url>-->
             </pluginRepository>
         </pluginRepositories>
 

@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by 振涛 on 2016/1/8.
  */
-//@Component
+@Component
 public class HotelInfoRefreshJob implements InitializingBean {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);

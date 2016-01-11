@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by 振涛 on 2016/1/7.
  */
-//@Component
+@Component
 public class ProxyServerAddJob implements Worker {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerAddJob.class);
