@@ -9,14 +9,10 @@ import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
-import java.util.Random;
-
 /**
  * Created by 振涛 on 2016/1/8.
  */
 public class HotelInfoRefreshThread implements Runnable {
-
-    private static final Random RANDOM = new Random();
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThread.class);
 
