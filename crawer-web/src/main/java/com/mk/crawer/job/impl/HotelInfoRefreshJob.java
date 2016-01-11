@@ -78,7 +78,9 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         if ( EXECUTOR_100.getActiveCount() < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } else {
-                            ThreadUtil.sleep(1000);
+                            int sleepTime = 1000;
+                            LOGGER.info("{} active thread, current thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
+                            ThreadUtil.sleep(sleepTime);
                         }
                     }
                 } catch (Exception e) {
