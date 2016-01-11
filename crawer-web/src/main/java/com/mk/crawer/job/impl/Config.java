@@ -137,7 +137,7 @@ public class Config {
     /**
      * 中国热门城市100个集合的线程池并发数
      */
-    public static final Integer HOT_CITY_100_CONCURRENCY_THREAD_COUNT = 100;
+    public static final Integer HOT_CITY_100_CONCURRENCY_THREAD_COUNT = 150;
     /**
      * 中国热门城市1000个集合的线程池并发数
      */
