@@ -1112,4 +1112,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <select id="seletAllHotelCity" resultType="map">
+    SELECT DISTINCT city_name from t_qunar_hotel
+  </select>
 </mapper>
