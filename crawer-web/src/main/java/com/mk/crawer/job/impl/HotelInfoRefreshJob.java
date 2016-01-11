@@ -81,7 +81,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } catch (RejectedExecutionException e) {
                             int sleepTime = 1000;
-                            LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", 1, sleepTime);
+                            LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", sleepTime);
                             ThreadUtil.sleep(sleepTime);
                         }
                     } else {
