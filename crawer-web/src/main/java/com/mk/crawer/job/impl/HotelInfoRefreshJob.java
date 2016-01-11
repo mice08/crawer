@@ -24,7 +24,8 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
 
     private static final ThreadPoolExecutor EXECUTOR_100 =
-            new ThreadPoolExecutor(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
+            new ThreadPoolExecutor(
+                    Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                     Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                     100L, TimeUnit.MILLISECONDS,
                     new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT),
