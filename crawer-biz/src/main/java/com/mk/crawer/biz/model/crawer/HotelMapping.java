@@ -7,7 +7,7 @@ public class HotelMapping {
 
     private String otsHotelName;
 
-    private Long exHotelId;
+    private String exHotelId;
 
     private String exHotelName;
 
@@ -37,12 +37,12 @@ public class HotelMapping {
         this.otsHotelName = otsHotelName == null ? null : otsHotelName.trim();
     }
 
-    public Long getExHotelId() {
+    public String getExHotelId() {
         return exHotelId;
     }
 
-    public void setExHotelId(Long exHotelId) {
-        this.exHotelId = exHotelId;
+    public void setExHotelId(String exHotelId) {
+        this.exHotelId = exHotelId == null ? null : exHotelId.trim();
     }
 
     public String getExHotelName() {

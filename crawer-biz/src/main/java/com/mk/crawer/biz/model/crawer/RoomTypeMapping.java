@@ -5,7 +5,7 @@ public class RoomTypeMapping {
 
     private Long otsRoomTypeId;
 
-    private Long exRoomTypeId;
+    private String exRoomTypeId;
 
     private String valid;
 
@@ -25,12 +25,12 @@ public class RoomTypeMapping {
         this.otsRoomTypeId = otsRoomTypeId;
     }
 
-    public Long getExRoomTypeId() {
+    public String getExRoomTypeId() {
         return exRoomTypeId;
     }
 
-    public void setExRoomTypeId(Long exRoomTypeId) {
-        this.exRoomTypeId = exRoomTypeId;
+    public void setExRoomTypeId(String exRoomTypeId) {
+        this.exRoomTypeId = exRoomTypeId == null ? null : exRoomTypeId.trim();
     }
 
     public String getValid() {
