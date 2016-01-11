@@ -42,7 +42,7 @@ public class HotelMapping {
     }
 
     public void setExHotelId(String exHotelId) {
-        this.exHotelId = exHotelId;
+        this.exHotelId = exHotelId == null ? null : exHotelId.trim();
     }
 
     public String getExHotelName() {

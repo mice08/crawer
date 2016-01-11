@@ -73,7 +73,7 @@ public class HotelMappingController {
         HotelMapping  hotelMapping = new HotelMapping();
         hotelMapping.setOtsHotelId(Long.parseLong(otsHotelId));
         hotelMapping.setOtsHotelName(otsHotelName);
-        hotelMapping.setExHotelId(Long.parseLong(exHotelId));
+        hotelMapping.setExHotelId(exHotelId);
         hotelMapping.setExHotelName(exHotelName);
         hotelMapping.setValid("T");
 
@@ -124,7 +124,7 @@ public class HotelMappingController {
             bl = true;
         }
         if(StringUtil.isNotEmpty(otsHotelName)){
-            hotelMapping.setExHotelId(Long.parseLong(exHotelId));
+            hotelMapping.setExHotelId(exHotelId);
             bl = true;
         }
         if(StringUtil.isNotEmpty(otsHotelName)){

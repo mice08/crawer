@@ -30,7 +30,7 @@ public class RoomTypeMapping {
     }
 
     public void setExRoomTypeId(String exRoomTypeId) {
-        this.exRoomTypeId = exRoomTypeId;
+        this.exRoomTypeId = exRoomTypeId == null ? null : exRoomTypeId.trim();
     }
 
     public String getValid() {

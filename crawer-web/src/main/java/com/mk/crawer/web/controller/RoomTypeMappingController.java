@@ -68,7 +68,7 @@ public class RoomTypeMappingController {
 
 
         RoomTypeMapping roomTypeMapping = new RoomTypeMapping();
-        roomTypeMapping.setExRoomTypeId(Long.parseLong(exRoomTypeId));
+        roomTypeMapping.setExRoomTypeId(exRoomTypeId);
         roomTypeMapping.setOtsRoomTypeId(Long.parseLong(otsRoomTypeId));
         roomTypeMapping.setValid("T");
 
@@ -120,7 +120,7 @@ public class RoomTypeMappingController {
         }
         if(StringUtil.isNotEmpty(exRoomTypeId)){
             bl = true;
-            roomTypeMapping.setExRoomTypeId(Long.parseLong(exRoomTypeId));
+            roomTypeMapping.setExRoomTypeId(exRoomTypeId);
         }
 
         try {
