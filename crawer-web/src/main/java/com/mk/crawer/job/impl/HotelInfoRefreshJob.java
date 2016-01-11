@@ -82,6 +82,10 @@ public class HotelInfoRefreshJob implements InitializingBean {
                             LOGGER.info("{} active thread, current thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
                             ThreadUtil.sleep(sleepTime);
                         }
+                    } else {
+                        int sleepTime = 8000;
+                        LOGGER.info("there is not refresh thread in the redis, {} active thread, current thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
+                        ThreadUtil.sleep(sleepTime);
                     }
                 } catch (Exception e) {
                     LOGGER.error("刷新酒店价格任务执行出错：", e);
