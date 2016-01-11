@@ -164,6 +164,16 @@ public class QunarHotel {
 
     private String tagName;
 
+    private String bpoint;
+
+    private String phoneNumber;
+
+    private String hotelBrand;
+
+    private String oneSentence;
+
+    private String shortName;
+
     private Date createTime;
 
     private Date updateTime;
@@ -806,6 +816,46 @@ public class QunarHotel {
 
     public void setTagName(String tagName) {
         this.tagName = tagName == null ? null : tagName.trim();
+    }
+
+    public String getBpoint() {
+        return bpoint;
+    }
+
+    public void setBpoint(String bpoint) {
+        this.bpoint = bpoint == null ? null : bpoint.trim();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber == null ? null : phoneNumber.trim();
+    }
+
+    public String getHotelBrand() {
+        return hotelBrand;
+    }
+
+    public void setHotelBrand(String hotelBrand) {
+        this.hotelBrand = hotelBrand == null ? null : hotelBrand.trim();
+    }
+
+    public String getOneSentence() {
+        return oneSentence;
+    }
+
+    public void setOneSentence(String oneSentence) {
+        this.oneSentence = oneSentence == null ? null : oneSentence.trim();
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName == null ? null : shortName.trim();
     }
 
     public Date getCreateTime() {

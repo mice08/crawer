@@ -273,16 +273,18 @@
                 </snapshots>
                 <id>public</id>
                 <name>Public Repositories</name>
-                <!--  <url>http://192.168.20.80:8081/mkrepo</url>-->
+                  <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
                   <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+                  <!--<url>http://repository.sonatype.org/content/groups/public/</url>-->
             </repository>
         </repositories>
         <pluginRepositories>
             <pluginRepository>
                 <id>public</id>
                 <name>Public Repositories</name>
-                <!-- <url>http://192.168.20.80:8081/mkrepo</url>-->
+                 <!--<url>http://192.168.20.80:8081/mkrepo</url>-->
                  <url>http://10.10.144.74:8081/nexus/contentgit/repositories/releases/</url>
+                 <!--<url>http://repository.sonatype.org/content/groups/public/</url>-->
             </pluginRepository>
         </pluginRepositories>
 
@@ -398,7 +400,9 @@
 
         <profile>
             <id>dev</id>
-
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -422,14 +426,12 @@
                 <qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
                 <qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
                 <qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+                <qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
             </properties>
         </profile>
 
         <profile>
             <id>dev2</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>

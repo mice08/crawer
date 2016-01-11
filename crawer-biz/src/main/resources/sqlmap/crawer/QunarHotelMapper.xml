@@ -82,6 +82,11 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="discount" jdbcType="DECIMAL" property="discount" />
     <result column="tag_name" jdbcType="VARCHAR" property="tagName" />
+    <result column="bpoint" jdbcType="VARCHAR" property="bpoint" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="hotel_brand" jdbcType="VARCHAR" property="hotelBrand" />
+    <result column="one_sentence" jdbcType="VARCHAR" property="oneSentence" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -127,7 +132,8 @@
     has_internet_access, wifi_access, trading_area, image_id, when_fitment, near_address, 
     is_lp, is_top500, is_cwt, theme, hotel_stars, is_web_free, dangci, has_wifiIn_room, 
     has_parking_area2, hotel_name, hotel_address, gpoint, rank_info, logic_bit, mobile_price, 
-    mobile_room_status, activity, price, discount, tag_name, create_time, update_time
+    mobile_room_status, activity, price, discount, tag_name, bpoint, phone_number, hotel_brand, 
+    one_sentence, short_name, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.mk.crawer.biz.model.crawer.QunarHotelExample" resultMap="BaseResultMap">
     select
@@ -181,8 +187,10 @@
       hotel_name, hotel_address, gpoint, 
       rank_info, logic_bit, mobile_price, 
       mobile_room_status, activity, price, 
-      discount, tag_name, create_time, 
-      update_time)
+      discount, tag_name, bpoint, 
+      phone_number, hotel_brand, one_sentence, 
+      short_name, create_time, update_time
+      )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{isLmFullRoom,jdbcType=CHAR}, 
       #{distance,jdbcType=VARCHAR}, #{specialPriceBit,jdbcType=INTEGER}, #{hasFiveFtarHongbao,jdbcType=CHAR}, 
       #{hasSigninRed,jdbcType=CHAR}, #{showRedPack,jdbcType=CHAR}, #{wapInfo,jdbcType=INTEGER}, 
@@ -209,8 +217,10 @@
       #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, #{gpoint,jdbcType=VARCHAR}, 
       #{rankInfo,jdbcType=VARCHAR}, #{logicBit,jdbcType=VARCHAR}, #{mobilePrice,jdbcType=DECIMAL}, 
       #{mobileRoomStatus,jdbcType=INTEGER}, #{activity,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{discount,jdbcType=DECIMAL}, #{tagName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{discount,jdbcType=DECIMAL}, #{tagName,jdbcType=VARCHAR}, #{bpoint,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{hotelBrand,jdbcType=VARCHAR}, #{oneSentence,jdbcType=VARCHAR}, 
+      #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.QunarHotel">
     insert into t_qunar_hotel
@@ -454,6 +464,21 @@
       </if>
       <if test="tagName != null">
         tag_name,
+      </if>
+      <if test="bpoint != null">
+        bpoint,
+      </if>
+      <if test="phoneNumber != null">
+        phone_number,
+      </if>
+      <if test="hotelBrand != null">
+        hotel_brand,
+      </if>
+      <if test="oneSentence != null">
+        one_sentence,
+      </if>
+      <if test="shortName != null">
+        short_name,
       </if>
       <if test="createTime != null">
         create_time,
@@ -702,6 +727,21 @@
       </if>
       <if test="tagName != null">
         #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="bpoint != null">
+        #{bpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelBrand != null">
+        #{hotelBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="oneSentence != null">
+        #{oneSentence,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        #{shortName,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -957,6 +997,21 @@
       <if test="tagName != null">
         tag_name = #{tagName,jdbcType=VARCHAR},
       </if>
+      <if test="bpoint != null">
+        bpoint = #{bpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelBrand != null">
+        hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="oneSentence != null">
+        one_sentence = #{oneSentence,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -1047,12 +1102,14 @@
       price = #{price,jdbcType=DECIMAL},
       discount = #{discount,jdbcType=DECIMAL},
       tag_name = #{tagName,jdbcType=VARCHAR},
+      bpoint = #{bpoint,jdbcType=VARCHAR},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
+      one_sentence = #{oneSentence,jdbcType=VARCHAR},
+      short_name = #{shortName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="seletAllHotelCity" resultType="map">
-    SELECT DISTINCT city_name from t_qunar_hotel
-  </select>
 </mapper>

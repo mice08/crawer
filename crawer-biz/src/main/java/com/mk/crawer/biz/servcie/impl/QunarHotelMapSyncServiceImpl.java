@@ -37,14 +37,26 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
     @Autowired
     private QunarHotelService qunarHotelService;
 
-    public Map<String,Object> hotelMapSyncByCity(String cityName){
+    public Map<String,Object> hotelMapSyncByCity(CityList bean){
         Cat.logEvent("hotelMapSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
         );
         logger.info("====================hotelMapSyncByCity beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
+        if(bean==null||(bean.getCityName()==null&& bean.getCityUrl()==null)){
+            logger.info("====================cityName={}&cityUrl={}====================",bean.getCityName(),bean.getCityUrl());
+            resultMap.put("message","cityName || cityUrl is not empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
         CityListExample cityListExample=new CityListExample();
-        cityListExample.createCriteria().andCityNameEqualTo(cityName);
+        if (!StringUtils.isEmpty(bean.getCityUrl())) {
+            cityListExample.createCriteria().andCityUrlEqualTo(bean.getCityUrl());
+            logger.info("====================cityUrl={}====================",bean.getCityUrl());
+        }else if (!StringUtils.isEmpty(bean.getCityName())){
+            cityListExample.createCriteria().andCityNameEqualTo(bean.getCityName());
+            logger.info("====================cityName={}====================",bean.getCityName());
+        }
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
         if (CollectionUtils.isEmpty(cityLists)){
             logger.info("====================hotelMapSyncByCity cityLists because is empty====================");
