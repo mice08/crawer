@@ -104,7 +104,14 @@ public class HttpUtil {
 
         String result = new String(bytes, charset);
 
-        LOGGER.info("获得响应：{}", result);
+        if ( StringUtils.isEmpty(result) ) {
+            LOGGER.warn("响应内容为空", result);
+        } else if ( result.length() < 100 ) {
+            LOGGER.info("获得响应：{}", result);
+        } else {
+            LOGGER.debug("获得响应：{}", result);
+        }
+
         return result;
     }
 

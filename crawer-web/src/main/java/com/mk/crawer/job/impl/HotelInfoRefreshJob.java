@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -25,9 +23,13 @@ public class HotelInfoRefreshJob implements InitializingBean {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
 
-    private static final ThreadPoolExecutor EXECUTOR_100 = (ThreadPoolExecutor) Executors.newFixedThreadPool(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT, new HotelInfoRefreshThreadFactory());
-//    private static final ExecutorService EXECUTOR_1000 = Executors.newFixedThreadPool(Config.HOT_CITY_1000_CONCURRENCY_THREAD_COUNT);
-//    private static final ExecutorService EXECUTOR_OTHER = Executors.newFixedThreadPool(Config.NO_HOT_CITY_CONCURRENCY_THREAD_COUNT);
+    private static final ThreadPoolExecutor EXECUTOR_100 =
+            new ThreadPoolExecutor(
+                    Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
+                    Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
+                    100L, TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT),
+                    new HotelInfoRefreshThreadFactory());
 
     private static volatile boolean addJobEnable = true;
 
@@ -40,7 +42,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         public HotelInfoRefreshThreadFactory() {
             SecurityManager s = System.getSecurityManager();
             group = (s != null)? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            namePrefix = "pool-" + poolNumber.getAndIncrement() + "-thread-";
+            namePrefix = "hotel price refresh pool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         @Override
@@ -75,16 +77,16 @@ public class HotelInfoRefreshJob implements InitializingBean {
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
-                        if ( EXECUTOR_100.getActiveCount() < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
+                        try {
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
-                        } else {
-                            int sleepTime = 300;
-                            LOGGER.info("{} active thread, current thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
+                        } catch (RejectedExecutionException e) {
+                            int sleepTime = 1000;
+                            LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", 1, sleepTime);
                             ThreadUtil.sleep(sleepTime);
                         }
                     } else {
                         int sleepTime = 8000;
-                        LOGGER.info("there is not refresh thread in the redis, {} active thread, current thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
+                        LOGGER.info("there is not hotel price that need to refreshed in the redis, hotel price refresh job thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
                         ThreadUtil.sleep(sleepTime);
                     }
                 } catch (Exception e) {
