@@ -18,9 +18,9 @@ public class ProxyServerAddJob implements Worker {
     @Override
     public void work() {
         try {
-            LOGGER.error("定时任务执行开始");
+            LOGGER.info("定时任务执行开始");
             ProxyServerJob.fetchAndAdd();
-            LOGGER.error("定时任务执行结束");
+            LOGGER.info("定时任务执行结束");
         } catch (Exception e) {
             LOGGER.error("定时任务执行出错：", e);
         }
