@@ -37,22 +37,32 @@ public class RoomTypeMappingController {
     public ResponseEntity<Map<String,Object>> addRoomTypeMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String errmsg = "";
+        String errcode ="1";
 
-        String  otsRoomTypeId = request.getParameter("otsRoomTypeId");
+        String  otsRoomTypeId = request.getParameter("otsroomtypeid");
         if(StringUtils.isEmpty(otsRoomTypeId)){
             success = false;
-            code = "-2";
-            result = "otsRoomTypeId不能为空";
+            errcode = "-2";
+            errmsg = "otsroomtypeid不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        String  exRoomTypeId  = request.getParameter("exRoomTypeId");
+        String  exRoomTypeId  = request.getParameter("exroomtypeid");
         if(StringUtil.isEmpty(exRoomTypeId)){
             success = false;
-            code = "-2";
-            result = "exRoomTypeId不能为空";
+            errcode = "-2";
+            errmsg = "exroomtypeid不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -65,12 +75,12 @@ public class RoomTypeMappingController {
         roomTypeMappingBusinessService.insert(roomTypeMapping);
 
         success = true;
-        result = "操作成功";
-        code ="1";
+        errmsg = "操作成功";
+        errcode ="1";
 
         hm.put("success",success);
-        hm.put("result",result);
-        hm.put("code",code);
+        hm.put("errmsg",errmsg);
+        hm.put("errcode",errcode);
 
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
@@ -80,20 +90,25 @@ public class RoomTypeMappingController {
     public ResponseEntity<Map<String,Object>> updateRoomTypeMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
         String  id = request.getParameter("id");
 
         if(StringUtils.isEmpty(id)){
             success = false;
-            code = "-2";
-            result = "id不能为空";
+            errcode = "-2";
+            errmsg = "id不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        String  otsRoomTypeId = request.getParameter("otsRoomTypeId");
-        String  exRoomTypeId  = request.getParameter("exRoomTypeId");
+        String  otsRoomTypeId = request.getParameter("otsroomtypeid");
+        String  exRoomTypeId  = request.getParameter("exroomtypeid");
 
         boolean  bl = false;
 
@@ -112,24 +127,34 @@ public class RoomTypeMappingController {
             if(bl){
                 roomTypeMappingBusinessService.update(roomTypeMapping);
                 success = true;
-                result = "操作成功";
-                code ="1";
+                errmsg = "操作成功";
+                errcode ="1";
             }else{
                 success = false;
-                result = "操作失败";
-                code ="-3";
+                errmsg = "操作失败";
+                errcode ="-3";
+                hm.put("success",success);
+                hm.put("errmsg",errmsg);
+                hm.put("errcode",errcode);
+
                 return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.BAD_REQUEST);
             }
 
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.BAD_REQUEST);
+
         }finally{
             hm.put("success",success);
-            hm.put("result",result);
-            hm.put("code",code);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
 
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
         }
@@ -140,32 +165,42 @@ public class RoomTypeMappingController {
     public ResponseEntity<Map<String,Object>> deleteRoomTypeMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
         String  id = request.getParameter("id");
 
         if(StringUtils.isEmpty(id)){
             success = false;
-            code = "-2";
-            result = "id不能为空";
+            errcode = "-2";
+            errmsg = "id不能为空";
+
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         try {
             roomTypeMappingBusinessService.deleteByPrimaryKey(Long.parseLong(id));
             success = true;
-            result = "操作成功";
-            code ="1";
+            errmsg = "操作成功";
+            errcode ="1";
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+            hm.put("success",success);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }finally{
 
             hm.put("success",success);
-            hm.put("result",result);
-            hm.put("code",code);
+            hm.put("errmsg",errmsg);
+            hm.put("errcode",errcode);
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
         }
     }
@@ -175,12 +210,12 @@ public class RoomTypeMappingController {
     public ResponseEntity<Map<String,Object>> queryRoomTypeMapping(HttpServletRequest request) {
         HashMap hm = new HashMap();
         boolean  success = true;
-        String result = "";
-        String code ="1";
+        String   errmsg = "";
+        String   errcode ="1";
 
         String  id = request.getParameter("id");
-        String  otsRoomTypeId = request.getParameter("otsRoomTypeId");
-        String  exRoomTypeId  = request.getParameter("exRoomTypeId");
+        String  otsRoomTypeId = request.getParameter("otsroomtypeid");
+        String  exRoomTypeId  = request.getParameter("exroomtypeid");
 
         HashMap  parme = new HashMap();
 
@@ -197,18 +232,26 @@ public class RoomTypeMappingController {
         try {
             list = roomTypeMappingBusinessService.queryHotelMapping(parme);
             success = true;
-            result = "操作成功";
-            code ="1";
+            errmsg = "操作成功";
+            errcode ="1";
         }catch (Exception e){
             e.printStackTrace();
             success = false;
-            result = "操作失败";
-            code ="-3";
+            errmsg = "操作失败";
+            errcode ="-3";
+
+            hm.put("success", success);
+            hm.put("list",new ArrayList());
+            hm.put("size",0);
+            hm.put("errcode",errcode);
+
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }finally{
             hm.put("success",success);
             hm.put("list",list);
             hm.put("size",list.size());
-            hm.put("code",code);
+            hm.put("errcode",errcode);
 
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
         }
