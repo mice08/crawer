@@ -110,6 +110,7 @@ public class HttpUtil {
         } else if ( result.length() < 100 ) {
             LOGGER.info("获得响应：{}", result);
         } else {
+            LOGGER.info("请求成功");
             LOGGER.debug("获得响应：{}", result);
         }
 
