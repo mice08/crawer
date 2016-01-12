@@ -47,6 +47,9 @@ public class HttpUtil {
                 return result;
             } catch (IOException e) {
                 LOGGER.warn("代理失效：{}，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.countBadServer());
+
+                ThreadUtil.sleep(2000);
+
                 return doGet(url, ++count);
             }
         } else {
@@ -66,53 +69,62 @@ public class HttpUtil {
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        ThreadUtil.randomSleep(1000, 5000);
-
         LOGGER.info("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
-        HttpGet httpGet = new HttpGet(urlStr);
+        try {
+            HttpGet httpGet = new HttpGet(urlStr);
 
-        RequestConfig config;
-        if (proxyServer != null) {
-            LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
-            HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-            config = RequestConfig
-                    .custom()
-                    .setProxy(httpHost)
-                    .setConnectTimeout(Config.READ_TIMEOUT)
-                    .build();
-        } else {
-            config = RequestConfig
-                    .custom()
-                    .setConnectTimeout(Config.READ_TIMEOUT)
-                    .build();
+            RequestConfig config;
+            if (proxyServer != null) {
+                LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
+                HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
+                config = RequestConfig
+                        .custom()
+                        .setProxy(httpHost)
+                        .setSocketTimeout(Config.READ_TIMEOUT)
+                        .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                        .setConnectTimeout(Config.READ_TIMEOUT)
+                        .build();
+            } else {
+                config = RequestConfig
+                        .custom()
+                        .setSocketTimeout(Config.READ_TIMEOUT)
+                        .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                        .setConnectTimeout(Config.READ_TIMEOUT)
+                        .build();
+            }
+            httpGet.setConfig(config);
+
+
+            CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
+
+            HttpEntity httpEntity = closeableHttpResponse.getEntity();
+
+            byte[] bytes = EntityUtils.toByteArray(httpEntity);
+
+            String charset = CharsetDetector.guessEncoding(bytes);
+
+            String result = new String(bytes, charset);
+
+            if ( StringUtils.isEmpty(result) ) {
+                LOGGER.warn("响应内容为空", result);
+            } else if ( result.length() < 100 ) {
+                LOGGER.info("获得响应：{}", result);
+            } else {
+                LOGGER.info("请求成功");
+                LOGGER.debug("获得响应：{}", result);
+            }
+
+            return result;
+        } finally {
+            if ( closeableHttpClient != null ) {
+                closeableHttpClient.close();
+            }
         }
-        httpGet.setConfig(config);
-
-
-        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
-
-        HttpEntity httpEntity = closeableHttpResponse.getEntity();
-
-        byte[] bytes = EntityUtils.toByteArray(httpEntity);
-
-        String charset = CharsetDetector.guessEncoding(bytes);
-
-        String result = new String(bytes, charset);
-
-        if ( StringUtils.isEmpty(result) ) {
-            LOGGER.warn("响应内容为空", result);
-        } else if ( result.length() < 100 ) {
-            LOGGER.info("获得响应：{}", result);
-        } else {
-            LOGGER.debug("获得响应：{}", result);
-        }
-
-        return result;
     }
 
     public static String urlEncoder(String url) {

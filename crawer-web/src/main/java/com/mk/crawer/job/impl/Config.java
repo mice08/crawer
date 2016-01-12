@@ -147,5 +147,4 @@ public class Config {
      */
     public static final Integer NO_HOT_CITY_CONCURRENCY_THREAD_COUNT = 5;
 
-
 }

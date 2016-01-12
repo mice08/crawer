@@ -2,10 +2,9 @@ package com.mk.crawer.job.impl;
 
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.framework.AppUtils;
-import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
-import com.mk.framework.proxy.http.ThreadUtil;
+import com.mk.framework.proxy.http.RedisUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -36,34 +35,31 @@ public class HotelInfoRefreshThread implements Runnable {
 
             LOGGER.info("开始刷新酒店:{}价格", hotelId);
 
-            ThreadUtil.randomSleep(500, 10000);
-
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 
             hotelDetailCrawlService.crawl(hotelId);
 
+            LOGGER.info("成功刷新酒店{}的价格", hotelId);
+        } catch (Exception e) {
             /**
-             * 价格刷新成功，移除任务
+             * 刷新酒店价格失败，任务重新添加到队列
              */
             Jedis jedis = null;
             try {
-                jedis = getJedis();
+                jedis = RedisUtil.getJedis();
 
-                jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(this));
+                String jsonStr = JSONUtil.toJson(this);
+
+                jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
+
+                LOGGER.info("刷新酒店价格失败，任务重新添加到队列：{}", jsonStr);
             } finally {
                 if (jedis != null) {
                     jedis.close();
+                    LOGGER.info("Redis连接关闭成功");
                 }
             }
-
-            LOGGER.info("结束刷新酒店{}的价格，还剩{}家酒店的价格需要刷新。", hotelId, jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
-        } catch (Exception e) {
-            LOGGER.error("刷新酒店:{}价格出错。", hotelId);
         }
-    }
-
-    private static Jedis getJedis() {
-        return AppUtils.getBean(MkJedisConnectionFactory.class).getJedis();
     }
 
 }
