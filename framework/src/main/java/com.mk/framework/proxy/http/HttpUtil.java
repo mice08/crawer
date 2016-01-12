@@ -84,11 +84,13 @@ public class HttpUtil {
             config = RequestConfig
                     .custom()
                     .setProxy(httpHost)
+                    .setSocketTimeout(Config.READ_TIMEOUT)
                     .setConnectTimeout(Config.READ_TIMEOUT)
                     .build();
         } else {
             config = RequestConfig
                     .custom()
+                    .setSocketTimeout(Config.READ_TIMEOUT)
                     .setConnectTimeout(Config.READ_TIMEOUT)
                     .build();
         }
