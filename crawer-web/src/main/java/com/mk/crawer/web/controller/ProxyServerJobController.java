@@ -8,6 +8,8 @@ import com.mk.framework.AppUtils;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.framework.proxy.http.ProxyServerJob;
+import com.mk.framework.proxy.http.RedisUtil;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/proxy-server-job")
 public class ProxyServerJobController {
+
+    private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(ProxyServerJobController.class);
 
     @RequestMapping(value = "/valid-and-remove")
     @ResponseBody
@@ -66,6 +70,8 @@ public class ProxyServerJobController {
             Jedis jedis = null;
 
             try {
+                jedis = RedisUtil.getJedis();
+
                 QunarHotelExample hotelExample = new QunarHotelExample();
                 hotelExample.createCriteria().andCityNameEqualTo(city);
 
@@ -77,7 +83,11 @@ public class ProxyServerJobController {
                         HotelInfoRefreshThread hotelInfoRefreshThread = new HotelInfoRefreshThread();
                         hotelInfoRefreshThread.setHotelId(hotel.getSourceId());
 
-                        jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(hotelInfoRefreshThread));
+                        String jsonStr = JSONUtil.toJson(hotelInfoRefreshThread);
+
+                        jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
+
+                        LOGGER.info("添加到价格刷新队列：{}", jsonStr);
                     }
                 }
 
@@ -91,9 +101,6 @@ public class ProxyServerJobController {
                     jedis.close();
                 }
             }
-
-
-
         }
 
 
