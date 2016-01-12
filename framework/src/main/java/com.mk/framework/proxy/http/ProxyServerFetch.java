@@ -69,7 +69,7 @@ public class ProxyServerFetch {
 
         BY_MIKE.clear();
         BY_MIKE.addAll(proxyServerList);
-        LOGGER.info("从眯客获取到{}个代理IP", BY_BILL.size());
+        LOGGER.info("从眯客获取到{}个代理IP", BY_MIKE.size());
     }
 
     private static void fetchByBill() {
