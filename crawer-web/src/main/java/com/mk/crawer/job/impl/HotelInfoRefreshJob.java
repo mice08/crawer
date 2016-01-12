@@ -94,6 +94,9 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         jedis.close();
                     }
                 }
+
+                //防止过度自旋
+                ThreadUtil.sleep(1000);
             }
 
             LOGGER.info("刷新酒店价格任务执行结束");
