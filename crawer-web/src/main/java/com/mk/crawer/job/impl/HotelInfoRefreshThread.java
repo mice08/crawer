@@ -41,8 +41,6 @@ public class HotelInfoRefreshThread implements Runnable {
 
             LOGGER.info("成功刷新酒店{}的价格", hotelId);
         } catch (Exception e) {
-            LOGGER.error("刷新酒店价格出错：", e);
-
             /**
              * 刷新酒店价格失败，任务重新添加到队列
              */
