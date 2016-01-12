@@ -146,9 +146,5 @@ public class Config {
      * 中国非热门城市的线程池并发数
      */
     public static final Integer NO_HOT_CITY_CONCURRENCY_THREAD_COUNT = 5;
-    /**
-     * 线程池添加任务连续失败次数限制
-     */
-    public static final Integer THREAD_POLL_FULL_TIME = 3;
 
 }

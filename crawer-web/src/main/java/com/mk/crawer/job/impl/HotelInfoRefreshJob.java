@@ -59,8 +59,6 @@ public class HotelInfoRefreshJob implements InitializingBean {
         private void doJob() {
             LOGGER.info("刷新酒店价格任务执行开始");
 
-            Integer executorFullTime = 0;
-
             while (addJobEnable) {
                 Jedis jedis = null;
 
@@ -76,17 +74,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
                         try {
-                            executorFullTime = 0;
-
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
 
                             LOGGER.info("refresh thread add to thread pool: {}", jsonStr);
                         } catch (RejectedExecutionException e) {
-                            if ( ++executorFullTime >= Config.THREAD_POLL_FULL_TIME ) {
-                                initExecutor();
-                            }
-
-                            int sleepTime = 1000;
+                            int sleepTime = 60000;
                             LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", sleepTime);
                             ThreadUtil.sleep(sleepTime);
                         }
