@@ -60,8 +60,10 @@ public class ProxyServerJobController {
 
     @RequestMapping(value = "/add-city-hotel")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> addCityHotel(String city) {
+    public ResponseEntity<Map<String,Object>> addCityHotel() {
         HashMap hm = new HashMap();
+
+        String city = "重庆";
 
         if (StringUtils.isEmpty(city)) {
             hm.put("result", "没有指定城市");
