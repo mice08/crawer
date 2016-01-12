@@ -2,11 +2,10 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.HotelMapping;
 import com.mk.crawer.biz.model.crawer.HotelMappingExample;
-
-import java.util.HashMap;
 import java.util.List;
 
 public interface HotelMappingMapper {
+    int countByExample(HotelMappingExample example);
 
     int deleteByPrimaryKey(Long id);
 
@@ -14,11 +13,11 @@ public interface HotelMappingMapper {
 
     int insertSelective(HotelMapping record);
 
+    List<HotelMapping> selectByExample(HotelMappingExample example);
+
     HotelMapping selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(HotelMapping record);
 
     int updateByPrimaryKey(HotelMapping record);
-
-    public  List<HotelMapping>   queryHotelMapping(HashMap hm);
 }

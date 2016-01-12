@@ -434,6 +434,76 @@ public class HotelMappingExample {
             return (Criteria) this;
         }
 
+        public Criteria andSiteIsNull() {
+            addCriterion("site is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteIsNotNull() {
+            addCriterion("site is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteEqualTo(String value) {
+            addCriterion("site =", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotEqualTo(String value) {
+            addCriterion("site <>", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteGreaterThan(String value) {
+            addCriterion("site >", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteGreaterThanOrEqualTo(String value) {
+            addCriterion("site >=", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLessThan(String value) {
+            addCriterion("site <", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLessThanOrEqualTo(String value) {
+            addCriterion("site <=", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLike(String value) {
+            addCriterion("site like", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotLike(String value) {
+            addCriterion("site not like", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteIn(List<String> values) {
+            addCriterion("site in", values, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotIn(List<String> values) {
+            addCriterion("site not in", values, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteBetween(String value1, String value2) {
+            addCriterion("site between", value1, value2, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotBetween(String value1, String value2) {
+            addCriterion("site not between", value1, value2, "site");
+            return (Criteria) this;
+        }
+
         public Criteria andValidIsNull() {
             addCriterion("valid is null");
             return (Criteria) this;

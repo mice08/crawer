@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * Created by 振涛 on 2016/1/8.
  */
-@Component
+//@Component
 public class HotelInfoRefreshThreadAddJob implements Worker {
 
     private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);

@@ -2,8 +2,6 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.RoomTypeMapping;
 import com.mk.crawer.biz.model.crawer.RoomTypeMappingExample;
-
-import java.util.HashMap;
 import java.util.List;
 
 public interface RoomTypeMappingMapper {
@@ -22,6 +20,4 @@ public interface RoomTypeMappingMapper {
     int updateByPrimaryKeySelective(RoomTypeMapping record);
 
     int updateByPrimaryKey(RoomTypeMapping record);
-
-    List<RoomTypeMapping> queryRoomTypeMapping(HashMap hm);
 }

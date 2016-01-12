@@ -400,6 +400,7 @@
 
         <profile>
             <id>dev</id>
+
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>

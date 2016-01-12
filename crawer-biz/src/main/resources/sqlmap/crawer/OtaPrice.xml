@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.OtaPriceMapper" >
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.OtaPrice" >
+    <result column="ots_hotel_id" property="otsHotelId" />
     <result column="ots_hotel_name" property="otsHotelName" />
     <result column="ex_hotel_id" property="exHotelId" />
     <result column="ots_room_type_id" property="otsRoomTypeId" />
@@ -20,23 +21,29 @@
     <result column="wrapper_id" property="wrapperId" />
     <result column="all_room_count" property="allRoomCount" />
     <result column="available_roomcount" property="availableRoomcount" />
+    <result column="valid" property="valid" />
+    <result column="create_time" property="createTime" />
+    <result column="site" property="site" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    ex_hotel_id,ots_room_type_id,ex_room_type_id,room_type_id,room_type_key,hotel_id,
-    hotel_source_id,price,o_price,real_price,origin_price,show_price,ota_show_price,wrapper_name,
-    wrapper_id,all_room_count,available_roomcount
+    a.ex_hotel_id,b.ots_room_type_id,b.ex_room_type_id,c.room_type_id,c.room_type_key,hotel_id,
+    b.hotel_source_id,price,o_price,real_price,origin_price,show_price,ota_show_price,wrapper_name,
+    wrapper_id,all_room_count,available_roomcount,c.create_time,a.site
   </sql>
   <sql id="Base_Query_List" >
     <where>
+      <if test="otsHotelId != null">
+        a.ots_hotel_id = #{otsHotelId}
+      </if>
       <if test="exHotelId != null">
-        ex_hotel_id = #{exHotelId}
+        and a.ex_hotel_id = #{exHotelId}
       </if>
       <if test="otsRoomTypeId != null">
-        AND ots_room_type_id = #{otsRoomTypeId}
+        AND b.ots_room_type_id = #{otsRoomTypeId}
       </if>
       <if test="exRoomTypeId != null">
-        AND ex_room_type_id  = #{exRoomTypeId}
+        AND b.ex_room_type_id  = #{exRoomTypeId}
       </if>
       <if test="roomTypeId != null">
         AND room_type_id  = #{roomTypeId}
@@ -45,28 +52,36 @@
         AND room_type_key  = #{roomTypeKey}
       </if>
       <if test="hotelId != null">
-        AND hotel_id  = #{hotelId}
+        AND a.ots_hotel_id  = #{hotelId}
       </if>
       <if test="hotelSourceId != null">
-        AND hotel_source_id  = #{hotelSourceId}
+        AND b.hotel_source_id  = #{hotelSourceId}
       </if>
-      <if test="exRoomTypeId != null">
-        AND ex_room_type_id  = #{exRoomTypeId}
-      </if>
-      <if test="exRoomTypeId != null">
-        AND ex_room_type_id  = #{exRoomTypeId}
-      </if>
-      <if test="exRoomTypeId != null">
-        AND ex_room_type_id  = #{exRoomTypeId}
+      <if test="site != null">
+        AND a.site  = #{site}
       </if>
 
     </where>
   </sql>
   <select id="getOtaPrice" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.OtaPrice" >
-  select
-    <include refid="Base_Column_List" />
-  from cps_user a  LEFT  JOIN cps_channel b on a.channelId=b.id
-    <include refid="Base_Column_List" />
+  select d.* from (
+      select
+      <include refid="Base_Column_List"/>from `ots_ex_hotel_mapping` a inner join `ots_ex_room_type_mapping` b
+      on a. `ex_hotel_id`=b.`hotel_source_id` and a.valid='T' inner join `t_ex_roomtype_price` c
+      on b.`ex_room_type_id` = c.`room_type_key` and c.`create_time`
+      like '%${createTime}%' and b.valid='T' and c.`wrapper_name`='去哪儿直销-预付'
+      <include refid="Base_Query_List" />
+      ORDER BY c.`create_time` DESC
+    ) d GROUP BY room_type_key
+  </select>
+
+  <select id="getValidDate" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.OtaPrice" >
+    select a.site,b.hotel_source_id,room_type_key,create_time
+    from `ots_ex_hotel_mapping`  a inner join `ots_ex_room_type_mapping` b
+    on  a.`ex_hotel_id`=b.`hotel_source_id` and a.valid='T' inner join `t_ex_roomtype_price` c
+    on b.`ex_room_type_id` = c.`room_type_key` and c.`wrapper_name`='去哪儿直销-预付'
+    <include refid="Base_Query_List" />
+    ORDER BY c.`create_time` DESC limit 1
   </select>
 
 </mapper>

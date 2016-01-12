@@ -7,6 +7,7 @@
     <result column="ots_hotel_name" property="otsHotelName" jdbcType="VARCHAR" />
     <result column="ex_hotel_id" property="exHotelId" jdbcType="VARCHAR" />
     <result column="ex_hotel_name" property="exHotelName" jdbcType="VARCHAR" />
+    <result column="site" property="site" jdbcType="VARCHAR" />
     <result column="valid" property="valid" jdbcType="CHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -39,11 +40,25 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, ots_hotel_id, ots_hotel_name, ex_hotel_id, ex_hotel_name, valid
+    id, ots_hotel_id, ots_hotel_name, ex_hotel_id, ex_hotel_name, site, valid
   </sql>
-
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelMappingExample" >
     select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from ots_ex_hotel_mapping
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
     <include refid="Base_Column_List" />
     from ots_ex_hotel_mapping
     where id = #{id,jdbcType=BIGINT}
@@ -54,11 +69,11 @@
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
     insert into ots_ex_hotel_mapping (id, ots_hotel_id, ots_hotel_name, 
-      ex_hotel_id, ex_hotel_name, valid
-      )
+      ex_hotel_id, ex_hotel_name, site, 
+      valid)
     values (#{id,jdbcType=BIGINT}, #{otsHotelId,jdbcType=BIGINT}, #{otsHotelName,jdbcType=VARCHAR}, 
-      #{exHotelId,jdbcType=VARCHAR}, #{exHotelName,jdbcType=VARCHAR}, #{valid,jdbcType=CHAR}
-      )
+      #{exHotelId,jdbcType=VARCHAR}, #{exHotelName,jdbcType=VARCHAR}, #{site,jdbcType=VARCHAR}, 
+      #{valid,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
     insert into ots_ex_hotel_mapping
@@ -77,6 +92,9 @@
       </if>
       <if test="exHotelName != null" >
         ex_hotel_name,
+      </if>
+      <if test="site != null" >
+        site,
       </if>
       <if test="valid != null" >
         valid,
@@ -97,6 +115,9 @@
       </if>
       <if test="exHotelName != null" >
         #{exHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null" >
+        #{site,jdbcType=VARCHAR},
       </if>
       <if test="valid != null" >
         #{valid,jdbcType=CHAR},
@@ -124,6 +145,9 @@
       <if test="exHotelName != null" >
         ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
       </if>
+      <if test="site != null" >
+        site = #{site,jdbcType=VARCHAR},
+      </if>
       <if test="valid != null" >
         valid = #{valid,jdbcType=CHAR},
       </if>
@@ -136,26 +160,8 @@
       ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
       ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
       ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
+      site = #{site,jdbcType=VARCHAR},
       valid = #{valid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select id="queryHotelMapping" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
-    select *  from ots_ex_hotel_mapping  where  valid = 'T'
-    <if test="otsHotelId != null" >
-       and  ots_hotel_id = #{otsHotelId}
-    </if>
-    <if test="otsHotelName != null" >
-      and  ots_hotel_name = #{otsHotelName}
-    </if>
-    <if test="exHotelId != null" >
-      and  ex_hotel_id = #{exHotelId}
-    </if>
-    <if test="exHotelName != null" >
-      and  ex_hotel_name = #{exHotelName}
-    </if>
-    <if test="id != null" >
-      and  id = #{id}
-    </if>
-  </select>
 </mapper>
