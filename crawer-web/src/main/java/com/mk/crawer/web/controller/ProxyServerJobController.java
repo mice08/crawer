@@ -64,7 +64,7 @@ public class ProxyServerJobController {
         HashMap hm = new HashMap();
 
         if (StringUtils.isEmpty(city)) {
-            hm.put("result", "为指定城市");
+            hm.put("result", "没有指定城市");
             hm.put("success", false);
         } else {
             Jedis jedis = null;
