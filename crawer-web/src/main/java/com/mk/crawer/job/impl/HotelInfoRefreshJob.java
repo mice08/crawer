@@ -92,7 +92,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         }
                     } else {
                         int sleepTime = 8000;
-                        LOGGER.info("there is not hotel price that need to refreshed in the redis, hotel price refresh job thread sleep {} ms", EXECUTOR_100.getActiveCount(), sleepTime);
+                        LOGGER.info("there is not hotel price that need to refreshed in the redis, hotel price refresh job thread sleep {} ms", sleepTime);
                         ThreadUtil.sleep(sleepTime);
                     }
                 } catch (Exception e) {
