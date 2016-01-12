@@ -2,6 +2,7 @@ package com.mk.framework.proxy.http;
 
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
+import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -9,7 +10,9 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtil {
 
-    public static Jedis getJedis() throws InterruptedException {
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(RedisUtil.class);
+
+    public static Jedis getJedis() {
         Jedis jedis = null;
         while (jedis == null) {
 
@@ -20,7 +23,8 @@ public class RedisUtil {
                     jedis = mkJedisConnectionFactory.getJedis();
                 }
             } catch (Exception e) {
-                Thread.sleep(5000);
+                LOGGER.error("get redis client happen an error, will try again after 5s: ", e);
+                ThreadUtil.sleep(5000);
             }
 
         }

@@ -6,9 +6,9 @@ import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.Worker;
 import com.mk.framework.AppUtils;
-import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.http.RedisUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -41,7 +41,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
             Jedis jedis = null;
 
             try {
-                jedis = getJedis();
+                jedis = RedisUtil.getJedis();
 
                 Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWER_CITY_NAME_SET);
 
@@ -86,8 +86,5 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
     public void doJob(){
         work();
-    }
-    private static Jedis getJedis() {
-        return AppUtils.getBean(MkJedisConnectionFactory.class).getJedis();
     }
 }

@@ -1,13 +1,10 @@
 package com.mk.framework.proxy.http;
 
-import com.mk.framework.AppUtils;
-import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -21,8 +18,6 @@ public class ProxyServerManager {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
 
     private static final Random RANDOM = new Random();
-
-    private static MkJedisConnectionFactory connectionFactory = null;
 
     static ProxyServer random() {
         List<ProxyServer> proxyServerList = null;
@@ -49,7 +44,7 @@ public class ProxyServerManager {
         String jsonStr;
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
 
             jsonStr = jedis.srandmember(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
 
@@ -79,7 +74,7 @@ public class ProxyServerManager {
         Long count = null;
 
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             count = jedis.sadd(
                     RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
@@ -100,7 +95,7 @@ public class ProxyServerManager {
         boolean flag = false;
 
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             flag = jedis.sismember(
                     RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
@@ -118,7 +113,7 @@ public class ProxyServerManager {
     static void remove(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             jedis.srem(
                     RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
@@ -136,7 +131,7 @@ public class ProxyServerManager {
    public static void removeBlock(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             jedis.srem(
                     RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
@@ -155,7 +150,7 @@ public class ProxyServerManager {
     static List<ProxyServer> listProxyServer() {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
 
             List<ProxyServer> proxyServerList = new LinkedList<>();
@@ -179,7 +174,7 @@ public class ProxyServerManager {
     static boolean check(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             return !jedis.sismember(
                     RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer)
@@ -196,7 +191,7 @@ public class ProxyServerManager {
     static Long count() {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             return jedis.scard(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
         }catch (Exception e){
             throw e;
@@ -211,7 +206,7 @@ public class ProxyServerManager {
     static void addBadServer(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             jedis.sadd(
                     RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer)
@@ -228,7 +223,7 @@ public class ProxyServerManager {
     public  static Long countBadServer() {
         Jedis jedis = null;
         try {
-            jedis = getJedis();
+            jedis = RedisUtil.getJedis();
             return jedis.scard(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
         }catch (Exception e){
             throw e;
@@ -237,21 +232,6 @@ public class ProxyServerManager {
                 jedis.close();
             }
         }
-    }
-
-    private static Jedis getJedis() {
-        return ProxyServerManager.getConnectionFactory().getJedis();
-    }
-
-    private static MkJedisConnectionFactory getConnectionFactory() {
-        if (ProxyServerManager.connectionFactory == null) {
-            synchronized (ProxyServerManager.class) {
-                if (ProxyServerManager.connectionFactory == null) {
-                    ProxyServerManager.connectionFactory = AppUtils.getBean(MkJedisConnectionFactory.class);
-                }
-            }
-        }
-        return ProxyServerManager.connectionFactory;
     }
 
 }

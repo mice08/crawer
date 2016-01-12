@@ -1,9 +1,8 @@
 package com.mk.crawer.job.impl;
 
-import com.mk.framework.AppUtils;
-import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,8 +26,8 @@ public class HotelInfoRefreshJob implements InitializingBean {
             new ThreadPoolExecutor(
                     Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                     Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
-                    100L, TimeUnit.MILLISECONDS,
-                    new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT),
+                    0L, TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT*4),
                     new HotelInfoRefreshThreadFactory());
 
     private static volatile boolean addJobEnable = true;
@@ -70,7 +69,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 Jedis jedis = null;
 
                 try {
-                    jedis = getJedis();
+                    jedis = RedisUtil.getJedis();
 
                     String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET);
 
@@ -107,28 +106,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
             @Override
             public void run() {
                 addJobEnable = false;
-                LOGGER.info("停止添加任务");
+                LOGGER.info("停止添加刷新酒店价格任务");
                 EXECUTOR_100.shutdown();
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
-    }
-
-    private static Jedis getJedis() throws InterruptedException {
-        Jedis jedis = null;
-        while (jedis == null) {
-
-            MkJedisConnectionFactory mkJedisConnectionFactory = null;
-            try {
-                mkJedisConnectionFactory = AppUtils.getBean(MkJedisConnectionFactory.class);
-            } catch (Exception e) {
-                Thread.sleep(5000);
-            }
-            if ( mkJedisConnectionFactory != null ) {
-                jedis = mkJedisConnectionFactory.getJedis();
-            }
-        }
-        return jedis;
     }
 
     @Override

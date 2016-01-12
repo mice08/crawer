@@ -47,6 +47,9 @@ public class HttpUtil {
                 return result;
             } catch (IOException e) {
                 LOGGER.warn("代理失效：{}，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.countBadServer());
+
+                ThreadUtil.sleep(2000);
+
                 return doGet(url, ++count);
             }
         } else {
@@ -66,8 +69,6 @@ public class HttpUtil {
     }
 
     static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        ThreadUtil.randomSleep(1000, 5000);
-
         LOGGER.info("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();

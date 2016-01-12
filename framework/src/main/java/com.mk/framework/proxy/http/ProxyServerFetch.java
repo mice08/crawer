@@ -1,9 +1,10 @@
 package com.mk.framework.proxy.http;
 
+import com.mk.framework.manager.RedisCacheName;
 import org.slf4j.Logger;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -13,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ProxyServerFetch {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
     private static final List<ProxyServer> BY_MIKE = new CopyOnWriteArrayList<>();
     private static final List<ProxyServer> BY_BILL = new CopyOnWriteArrayList<>();
@@ -36,20 +37,59 @@ public class ProxyServerFetch {
         thread.start();
     }
 
+    private static List<ProxyServer> list(List<GBJProxy.Proxy> proxyList) {
+        List<ProxyServer> proxyServerList = new LinkedList<>();
+
+        for (GBJProxy.Proxy proxy : proxyList) {
+            Jedis jedis = null;
+
+            try {
+                ProxyServer proxyServer = new ProxyServer();
+                proxyServer.setIp(proxy.ip);
+                proxyServer.setPort(proxy.port);
+
+                if ( !isBadProxy(proxyServer) ) {
+                    proxyServerList.add(proxyServer);
+                }
+            } catch (Exception e) {
+                LOGGER.info("过滤坏代理IP时发生发送错误：", e);
+            } finally {
+                if ( jedis != null ) {
+                    jedis.close();
+                }
+            }
+        }
+
+        return proxyServerList;
+    }
+
+    private static boolean isBadProxy(ProxyServer proxyServer) {
+        Jedis jedis = null;
+
+        boolean flag = true;
+
+        try {
+            jedis = RedisUtil.getJedis();
+            flag = jedis.sismember(
+                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    JSONUtil.toJson(proxyServer));
+        } catch (Exception e) {
+            LOGGER.error("错误：", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+
+        return flag;
+    }
+
     private static void fetchByMike() {
         String ipListJSONStr = HttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
 
         GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
-        List<ProxyServer> proxyServerList = new LinkedList<>();
-
-        for (GBJProxy.Proxy proxy : gbjProxy.data) {
-            ProxyServer proxyServer = new ProxyServer();
-            proxyServer.setIp(proxy.ip);
-            proxyServer.setPort(proxy.port);
-
-            proxyServerList.add(proxyServer);
-        }
+        List<ProxyServer> proxyServerList = list(gbjProxy.data);
 
         BY_MIKE.clear();
         BY_MIKE.addAll(proxyServerList);
@@ -60,15 +100,7 @@ public class ProxyServerFetch {
 
         GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
-        List<ProxyServer> proxyServerList = new LinkedList<>();
-
-        for (GBJProxy.Proxy proxy : gbjProxy.data) {
-            ProxyServer proxyServer = new ProxyServer();
-            proxyServer.setIp(proxy.ip);
-            proxyServer.setPort(proxy.port);
-
-            proxyServerList.add(proxyServer);
-        }
+        List<ProxyServer> proxyServerList = list(gbjProxy.data);
 
         BY_BILL.clear();
         BY_BILL.addAll(proxyServerList);
