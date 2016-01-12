@@ -39,6 +39,8 @@ public class HotelInfoRefreshThread implements Runnable {
 
             hotelDetailCrawlService.crawl(hotelId);
 
+            LOGGER.info("刷新酒店:{}价格成功", hotelId);
+
             /**
              * 价格刷新成功，移除任务
              */

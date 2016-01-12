@@ -22,13 +22,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
 
-    private static final ThreadPoolExecutor EXECUTOR_100 =
-            new ThreadPoolExecutor(
-                    Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
-                    Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
-                    0L, TimeUnit.MILLISECONDS,
-                    new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT*4),
-                    new HotelInfoRefreshThreadFactory());
+    private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
 
     private static volatile boolean addJobEnable = true;
 
@@ -65,6 +59,8 @@ public class HotelInfoRefreshJob implements InitializingBean {
         private void doJob() {
             LOGGER.info("刷新酒店价格任务执行开始");
 
+            Integer executorFullTime = 0;
+
             while (addJobEnable) {
                 Jedis jedis = null;
 
@@ -77,8 +73,14 @@ public class HotelInfoRefreshJob implements InitializingBean {
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
                         try {
+                            executorFullTime = 0;
+
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
                         } catch (RejectedExecutionException e) {
+                            if ( ++executorFullTime >= Config.EXECUTOR_POLL_FULL_TIME ) {
+                                initExecutor();
+                            }
+
                             int sleepTime = 1000;
                             LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", sleepTime);
                             ThreadUtil.sleep(sleepTime);
@@ -111,6 +113,19 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
+    }
+
+    private static ThreadPoolExecutor initExecutor() {
+        if ( EXECUTOR_100 != null ) {
+            EXECUTOR_100.shutdown();
+        }
+
+        return new ThreadPoolExecutor(
+                Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
+                Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
+                0L, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT*4),
+                new HotelInfoRefreshThreadFactory());
     }
 
     @Override

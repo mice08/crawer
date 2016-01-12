@@ -93,6 +93,7 @@ public class ProxyServerFetch {
 
         BY_MIKE.clear();
         BY_MIKE.addAll(proxyServerList);
+        LOGGER.info("从眯客获取到{}个有效代理IP", BY_BILL.size());
     }
 
     private static void fetchByBill() {
@@ -104,6 +105,7 @@ public class ProxyServerFetch {
 
         BY_BILL.clear();
         BY_BILL.addAll(proxyServerList);
+        LOGGER.info("从付费渠道获取到{}个有效代理IP", BY_BILL.size());
     }
 
     public static List<ProxyServer> byMike() {
