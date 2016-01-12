@@ -69,10 +69,10 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
                     String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET);
 
-                    //暂时从酒店价格刷新队列中移除，如果酒店价格刷新失败，会在酒店价格刷新线程中将该数据添加回来
-                    jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
-
                     if (!StringUtils.isEmpty(jsonStr)) {
+                        //暂时从酒店价格刷新队列中移除，如果酒店价格刷新失败，会在酒店价格刷新线程中将该数据添加回来
+                        jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
+
                         HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
 
                         try {
