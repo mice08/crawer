@@ -149,6 +149,6 @@ public class Config {
     /**
      * 线程池添加任务连续失败次数限制
      */
-    public static final Integer EXECUTOR_POLL_FULL_TIME = 3;
+    public static final Integer THREAD_POLL_FULL_TIME = 3;
 
 }

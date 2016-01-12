@@ -76,8 +76,10 @@ public class HotelInfoRefreshJob implements InitializingBean {
                             executorFullTime = 0;
 
                             EXECUTOR_100.execute(hotelInfoRefreshThread);
+
+                            LOGGER.info("refresh thread add to thread pool: {}", jsonStr);
                         } catch (RejectedExecutionException e) {
-                            if ( ++executorFullTime >= Config.EXECUTOR_POLL_FULL_TIME ) {
+                            if ( ++executorFullTime >= Config.THREAD_POLL_FULL_TIME) {
                                 initExecutor();
                             }
 
