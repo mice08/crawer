@@ -1,6 +1,5 @@
 package com.mk.framework.proxy.http;
 
-import com.mk.framework.manager.RedisCacheName;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -48,9 +47,7 @@ public class ProxyServerFetch {
                 proxyServer.setIp(proxy.ip);
                 proxyServer.setPort(proxy.port);
 
-                if ( !isBadProxy(proxyServer) ) {
-                    proxyServerList.add(proxyServer);
-                }
+                proxyServerList.add(proxyServer);
             } catch (Exception e) {
                 LOGGER.info("过滤坏代理IP时发生发送错误：", e);
             } finally {
@@ -63,27 +60,6 @@ public class ProxyServerFetch {
         return proxyServerList;
     }
 
-    private static boolean isBadProxy(ProxyServer proxyServer) {
-        Jedis jedis = null;
-
-        boolean flag = true;
-
-        try {
-            jedis = RedisUtil.getJedis();
-            flag = jedis.sismember(
-                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer));
-        } catch (Exception e) {
-            LOGGER.error("错误：", e);
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-
-        return flag;
-    }
-
     private static void fetchByMike() {
         String ipListJSONStr = HttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
 
@@ -93,7 +69,7 @@ public class ProxyServerFetch {
 
         BY_MIKE.clear();
         BY_MIKE.addAll(proxyServerList);
-        LOGGER.info("从眯客获取到{}个有效代理IP", BY_BILL.size());
+        LOGGER.info("从眯客获取到{}个代理IP", BY_BILL.size());
     }
 
     private static void fetchByBill() {
@@ -105,7 +81,7 @@ public class ProxyServerFetch {
 
         BY_BILL.clear();
         BY_BILL.addAll(proxyServerList);
-        LOGGER.info("从付费渠道获取到{}个有效代理IP", BY_BILL.size());
+        LOGGER.info("从付费渠道获取到{}个代理IP", BY_BILL.size());
     }
 
     public static List<ProxyServer> byMike() {
