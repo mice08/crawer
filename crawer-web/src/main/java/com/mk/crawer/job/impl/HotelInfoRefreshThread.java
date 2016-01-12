@@ -39,28 +39,28 @@ public class HotelInfoRefreshThread implements Runnable {
 
             hotelDetailCrawlService.crawl(hotelId);
 
-            LOGGER.info("刷新酒店:{}价格成功", hotelId);
+            LOGGER.info("成功刷新酒店{}的价格", hotelId);
+        } catch (Exception e) {
+            LOGGER.error("刷新酒店价格出错：", e);
 
             /**
-             * 价格刷新成功，移除任务
+             * 刷新酒店价格失败，任务重新添加到队列
              */
             Jedis jedis = null;
             try {
                 jedis = RedisUtil.getJedis();
 
-                jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(this));
+                String jsonStr = JSONUtil.toJson(this);
 
-                LOGGER.info("从价格刷新队列中移除酒店：{}", hotelId);
+                jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
+
+                LOGGER.info("刷新酒店价格失败，任务重新添加到队列：{}", jsonStr);
             } finally {
                 if (jedis != null) {
                     jedis.close();
                     LOGGER.info("Redis连接关闭成功");
                 }
             }
-
-            LOGGER.info("结束刷新酒店{}的价格，还剩{}家酒店的价格需要刷新。", hotelId, jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
-        } catch (Exception e) {
-            LOGGER.error("刷新酒店:{}价格出错。", hotelId);
         }
     }
 
