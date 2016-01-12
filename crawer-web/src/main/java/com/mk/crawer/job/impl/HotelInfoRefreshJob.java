@@ -116,6 +116,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
     }
 
     private static ThreadPoolExecutor initExecutor() {
+        LOGGER.info("重新初始化线程池");
         if ( EXECUTOR_100 != null ) {
             EXECUTOR_100.shutdown();
         }
