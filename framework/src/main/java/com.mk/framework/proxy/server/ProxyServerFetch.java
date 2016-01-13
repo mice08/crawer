@@ -28,20 +28,6 @@ public class ProxyServerFetch {
 
     private static final ThreadPoolExecutor CHECK_EXECUTOR = initExecutor();
 
-    private static ThreadPoolExecutor initExecutor() {
-        LOGGER.info("初始化线程池");
-        if ( CHECK_EXECUTOR != null ) {
-            CHECK_EXECUTOR.shutdown();
-        }
-
-        return new ThreadPoolExecutor(
-                Config.CHECK_PROXY_THREAD_COUNT,
-                Config.CHECK_PROXY_THREAD_COUNT,
-                0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(),
-                new ProxyServerCheckThreadFactory());
-    }
-
     static class ProxyServerCheckThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
         final ThreadGroup group;
@@ -138,6 +124,28 @@ public class ProxyServerFetch {
         Thread addToCheckPool = new Thread(new AddToCheckPool(), "AddToCheckPool");
         addToCheckPool.setDaemon(true);
         addToCheckPool.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                CHECK_EXECUTOR.shutdownNow();
+                LOGGER.info("检测代理IP是否有效的线程池关闭");
+            }
+        });
+    }
+
+    private static ThreadPoolExecutor initExecutor() {
+        LOGGER.info("初始化线程池");
+        if ( CHECK_EXECUTOR != null ) {
+            CHECK_EXECUTOR.shutdown();
+        }
+
+        return new ThreadPoolExecutor(
+                Config.CHECK_PROXY_THREAD_COUNT,
+                Config.CHECK_PROXY_THREAD_COUNT,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(),
+                new ProxyServerCheckThreadFactory());
     }
 
     private static List<ProxyServer> list(List<GBJProxy.Proxy> proxyList) {

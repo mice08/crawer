@@ -106,8 +106,8 @@ public class HotelDetailRefreshJob implements InitializingBean {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-//                EXECUTOR_100.shutdownNow();
-//                LOGGER.info("刷新酒店价格任务的线程池关闭");
+                EXECUTOR_100.shutdownNow();
+                LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
     }
