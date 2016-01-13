@@ -1,5 +1,10 @@
 package com.mk.framework.proxy.http;
 
+import com.mk.framework.proxy.Config;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.ThreadUtil;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -25,13 +30,19 @@ public class HttpUtil {
     public static String doGet(String url) throws Exception {
         ProxyServer proxyServer = ProxyServerManager.random();
 
-        String result = HttpUtil.doGet(url, proxyServer);
+        String result;
+        try {
+            result = HttpUtil.doGet(url, proxyServer);
+        } catch (Exception e) {
+            ProxyServerManager.remove(proxyServer);
+            throw e;
+        }
 
         if ( StringUtils.isEmpty(result)  ) {
+            ProxyServerManager.remove(proxyServer);
             throw new Exception("响应内容为空");
         } else if ( result.length() < 100 ) {
             ProxyServerManager.remove(proxyServer);
-            ProxyServerManager.addBadServer(proxyServer);
             throw new Exception(result);
         }
 
@@ -48,8 +59,8 @@ public class HttpUtil {
         return resp;
     }
 
-    static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        LOGGER.info("发送请求：{}", urlStr);
+    public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+        LOGGER.debug("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -60,7 +71,7 @@ public class HttpUtil {
 
             RequestConfig config;
             if (proxyServer != null) {
-                LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
+                LOGGER.debug("使用代理：{}", JSONUtil.toJson(proxyServer));
                 HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
                 config = RequestConfig
                         .custom()
@@ -93,9 +104,8 @@ public class HttpUtil {
             if ( StringUtils.isEmpty(result) ) {
                 LOGGER.warn("响应内容为空", result);
             } else if ( result.length() < 100 ) {
-                LOGGER.info("获得响应：{}", result);
+                LOGGER.warn("获得响应：{}", result);
             } else {
-                LOGGER.info("请求成功");
                 LOGGER.debug("获得响应：{}", result);
             }
 

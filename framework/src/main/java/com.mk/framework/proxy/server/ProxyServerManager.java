@@ -1,6 +1,8 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.proxy.server;
 
 import com.mk.framework.manager.RedisCacheName;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
@@ -20,7 +22,7 @@ public class ProxyServerManager {
 
     private static final Set<ProxyServer> USING_PROXY_SERVER_SET = new ConcurrentSkipListSet<>();
 
-    static ProxyServer random() throws InterruptedException {
+    public static ProxyServer random() throws InterruptedException {
         ProxyServer proxyServer = PROXY_SERVER_THREAD_LOCAL.get();
 
         if ( proxyServer != null ) {
@@ -39,6 +41,11 @@ public class ProxyServerManager {
 
             return proxyServer;
         }
+    }
+
+    public static void remove(ProxyServer proxyServer) {
+        PROXY_SERVER_THREAD_LOCAL.remove();
+        USING_PROXY_SERVER_SET.remove(proxyServer);
     }
 
     public  static ProxyServer randomBlock() {
@@ -61,11 +68,6 @@ public class ProxyServerManager {
                 jedis.close();
             }
         }
-    }
-
-    static void remove(ProxyServer proxyServer) {
-        PROXY_SERVER_THREAD_LOCAL.remove();
-        USING_PROXY_SERVER_SET.remove(proxyServer);
     }
 
 

@@ -2,12 +2,10 @@ package com.mk.crawer.biz.servcie.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.mk.crawer.api.QunarHotelSyncService;
 import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -17,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

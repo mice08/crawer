@@ -47,7 +47,7 @@ public class HomeController {
 //		HashMap<String, Object> result = new HashMap<String, Object>();
 //
 //		List<String> hotelIdList = new ArrayList<String>();
-//		hotelIdList.add(hotelDetail.getHotelIds());
+//		hotelIdList.rollback(hotelDetail.getHotelIds());
 //
 //		try {
 //			hotelDetailService.crawl(hotelIdList);

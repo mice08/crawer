@@ -2,9 +2,8 @@ package com.mk.crawer.biz.utils;
 
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
-import com.mk.framework.proxy.http.ThreadUtil;
+import com.mk.framework.proxy.ThreadUtil;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 /**

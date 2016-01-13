@@ -1,34 +1,31 @@
 package com.mk.crawer.job.hotel.price;
 
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.JSONUtil;
-import com.mk.framework.proxy.http.RedisUtil;
-import com.mk.framework.proxy.http.ThreadUtil;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.RedisUtil;
+import com.mk.framework.proxy.SystemStatus;
+import com.mk.framework.proxy.ThreadUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by 振涛 on 2016/1/8.
  */
 @Component
-public class HotelInfoRefreshJob implements InitializingBean {
+public class HotelDetailRefreshJob implements InitializingBean {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
-
-    private static final BlockingQueue<HotelInfoRefreshThread> HOTEL_INFO_REFRESH_QUEUE =
-            new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailRefreshJob.class);
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
-
-    private static volatile boolean enableListen = true;
-
-    private static volatile boolean enableAddJob = true;
 
     static class HotelInfoRefreshThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
@@ -45,7 +42,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(false);
+            t.setDaemon(true);
             if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
             }
@@ -62,15 +59,16 @@ public class HotelInfoRefreshJob implements InitializingBean {
             try {
                 jedis = RedisUtil.getJedis();
 
-                while (enableListen) {
+                while (!SystemStatus.JVM_IS_SHUTDOWN) {
+
                     String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET);
 
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelDetail hotelDetail = JSONUtil.fromJson(jsonStr, HotelDetail.class);
 
-                        HotelPriceManager.put(hotelDetail);
+                        HotelDetailManager.put(hotelDetail);
 
-                        LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
+                        LOGGER.debug("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
                     } else {
                         ThreadUtil.sleep(1000);
                     }
@@ -90,9 +88,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
         public void run() {
             LOGGER.info("开始添加刷新酒店信息的线程");
             Integer count = 0;
-            while (enableAddJob) {
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 if ( ++count <= Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
-                    EXECUTOR_100.execute(new HotelInfoRefreshThread());
+                    EXECUTOR_100.execute(new HotelDetailRefreshThread());
+                    //一秒钟增加一个，防止同一时刻发送大量请求，导致服务器拒绝服务
+                    ThreadUtil.sleep(1000);
                 } else {
                     break;
                 }
@@ -106,18 +106,14 @@ public class HotelInfoRefreshJob implements InitializingBean {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                enableListen = false;
-                LOGGER.info("停止监听Redis中的待刷新的酒店价格SET");
-                enableAddJob = false;
-                LOGGER.info("停止添加刷新酒店价格任务");
-                EXECUTOR_100.shutdown();
+                EXECUTOR_100.shutdownNow();
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
     }
 
     private static ThreadPoolExecutor initExecutor() {
-        LOGGER.info("重新初始化线程池");
+        LOGGER.info("初始化线程池");
         if ( EXECUTOR_100 != null ) {
             EXECUTOR_100.shutdown();
         }
@@ -133,11 +129,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
-        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.setDaemon(true);
         redisRefreshPriceListener.start();
 
         Thread startRefreshThread = new Thread(new StartRefreshThread(), "StartRefreshThread");
-        startRefreshThread.setDaemon(false);
+        startRefreshThread.setDaemon(true);
         startRefreshThread.start();
     }
 }

@@ -4,11 +4,9 @@ import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.hotel.price.HotelDetail;
-import com.mk.crawer.job.hotel.price.HotelInfoRefreshThread;
+import com.mk.crawer.job.hotel.price.HotelDetailManager;
 import com.mk.framework.AppUtils;
-import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.JSONUtil;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,11 +79,9 @@ public class HotelPriceJobController {
                         HotelDetail hotelDetail = new HotelDetail();
                         hotelDetail.setHotelId(hotel.getSourceId());
 
-                        String jsonStr = JSONUtil.toJson(hotelDetail);
+                        HotelDetailManager.add(hotelDetail);
 
-                        jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
-
-                        LOGGER.info("添加到价格刷新队列：{}", jsonStr);
+                        LOGGER.info("添加到价格刷新队列，酒店ID：{}", hotelDetail.getHotelId());
                     }
                 }
 

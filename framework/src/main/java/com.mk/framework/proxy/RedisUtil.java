@@ -1,4 +1,4 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.proxy;
 
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
@@ -45,7 +45,7 @@ public class RedisUtil {
     public static void close(Jedis jedis) {
         if ( jedis != null ) {
             jedis.close();
-            LOGGER.info("Redis连接关闭成功");
+            LOGGER.debug("Redis连接关闭成功");
         }
     }
 

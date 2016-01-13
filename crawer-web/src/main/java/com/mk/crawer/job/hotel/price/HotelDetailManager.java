@@ -1,24 +1,57 @@
 package com.mk.crawer.job.hotel.price;
 
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.JSONUtil;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by 振涛 on 2016/1/13.
  */
-public class HotelPriceManager {
+public class HotelDetailManager {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelPriceManager.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailManager.class);
 
     private static final BlockingQueue<HotelDetail> HOTEL_DETAIL_BLOCKING_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
+
+    static {
+        init();
+    }
+
+    private static void init() {
+        Thread doInit = new Thread() {
+            @Override
+            public void run() {
+                Jedis jedis = null;
+
+                try {
+                    jedis = RedisUtil.getJedis();
+
+                    Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
+
+                    for (String s : jsonSet) {
+                        HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+                        HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+                    }
+
+                } catch (Exception e) {
+                    LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
+                } finally {
+                    RedisUtil.close(jedis);
+                }
+                LOGGER.info("初始化待刷新信息的酒店完成");
+            }
+        };
+        doInit.setDaemon(true);
+        doInit.start();
+    }
 
     /**
      * 获取待刷新的酒店
@@ -49,8 +82,8 @@ public class HotelPriceManager {
 
             transaction = jedis.multi();
 
-            jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
-            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
 
@@ -66,11 +99,11 @@ public class HotelPriceManager {
     }
 
     /**
-     * 将要刷新的酒店添加到Redis
+     * 将要刷新的酒店添加到Redis,并从正在刷新队列中移除
      * @param hotelDetail
      * @return
      */
-    public static boolean add(HotelDetail hotelDetail) {
+    public static void rollback(HotelDetail hotelDetail) {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -81,12 +114,10 @@ public class HotelPriceManager {
 
             transaction = jedis.multi();
 
-            jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
-            Long reply = jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
 
             transaction.exec();
-
-            return reply > 0;
         } catch (Exception e) {
             if ( transaction != null ) {
                 transaction.discard();
@@ -98,11 +129,11 @@ public class HotelPriceManager {
     }
 
     /**
-     * 从Redis移除正在刷新的酒店
+     * 从Redis移除正在刷新的酒店，代表该酒店的价格完成刷新
      * @param hotelDetail
-     * @return 如果存在该元素返回true，如果不存在改元素返回false
+     * @return 如果存在该元素返回true，如果不存在该元素返回false
      */
-    public static boolean remove(HotelDetail hotelDetail) {
+    public static boolean complete(HotelDetail hotelDetail) {
         Jedis jedis = null;
 
         try {
@@ -113,13 +144,26 @@ public class HotelPriceManager {
             Long reply = jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             return reply > 0;
-        } catch (Exception e) {
-            throw e;
         } finally {
             RedisUtil.close(jedis);
         }
     }
 
+
+    public static boolean add(HotelDetail hotelDetail) {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            String jsonStr = JSONUtil.toJson(hotelDetail);
+
+            Long reply = jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+
+            return reply > 0;
+        } finally {
+            RedisUtil.close(jedis);
+        }
+    }
 
 
 }
