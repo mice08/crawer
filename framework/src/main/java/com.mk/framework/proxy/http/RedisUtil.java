@@ -31,4 +31,11 @@ public class RedisUtil {
         return jedis;
     }
 
+    public static void close(Jedis jedis) {
+        if ( jedis != null ) {
+            jedis.close();
+            LOGGER.info("Redis连接关闭成功");
+        }
+    }
+
 }

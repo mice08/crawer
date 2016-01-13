@@ -5,10 +5,9 @@ import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by 振涛 on 2016/1/6.
@@ -17,27 +16,29 @@ public class ProxyServerManager {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
 
-    private static final Random RANDOM = new Random();
+    private static final ThreadLocal<ProxyServer> PROXY_SERVER_THREAD_LOCAL = new ThreadLocal<>();
 
-    static ProxyServer random() {
-        List<ProxyServer> proxyServerList = null;
+    private static final Set<ProxyServer> USING_PROXY_SERVER_SET = new ConcurrentSkipListSet<>();
 
-        while (proxyServerList ==null || proxyServerList.size()==0) {
-            ThreadUtil.randomSleep(1000, 5000);
-            try {
-                proxyServerList = ProxyServerFetch.byBill();
-            } catch (Exception e) {
-                proxyServerList = ProxyServerFetch.byMike();
+    static ProxyServer random() throws InterruptedException {
+        ProxyServer proxyServer = PROXY_SERVER_THREAD_LOCAL.get();
+
+        if ( proxyServer != null ) {
+            return proxyServer;
+        } else {
+            BlockingQueue<ProxyServer> queue = ProxyServerFetch.byBill();
+
+            proxyServer = queue.take();
+
+            while (USING_PROXY_SERVER_SET.contains(proxyServer)) {
+                proxyServer = queue.take();
             }
+
+            PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+            USING_PROXY_SERVER_SET.add(proxyServer);
+
+            return proxyServer;
         }
-
-        ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
-
-        while (!check(proxyServer)) {
-            proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
-        }
-
-        return proxyServer;
     }
 
     public  static ProxyServer randomBlock() {
@@ -54,81 +55,21 @@ public class ProxyServerManager {
 
             return JSONUtil.fromJson(jsonStr, ProxyServer.class);
         } catch (Exception e) {
-            List<ProxyServer> proxyServerList = ProxyServerFetch.byMike();
-
-            ProxyServer proxyServer = proxyServerList.get(RANDOM.nextInt(proxyServerList.size()));
-
-            LOGGER.warn("使用备用代理IP：{}", JSONUtil.toJson(proxyServer));
-
-            return proxyServer;
+            throw e;
         } finally {
             if (jedis != null) {
                 jedis.close();
             }
         }
-    }
-
-    static Long add(ProxyServer proxyServer) {
-        Jedis jedis = null;
-
-        Long count = null;
-
-        try {
-            jedis = RedisUtil.getJedis();
-            count = jedis.sadd(
-                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer));
-        } catch (Exception e) {
-            LOGGER.error("错误：", e);
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-
-        return count;
-    }
-
-    static boolean isExist(ProxyServer proxyServer) {
-        Jedis jedis = null;
-
-        boolean flag = false;
-
-        try {
-            jedis = RedisUtil.getJedis();
-            flag = jedis.sismember(
-                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer));
-        } catch (Exception e) {
-            LOGGER.error("错误：", e);
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-
-        return flag;
     }
 
     static void remove(ProxyServer proxyServer) {
-        Jedis jedis = null;
-        try {
-            jedis = RedisUtil.getJedis();
-            jedis.srem(
-                    RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer));
-        }catch (Exception e){
-            throw e;
-        }finally {
-            if (null != jedis){
-                jedis.close();
-            }
-        }
-
-
+        PROXY_SERVER_THREAD_LOCAL.remove();
+        USING_PROXY_SERVER_SET.remove(proxyServer);
     }
 
-   public static void removeBlock(ProxyServer proxyServer) {
+
+    public static void removeBlock(ProxyServer proxyServer) {
         Jedis jedis = null;
         try {
             jedis = RedisUtil.getJedis();
@@ -143,63 +84,6 @@ public class ProxyServerManager {
             }
         }
 
-
-    }
-
-
-    static List<ProxyServer> listProxyServer() {
-        Jedis jedis = null;
-        try {
-            jedis = RedisUtil.getJedis();
-            Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
-
-            List<ProxyServer> proxyServerList = new LinkedList<>();
-
-            for (String s : jsonStrList) {
-                ProxyServer proxyServer = JSONUtil.fromJson(s, ProxyServer.class);
-                proxyServerList.add(proxyServer);
-            }
-
-            return proxyServerList;
-        }catch (Exception e){
-            throw e;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
-
-    static boolean check(ProxyServer proxyServer) {
-        Jedis jedis = null;
-        try {
-            jedis = RedisUtil.getJedis();
-            return !jedis.sismember(
-                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
-                    JSONUtil.toJson(proxyServer)
-            );
-        }catch (Exception e){
-            throw e;
-        }finally {
-            if (null != jedis){
-                jedis.close();
-            }
-        }
-    }
-
-    static Long count() {
-        Jedis jedis = null;
-        try {
-            jedis = RedisUtil.getJedis();
-            return jedis.scard(RedisCacheName.CRAWER_PROXY_SERVER_POOL_SET);
-        }catch (Exception e){
-            throw e;
-        }finally {
-            if (null != jedis){
-                jedis.close();
-            }
-        }
 
     }
 
