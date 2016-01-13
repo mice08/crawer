@@ -25,5 +25,7 @@ public class RedisCacheName {
      */
     public static final String CRAWER_HOTEL_INFO_REFRESHING_SET = "crawer_hotel_info_refreshing_set";
 
+    public static final String CRAWER_OTAPRICE = "crawer_otaprice";
+
 
 }

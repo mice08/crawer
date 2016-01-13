@@ -43,6 +43,12 @@ public class OtaPrice {
 
 	private Long availableRoomcount;
 
+	private String valid;
+
+	private String createTime;
+
+	private String site;
+
 	public Long getOtsHotelId() {
 		return otsHotelId;
 	}
@@ -193,5 +199,29 @@ public class OtaPrice {
 
 	public void setAvailableRoomcount(Long availableRoomcount) {
 		this.availableRoomcount = availableRoomcount;
+	}
+
+	public String getValid() {
+		return valid;
+	}
+
+	public void setValid(String valid) {
+		this.valid = valid;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
 	}
 }

@@ -11,20 +11,22 @@ import java.util.List;
 /**
  * Created by jeashi on 2016/1/8.
  */
-public interface IHotelMappingService {
+public interface HotelMappingService {
+
+    public int countByExample(HotelMappingExample example);
 
     public int deleteByPrimaryKey(Long id);
 
     public int insert(HotelMapping record);
 
-    public  int insertSelective(HotelMapping record);
+    public int insertSelective(HotelMapping record);
 
-    public   HotelMapping selectByPrimaryKey(Long id);
+    public List<HotelMapping> selectByExample(HotelMappingExample example);
+
+    public HotelMapping selectByPrimaryKey(Long id);
 
     public int updateByPrimaryKeySelective(HotelMapping record);
 
     public int updateByPrimaryKey(HotelMapping record);
-
-    public   List<HotelMapping>  queryHotelMapping(HashMap hm);
 
 }

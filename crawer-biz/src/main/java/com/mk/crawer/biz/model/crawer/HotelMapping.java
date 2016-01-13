@@ -11,6 +11,8 @@ public class HotelMapping {
 
     private String exHotelName;
 
+    private String site;
+
     private String valid;
 
     public Long getId() {
@@ -51,6 +53,14 @@ public class HotelMapping {
 
     public void setExHotelName(String exHotelName) {
         this.exHotelName = exHotelName == null ? null : exHotelName.trim();
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site == null ? null : site.trim();
     }
 
     public String getValid() {
