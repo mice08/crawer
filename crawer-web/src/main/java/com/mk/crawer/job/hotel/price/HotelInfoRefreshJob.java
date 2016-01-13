@@ -66,7 +66,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
                         HotelPriceManager.put(hotelDetail);
 
-                        LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
+                        LOGGER.debug("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
                     } else {
                         ThreadUtil.sleep(1000);
                     }
