@@ -1,20 +1,11 @@
 package com.mk.crawer.biz.servcie.impl;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.mk.crawer.api.QunarHotelSyncService;
 import com.mk.crawer.biz.mapper.crawer.OtaPriceMapper;
 import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
-import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.crawer.biz.utils.RedisUtil;
-import com.mk.framework.AppUtils;
-import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.HttpUtil;
-import com.mk.framework.proxy.http.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -108,7 +98,7 @@ public class OtaPriceServiceImpl implements OtaPriceService {
                 for (OtaPrice roomPrice:otaPriceList){
                     logger.info("=====hotelSourceId={}&roomTypeKey={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey());
                     init2redis(
-                            String.format("%s:%s:%s", RedisCacheName.CRAWER_OTAPRICE,
+                            String.format("%s:%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
                                     roomPrice.getOtsHotelId(),roomPrice.getOtsRoomTypeId()),
                             roomPrice.getPrice().toString());
                 }
