@@ -158,12 +158,12 @@ public class ProxyServerFetch {
         List<ProxyServer> proxyServerList = list(gbjProxy.data);
 
         for (ProxyServer proxyServer : proxyServerList) {
-            if ( !BY_BILL.contains(proxyServer) ) {
-                BY_BILL.add(proxyServer);
+            if ( !WAITING_FOR_CHECK.contains(proxyServer) ) {
+                WAITING_FOR_CHECK.add(proxyServer);
             }
         }
 
-        LOGGER.info("付费渠道代理IP队列里面有{}个元素", BY_BILL.size());
+        LOGGER.info("付费渠道代理IP队列里面有{}个元素", WAITING_FOR_CHECK.size());
     }
 
     public static BlockingQueue<ProxyServer> byBill() {
