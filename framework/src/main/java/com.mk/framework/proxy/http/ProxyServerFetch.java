@@ -1,22 +1,101 @@
 package com.mk.framework.proxy.http;
 
 import org.slf4j.Logger;
+import org.springframework.security.access.method.P;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by 振涛 on 2016/1/6.
  */
 public class ProxyServerFetch {
 
+    private static final String CHECK_URL = "http://1212.ip138.com/ic.asp";
+
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
-    private static final BlockingQueue<ProxyServer> BY_MIKE = new LinkedBlockingQueue<>();
     private static final BlockingQueue<ProxyServer> BY_BILL = new LinkedBlockingQueue<>();
+
+    private static final BlockingQueue<ProxyServer> WAITING_FOR_CHECK = new LinkedBlockingQueue<>();
+
+    private static final ThreadPoolExecutor CHECK_EXECUTOR = initExecutor();
+
+    private static ThreadPoolExecutor initExecutor() {
+        LOGGER.info("初始化线程池");
+        if ( CHECK_EXECUTOR != null ) {
+            CHECK_EXECUTOR.shutdown();
+        }
+
+        return new ThreadPoolExecutor(
+                Config.CHECK_PROXY_THREAD_COUNT,
+                Config.CHECK_PROXY_THREAD_COUNT,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(),
+                new ProxyServerCheckThreadFactory());
+    }
+
+    static class ProxyServerCheckThreadFactory implements ThreadFactory {
+        static final AtomicInteger poolNumber = new AtomicInteger(1);
+        final ThreadGroup group;
+        final AtomicInteger threadNumber = new AtomicInteger(1);
+        final String namePrefix;
+
+        public ProxyServerCheckThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null)? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            namePrefix = "Proxy-server-check-pool-" + poolNumber.getAndIncrement() + "-thread-";
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            t.setDaemon(true);
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+            return t;
+        }
+    }
+
+    static class AddToCheckPool implements Runnable {
+        @Override
+        public void run() {
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
+                try {
+                    ProxyServer proxyServer = WAITING_FOR_CHECK.take();
+                    Check check = new Check(proxyServer);
+
+                    CHECK_EXECUTOR.execute(check);
+                } catch (InterruptedException e) {
+                    LOGGER.error("添加代理IP检测出错：", e);
+                }
+            }
+        }
+    }
+
+    static class Check implements Runnable {
+
+        private ProxyServer proxyServer;
+
+        public Check(ProxyServer proxyServer) {
+            this.proxyServer = proxyServer;
+        }
+
+        @Override
+        public void run() {
+            try {
+                HttpUtil.doGet(CHECK_URL, proxyServer);
+
+                BY_BILL.put(proxyServer);
+            } catch (Exception e) {
+                LOGGER.debug("代理IP检测结果：{}", e);
+            }
+        }
+    }
 
     static class Fetch implements Runnable {
         @Override
@@ -24,11 +103,11 @@ public class ProxyServerFetch {
             while (true) {
                 try {
                     fetchByBill();
-                    fetchByMike();
                 } catch (Exception e) {
                     LOGGER.error("获取新的代理IP出错：", e);
+                } finally {
+                    ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
                 }
-                ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
             }
         }
     }
@@ -37,7 +116,7 @@ public class ProxyServerFetch {
         @Override
         public void run() {
             while (true) {
-                LOGGER.info("付费代理IP{}个---备用代理IP{}个", BY_BILL.size(), BY_MIKE.size());
+                LOGGER.info("待验证的代理IP{}个---验证过的代理IP{}个", WAITING_FOR_CHECK.size(), BY_BILL.size());
                 ThreadUtil.sleep(1000);
             }
         }
@@ -51,6 +130,10 @@ public class ProxyServerFetch {
         Thread info = new Thread(new Info(), "Info");
         info.setDaemon(true);
         info.start();
+
+        Thread addToCheckPool = new Thread(new AddToCheckPool(), "AddToCheckPool");
+        addToCheckPool.setDaemon(true);
+        addToCheckPool.start();
     }
 
     private static List<ProxyServer> list(List<GBJProxy.Proxy> proxyList) {
@@ -67,22 +150,6 @@ public class ProxyServerFetch {
         return proxyServerList;
     }
 
-    private static void fetchByMike() {
-        String ipListJSONStr = HttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
-
-        GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
-
-        List<ProxyServer> proxyServerList = list(gbjProxy.data);
-
-        for (ProxyServer proxyServer : proxyServerList) {
-           if ( !BY_MIKE.contains(proxyServer) ) {
-               BY_MIKE.add(proxyServer);
-           }
-        }
-
-        LOGGER.info("眯客代理IP队列里面有{}个元素", BY_MIKE.size());
-    }
-
     private static void fetchByBill() {
         String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_LIST_URL);
 
@@ -97,10 +164,6 @@ public class ProxyServerFetch {
         }
 
         LOGGER.info("付费渠道代理IP队列里面有{}个元素", BY_BILL.size());
-    }
-
-    public static BlockingQueue<ProxyServer> byMike() {
-        return BY_MIKE;
     }
 
     public static BlockingQueue<ProxyServer> byBill() {

@@ -1,4 +1,4 @@
-package com.mk.crawer.job.hotel.price;
+package com.mk.framework.proxy.http;
 
 import org.slf4j.Logger;
 

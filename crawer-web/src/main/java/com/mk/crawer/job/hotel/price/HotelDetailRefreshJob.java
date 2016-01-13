@@ -3,6 +3,7 @@ package com.mk.crawer.job.hotel.price;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.proxy.http.SystemStatus;
 import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;

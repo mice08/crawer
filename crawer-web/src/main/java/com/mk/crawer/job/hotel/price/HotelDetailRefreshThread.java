@@ -2,6 +2,7 @@ package com.mk.crawer.job.hotel.price;
 
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.framework.AppUtils;
+import com.mk.framework.proxy.http.SystemStatus;
 import com.mk.framework.proxy.http.ThreadUtil;
 import org.slf4j.Logger;
 
