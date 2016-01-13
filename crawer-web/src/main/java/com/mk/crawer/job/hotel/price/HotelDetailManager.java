@@ -144,8 +144,6 @@ public class HotelDetailManager {
             Long reply = jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             return reply > 0;
-        } catch (Exception e) {
-            throw e;
         } finally {
             RedisUtil.close(jedis);
         }
