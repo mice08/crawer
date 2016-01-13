@@ -25,7 +25,13 @@ public class HttpUtil {
     public static String doGet(String url) throws Exception {
         ProxyServer proxyServer = ProxyServerManager.random();
 
-        String result = HttpUtil.doGet(url, proxyServer);
+        String result;
+        try {
+            result = HttpUtil.doGet(url, proxyServer);
+        } catch (Exception e) {
+            ProxyServerManager.remove(proxyServer);
+            throw new Exception("请求失败");
+        }
 
         if ( StringUtils.isEmpty(result)  ) {
             ProxyServerManager.remove(proxyServer);
