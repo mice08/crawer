@@ -163,7 +163,7 @@ public class ProxyServerFetch {
             }
         }
 
-        LOGGER.info("付费渠道代理IP队列里面有{}个元素", WAITING_FOR_CHECK.size());
+        LOGGER.info("付费渠道获取到{}代理IP", proxyServerList.size());
     }
 
     public static BlockingQueue<ProxyServer> byBill() {
