@@ -26,12 +26,12 @@ public class RedisCacheName {
     public static final String CRAWER_HOTEL_INFO_REFRESHING_SET = "CRAWER:HOTEL:INFO:REFRESHING:SET";
 
     /********动态价格-OTA价格***********/
-    public static final String DYNAMIC_PRICE_OTA = "DYNAMIC:PRICE:OTA";
+    public static final String DYNAMIC_PRICE_OTA = "DYNAMIC:PRICE:OTA:";
     /********动态价格-协议价***********/
-    public static final String DYNAMIC_PRICE_AGREEMENT = "DYNAMIC:PRICE:AGREEMENT";
+    public static final String DYNAMIC_PRICE_AGREEMENT = "DYNAMIC:PRICE:AGREEMENT:";
     /********动态价格-mike价***********/
-    public static final String DYNAMIC_PRICE_MK = "DYNAMIC:PRICE:MK";
+    public static final String DYNAMIC_PRICE_MK = "DYNAMIC:PRICE:MK:";
     /********动态价格-门市价***********/
-    public static final String DYNAMIC_PRICE_MARKET = "DYNAMIC:PRICE:MARKET";
+    public static final String DYNAMIC_PRICE_MARKET = "DYNAMIC:PRICE:MARKET:";
 
 }
