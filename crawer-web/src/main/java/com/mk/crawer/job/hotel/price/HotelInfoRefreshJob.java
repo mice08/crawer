@@ -26,10 +26,6 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
 
-    private static volatile boolean enableListen = true;
-
-    private static volatile boolean enableAddJob = true;
-
     static class HotelInfoRefreshThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
         final ThreadGroup group;
@@ -62,7 +58,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
             try {
                 jedis = RedisUtil.getJedis();
 
-                while (enableListen) {
+                while (!SystemStatus.JVM_IS_SHUTDOWN) {
                     String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET);
 
                     if (!StringUtils.isEmpty(jsonStr)) {
@@ -90,7 +86,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         public void run() {
             LOGGER.info("开始添加刷新酒店信息的线程");
             Integer count = 0;
-            while (enableAddJob) {
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 if ( ++count <= Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                     EXECUTOR_100.execute(new HotelInfoRefreshThread());
                 } else {
@@ -106,10 +102,6 @@ public class HotelInfoRefreshJob implements InitializingBean {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                enableListen = false;
-                LOGGER.info("停止监听Redis中的待刷新的酒店价格SET");
-                enableAddJob = false;
-                LOGGER.info("停止添加刷新酒店价格任务");
                 EXECUTOR_100.shutdown();
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
             }

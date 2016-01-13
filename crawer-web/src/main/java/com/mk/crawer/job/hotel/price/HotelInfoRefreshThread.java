@@ -21,7 +21,7 @@ public class HotelInfoRefreshThread implements Runnable {
         Jedis jedis = RedisUtil.getJedis();
 
         try {
-            while (true) {
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 HotelDetail hotelDetail = null;
 
                 try {
