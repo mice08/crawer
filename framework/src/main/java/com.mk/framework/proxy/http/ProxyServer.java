@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-public class ProxyServer {
+public class ProxyServer implements Comparable {
 
     private String ip;
 
@@ -39,5 +39,13 @@ public class ProxyServer {
     @Override
     public int hashCode() {
         return Objects.hash(ip, port);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) return 0;
+        ProxyServer that = (ProxyServer) o;
+
+        return ip.compareTo(that.ip);
     }
 }
