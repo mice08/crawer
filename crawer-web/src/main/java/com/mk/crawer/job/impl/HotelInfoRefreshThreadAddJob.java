@@ -5,6 +5,8 @@ import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.Worker;
+import com.mk.crawer.job.hotel.price.HotelDetail;
+import com.mk.crawer.job.hotel.price.HotelInfoRefreshThread;
 import com.mk.framework.AppUtils;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
@@ -59,11 +61,11 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
                     List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
                     if (hotelList != null){
                         for (QunarHotel hotel : hotelList) {
-                            HotelInfoRefreshThread hotelInfoRefreshThread = new HotelInfoRefreshThread();
-                            hotelInfoRefreshThread.setHotelId(hotel.getSourceId());
+                            HotelDetail hotelDetail = new HotelDetail();
+                            hotelDetail.setHotelId(hotel.getSourceId());
                             LOGGER.info("*******************加入酒店属性缓存队列{} ***************",hotel.getHotelName());
 
-                            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, JSONUtil.toJson(hotelInfoRefreshThread));
+                            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, JSONUtil.toJson(hotelDetail));
                         }
                     }
 
@@ -77,7 +79,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
             Long end = System.currentTimeMillis();
             LOGGER.info("定时任务执行结束，耗时：{}毫秒", end - start);
-            LOGGER.info("酒店信息刷新任务队列，有{}酒店需要刷新。", jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET));
+            LOGGER.info("酒店信息刷新任务队列，有{}酒店需要刷新。", jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET));
         } catch (Exception e) {
             LOGGER.error("定时任务执行出错：", e);
             e.printStackTrace();

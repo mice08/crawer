@@ -1,4 +1,4 @@
-package com.mk.crawer.job.impl;
+package com.mk.crawer.job.hotel.price;
 
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;
@@ -21,10 +21,14 @@ public class HotelInfoRefreshJob implements InitializingBean {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
 
+    private static final BlockingQueue<HotelInfoRefreshThread> HOTEL_INFO_REFRESH_QUEUE =
+            new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
 
-    private static volatile boolean addJobEnable = true;
+    private static volatile boolean enableListen = true;
+
+    private static volatile boolean enableAddJob = true;
 
     static class HotelInfoRefreshThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
@@ -41,7 +45,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
+            t.setDaemon(false);
             if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
             }
@@ -49,65 +53,62 @@ public class HotelInfoRefreshJob implements InitializingBean {
         }
     }
 
-    class DoJob implements Runnable {
 
+    class RedisRefreshPriceListener implements Runnable {
         @Override
         public void run() {
-            doJob();
-        }
+            Jedis jedis = null;
 
-        private void doJob() {
-            LOGGER.info("刷新酒店价格任务执行开始");
+            try {
+                jedis = RedisUtil.getJedis();
 
-            while (addJobEnable) {
-                Jedis jedis = null;
-
-                try {
-                    jedis = RedisUtil.getJedis();
-
-                    String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET);
+                while (enableListen) {
+                    String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET);
 
                     if (!StringUtils.isEmpty(jsonStr)) {
-                        //暂时从酒店价格刷新队列中移除，如果酒店价格刷新失败，会在酒店价格刷新线程中将该数据添加回来
-                        jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_THREAD_SET, jsonStr);
+                        HotelDetail hotelDetail = JSONUtil.fromJson(jsonStr, HotelDetail.class);
 
-                        HotelInfoRefreshThread hotelInfoRefreshThread = JSONUtil.fromJson(jsonStr, HotelInfoRefreshThread.class);
+                        HotelPriceManager.put(hotelDetail);
 
-                        try {
-                            EXECUTOR_100.execute(hotelInfoRefreshThread);
-
-                            LOGGER.info("refresh thread add to thread pool: {}", jsonStr);
-                        } catch (RejectedExecutionException e) {
-                            int sleepTime = 60000;
-                            LOGGER.info("work queue is full, hotel price refresh job thread sleep {} ms", sleepTime);
-                            ThreadUtil.sleep(sleepTime);
-                        }
+                        LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
                     } else {
-                        int sleepTime = 8000;
-                        LOGGER.info("there is not hotel price that need to refreshed in the redis, hotel price refresh job thread sleep {} ms", sleepTime);
-                        ThreadUtil.sleep(sleepTime);
-                    }
-                } catch (Exception e) {
-                    LOGGER.error("刷新酒店价格任务执行出错：", e);
-                } finally {
-                    if (jedis!=null) {
-                        jedis.close();
+                        ThreadUtil.sleep(1000);
                     }
                 }
-
-                //防止过度自旋
-                ThreadUtil.sleep(1000);
+            } catch (Exception e) {
+                LOGGER.error("监听酒店价格刷新线程发生错误：",e);
+            } finally {
+                if ( jedis != null ) {
+                    jedis.close();
+                }
             }
-
-            LOGGER.info("刷新酒店价格任务执行结束");
         }
+    }
+
+    class StartRefreshThread implements Runnable {
+        @Override
+        public void run() {
+            LOGGER.info("开始添加刷新酒店信息的线程");
+            Integer count = 0;
+            while (enableAddJob) {
+                if ( ++count <= Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
+                    EXECUTOR_100.execute(new HotelInfoRefreshThread());
+                } else {
+                    break;
+                }
+            }
+            LOGGER.info("结束添加刷新酒店信息的线程");
+        }
+
     }
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                addJobEnable = false;
+                enableListen = false;
+                LOGGER.info("停止监听Redis中的待刷新的酒店价格SET");
+                enableAddJob = false;
                 LOGGER.info("停止添加刷新酒店价格任务");
                 EXECUTOR_100.shutdown();
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
@@ -125,14 +126,18 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                 Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                 0L, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT*4),
+                new LinkedBlockingQueue<Runnable>(),
                 new HotelInfoRefreshThreadFactory());
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Thread doJob = new Thread(new DoJob());
-        doJob.setDaemon(true);
-        doJob.start();
+        Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
+        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.start();
+
+        Thread startRefreshThread = new Thread(new StartRefreshThread(), "StartRefreshThread");
+        startRefreshThread.setDaemon(false);
+        startRefreshThread.start();
     }
 }

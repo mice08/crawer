@@ -1,12 +1,12 @@
 package com.mk.framework.proxy.http;
 
 import org.slf4j.Logger;
-import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by 振涛 on 2016/1/6.
@@ -15,8 +15,8 @@ public class ProxyServerFetch {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
-    private static final List<ProxyServer> BY_MIKE = new CopyOnWriteArrayList<>();
-    private static final List<ProxyServer> BY_BILL = new CopyOnWriteArrayList<>();
+    private static final BlockingQueue<ProxyServer> BY_MIKE = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<ProxyServer> BY_BILL = new LinkedBlockingQueue<>();
 
     static {
         Thread thread = new Thread() {
@@ -28,7 +28,7 @@ public class ProxyServerFetch {
                     } catch (Exception e) {
                         LOGGER.error("获取新的代理IP出错：", e);
                     }
-                    ThreadUtil.sleep(60000);
+                    ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
                 }
             }
         };
@@ -40,21 +40,11 @@ public class ProxyServerFetch {
         List<ProxyServer> proxyServerList = new LinkedList<>();
 
         for (GBJProxy.Proxy proxy : proxyList) {
-            Jedis jedis = null;
+            ProxyServer proxyServer = new ProxyServer();
+            proxyServer.setIp(proxy.ip);
+            proxyServer.setPort(proxy.port);
 
-            try {
-                ProxyServer proxyServer = new ProxyServer();
-                proxyServer.setIp(proxy.ip);
-                proxyServer.setPort(proxy.port);
-
-                proxyServerList.add(proxyServer);
-            } catch (Exception e) {
-                LOGGER.info("过滤坏代理IP时发生发送错误：", e);
-            } finally {
-                if ( jedis != null ) {
-                    jedis.close();
-                }
-            }
+            proxyServerList.add(proxyServer);
         }
 
         return proxyServerList;
@@ -67,9 +57,13 @@ public class ProxyServerFetch {
 
         List<ProxyServer> proxyServerList = list(gbjProxy.data);
 
-        BY_MIKE.clear();
-        BY_MIKE.addAll(proxyServerList);
-        LOGGER.info("从眯客获取到{}个代理IP", BY_MIKE.size());
+        for (ProxyServer proxyServer : proxyServerList) {
+           if ( !BY_MIKE.contains(proxyServer) ) {
+               BY_MIKE.add(proxyServer);
+           }
+        }
+
+        LOGGER.info("眯客代理IP队列里面有{}个元素", BY_MIKE.size());
     }
 
     private static void fetchByBill() {
@@ -79,26 +73,24 @@ public class ProxyServerFetch {
 
         List<ProxyServer> proxyServerList = list(gbjProxy.data);
 
-        BY_BILL.clear();
-        BY_BILL.addAll(proxyServerList);
-        LOGGER.info("从付费渠道获取到{}个代理IP", BY_BILL.size());
+        for (ProxyServer proxyServer : proxyServerList) {
+            if ( !BY_BILL.contains(proxyServer) ) {
+                BY_BILL.add(proxyServer);
+            }
+        }
+
+        LOGGER.info("付费渠道代理IP队列里面有{}个元素", BY_BILL.size());
     }
 
-    public static List<ProxyServer> byMike() {
+    public static BlockingQueue<ProxyServer> byMike() {
         return BY_MIKE;
     }
 
-    public static List<ProxyServer> byBill() {
+    public static BlockingQueue<ProxyServer> byBill() {
         return BY_BILL;
     }
 
     public static void main(String[] args) throws IOException {
-        List<ProxyServer> proxyServerList = byMike();
-//        List<ProxyServer> proxyServerList = byBill();
-//        List<ProxyServer> proxyServerList = byMikeBI();
-        for (ProxyServer proxyServer : proxyServerList) {
-            LOGGER.info("代理IP：{}", JSONUtil.toJson(proxyServer));
-        }
     }
 
 }

@@ -22,40 +22,20 @@ public class HttpUtil {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
 
-    public static String doGet(String url) {
-        return doGet(url, 1);
-    }
+    public static String doGet(String url) throws Exception {
+        ProxyServer proxyServer = ProxyServerManager.random();
 
+        String result = HttpUtil.doGet(url, proxyServer);
 
-
-    static String doGet(String url, int count) {
-        if ( count <= Config.FETCH_RETRY_TIMES ) {
-
-            LOGGER.info("开始第{}次请求。", count);
-
-            ProxyServer proxyServer = ProxyServerManager.random();
-            try {
-                String result = HttpUtil.doGet(url, proxyServer);
-
-                if ( StringUtils.isEmpty(result)  ) {
-                    throw new IOException("响应内容为空");
-                } else if ( result.length() < 100 ) {
-                    ProxyServerManager.addBadServer(proxyServer);
-                    throw new IOException(result);
-                }
-
-                return result;
-            } catch (IOException e) {
-                LOGGER.warn("代理失效：{}，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.countBadServer());
-
-                ThreadUtil.sleep(2000);
-
-                return doGet(url, ++count);
-            }
-        } else {
-            LOGGER.info("共进行了{}次请求，请求结束。", Config.FETCH_RETRY_TIMES);
-            return null;
+        if ( StringUtils.isEmpty(result)  ) {
+            throw new Exception("响应内容为空");
+        } else if ( result.length() < 100 ) {
+            ProxyServerManager.remove(proxyServer);
+            ProxyServerManager.addBadServer(proxyServer);
+            throw new Exception(result);
         }
+
+        return result;
     }
 
     public static String doGetNoProxy(String url)  {
@@ -138,7 +118,11 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        LOGGER.info(doGetNoProxy("http://1212.ip138.com/ic.asp"));
+        while ( true ) {
+            LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=20160112&checkOutDate=20160113&keywords=&location=&seq=chongqing_city_10958&clickNum=0&isLM=0&type=0"));
+            ThreadUtil.sleep(60000);
+        }
+//        LOGGER.info(doGetNoProxy("http://1212.ip138.com/ic.asp"));
 //        LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
 //        LOGGER.info(doGetNoProxy("http://www.xueshandai.com/"));
     }
