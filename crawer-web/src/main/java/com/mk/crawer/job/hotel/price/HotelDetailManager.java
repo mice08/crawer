@@ -50,8 +50,8 @@ public class HotelDetailManager {
                 } catch (Exception e) {
                     LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
                 } finally {
-                    RedisUtil.close(jedis);
                     lock.unlock();
+                    RedisUtil.close(jedis);
                 }
                 LOGGER.info("初始化待刷新信息的酒店完成");
             }
