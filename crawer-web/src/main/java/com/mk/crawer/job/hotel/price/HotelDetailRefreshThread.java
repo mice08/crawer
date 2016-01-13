@@ -27,7 +27,7 @@ public class HotelDetailRefreshThread implements Runnable {
 
                 hotelDetailCrawlService.crawl(hotelDetail.getHotelId());
 
-                HotelDetailManager.remove(hotelDetail);
+                HotelDetailManager.complete(hotelDetail);
 
                 LOGGER.info("成功刷新酒店：{}的价格", hotelDetail.getHotelId());
             } catch (InterruptedException e) {
