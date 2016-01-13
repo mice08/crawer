@@ -129,7 +129,7 @@ public class HotelDetailManager {
     }
 
     /**
-     * 从Redis移除正在刷新的酒店
+     * 从Redis移除正在刷新的酒店，代表改酒店的价格完成刷新
      * @param hotelDetail
      * @return 如果存在该元素返回true，如果不存在改元素返回false
      */
