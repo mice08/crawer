@@ -99,11 +99,11 @@ public class HotelDetailManager {
     }
 
     /**
-     * 将要刷新的酒店添加到Redis
+     * 将要刷新的酒店添加到Redis,并从正在刷新队列中移除
      * @param hotelDetail
      * @return
      */
-    public static void add(HotelDetail hotelDetail) {
+    public static void rollback(HotelDetail hotelDetail) {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -151,6 +151,21 @@ public class HotelDetailManager {
         }
     }
 
+
+    public static boolean add(HotelDetail hotelDetail) {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            String jsonStr = JSONUtil.toJson(hotelDetail);
+
+            Long reply = jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+
+            return reply > 0;
+        } finally {
+            RedisUtil.close(jedis);
+        }
+    }
 
 
 }
