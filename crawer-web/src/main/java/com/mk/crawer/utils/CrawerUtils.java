@@ -1,7 +1,7 @@
 package com.mk.crawer.utils;
 
 import com.mk.framework.UrlUtils;
-import com.mk.framework.proxy.http.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServer;
 
 import java.io.*;
 import java.net.HttpURLConnection;

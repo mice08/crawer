@@ -4,7 +4,7 @@ import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.JSONUtil;
 import redis.clients.jedis.Jedis;
 
 import java.util.LinkedList;

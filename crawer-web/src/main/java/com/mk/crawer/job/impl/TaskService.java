@@ -3,7 +3,7 @@ package com.mk.crawer.job.impl;
 import com.mk.crawer.biz.enums.CityTypeEnum;
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.servcie.ICityListService;
-import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.proxy.JSONUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

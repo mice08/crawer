@@ -1,4 +1,4 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.proxy.server;
 
 import java.util.Objects;
 

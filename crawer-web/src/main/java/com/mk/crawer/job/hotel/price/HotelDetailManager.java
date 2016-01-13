@@ -1,8 +1,8 @@
 package com.mk.crawer.job.hotel.price;
 
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.JSONUtil;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;

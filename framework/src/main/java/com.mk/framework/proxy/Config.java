@@ -1,11 +1,11 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.proxy;
 
 import com.google.common.collect.ImmutableSet;
 
 /**
  * Created by 振涛 on 2016/1/6.
  */
-class Config {
+public class Config {
 
     /**
      * 通过API提取其他网站价格数据重试次数--单位：次数

@@ -1,5 +1,10 @@
 package com.mk.framework.proxy.http;
 
+import com.mk.framework.proxy.Config;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.ThreadUtil;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -54,7 +59,7 @@ public class HttpUtil {
         return resp;
     }
 
-    static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
+    public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
         LOGGER.info("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
