@@ -30,7 +30,7 @@ public class HttpUtil {
             result = HttpUtil.doGet(url, proxyServer);
         } catch (Exception e) {
             ProxyServerManager.remove(proxyServer);
-            throw new Exception("请求失败");
+            throw e;
         }
 
         if ( StringUtils.isEmpty(result)  ) {
