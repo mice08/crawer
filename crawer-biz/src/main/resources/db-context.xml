@@ -114,7 +114,6 @@
 			<tx:method name="delete*" propagation="REQUIRED" />
 			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
 			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="select*" read-only="true" propagation="SUPPORTS" />
 			<tx:method name="*" read-only="true" />
 		</tx:attributes>
 	</tx:advice>
