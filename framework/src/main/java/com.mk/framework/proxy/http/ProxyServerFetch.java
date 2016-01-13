@@ -18,22 +18,39 @@ public class ProxyServerFetch {
     private static final BlockingQueue<ProxyServer> BY_MIKE = new LinkedBlockingQueue<>();
     private static final BlockingQueue<ProxyServer> BY_BILL = new LinkedBlockingQueue<>();
 
-    static {
-        Thread thread = new Thread() {
-            public void run() {
-                while (true) {
-                    try {
-                        fetchByBill();
-                        fetchByMike();
-                    } catch (Exception e) {
-                        LOGGER.error("获取新的代理IP出错：", e);
-                    }
-                    ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
+    static class Fetch implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    fetchByBill();
+                    fetchByMike();
+                } catch (Exception e) {
+                    LOGGER.error("获取新的代理IP出错：", e);
                 }
+                ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
             }
-        };
-        thread.setDaemon(true);
-        thread.start();
+        }
+    }
+
+    static class Info implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                LOGGER.info("付费代理IP{}个---备用代理IP{}个", BY_BILL.size(), BY_MIKE.size());
+                ThreadUtil.sleep(1000);
+            }
+        }
+    }
+
+    static {
+        Thread fetch = new Thread(new Fetch(), "Fetch");
+        fetch.setDaemon(true);
+        fetch.start();
+
+        Thread info = new Thread(new Info(), "Info");
+        info.setDaemon(true);
+        info.start();
     }
 
     private static List<ProxyServer> list(List<GBJProxy.Proxy> proxyList) {

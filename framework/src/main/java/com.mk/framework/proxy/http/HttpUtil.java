@@ -28,10 +28,10 @@ public class HttpUtil {
         String result = HttpUtil.doGet(url, proxyServer);
 
         if ( StringUtils.isEmpty(result)  ) {
+            ProxyServerManager.remove(proxyServer);
             throw new Exception("响应内容为空");
         } else if ( result.length() < 100 ) {
             ProxyServerManager.remove(proxyServer);
-            ProxyServerManager.addBadServer(proxyServer);
             throw new Exception(result);
         }
 
