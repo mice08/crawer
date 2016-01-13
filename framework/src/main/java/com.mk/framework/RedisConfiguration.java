@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import redis.clients.jedis.JedisPoolConfig;
 
-//@Configuration
+@Configuration
 @PropertySource("classpath:redis.properties")
 public class RedisConfiguration {
 
