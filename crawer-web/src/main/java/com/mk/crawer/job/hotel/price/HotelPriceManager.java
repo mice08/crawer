@@ -49,8 +49,8 @@ public class HotelPriceManager {
 
             transaction = jedis.multi();
 
-            jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
-            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
 
@@ -70,7 +70,7 @@ public class HotelPriceManager {
      * @param hotelDetail
      * @return
      */
-    public static boolean add(HotelDetail hotelDetail) {
+    public static void add(HotelDetail hotelDetail) {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -81,12 +81,10 @@ public class HotelPriceManager {
 
             transaction = jedis.multi();
 
-            jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
-            Long reply = jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
 
             transaction.exec();
-
-            return reply > 0;
         } catch (Exception e) {
             if ( transaction != null ) {
                 transaction.discard();
