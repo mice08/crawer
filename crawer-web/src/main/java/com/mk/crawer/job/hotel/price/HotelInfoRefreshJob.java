@@ -41,7 +41,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
         @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(false);
+            t.setDaemon(true);
             if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
             }
@@ -125,11 +125,11 @@ public class HotelInfoRefreshJob implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
-        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.setDaemon(true);
         redisRefreshPriceListener.start();
 
         Thread startRefreshThread = new Thread(new StartRefreshThread(), "StartRefreshThread");
-        startRefreshThread.setDaemon(false);
+        startRefreshThread.setDaemon(true);
         startRefreshThread.start();
     }
 }
