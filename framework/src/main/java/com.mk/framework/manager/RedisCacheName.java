@@ -20,8 +20,6 @@ public class RedisCacheName {
      */
     public static final String CRAWER_HOTEL_INFO_REFRESH_SET = "crawer_hotel_info_refresh_set";
 
-    public static final String CRAWER_HOTEL_INFO_REFRESH_THREAD_SET = "crawer_hotel_info_refresh_thread_set";
-
     /**
      * 正在刷新酒店价格的酒店ID列表
      */

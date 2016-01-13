@@ -4,7 +4,6 @@ import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.hotel.price.HotelDetail;
-import com.mk.crawer.job.hotel.price.HotelInfoRefreshThread;
 import com.mk.framework.AppUtils;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.JSONUtil;

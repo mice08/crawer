@@ -7,18 +7,44 @@ import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by 振涛 on 2016/1/13.
  */
-public class HotelPriceManager {
+public class HotelDetailManager {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelPriceManager.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailManager.class);
 
     private static final BlockingQueue<HotelDetail> HOTEL_DETAIL_BLOCKING_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
+
+    static {
+        init();
+    }
+
+    private static void init() {
+        Jedis jedis = null;
+
+        try {
+            jedis = RedisUtil.getJedis();
+
+            Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
+
+            for (String s : jsonSet) {
+                HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+                HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
+        } finally {
+            RedisUtil.close(jedis);
+        }
+        LOGGER.info("初始化待刷新信息的酒店完成");
+    }
 
     /**
      * 获取待刷新的酒店

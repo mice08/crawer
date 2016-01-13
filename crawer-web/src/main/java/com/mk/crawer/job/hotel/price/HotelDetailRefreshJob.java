@@ -17,11 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by 振涛 on 2016/1/8.
  */
 @Component
-public class HotelInfoRefreshJob implements InitializingBean {
+public class HotelDetailRefreshJob implements InitializingBean {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshJob.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailRefreshJob.class);
 
-    private static final BlockingQueue<HotelInfoRefreshThread> HOTEL_INFO_REFRESH_QUEUE =
+    private static final BlockingQueue<HotelDetailRefreshThread> HOTEL_INFO_REFRESH_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
@@ -59,12 +59,13 @@ public class HotelInfoRefreshJob implements InitializingBean {
                 jedis = RedisUtil.getJedis();
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
+
                     String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET);
 
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelDetail hotelDetail = JSONUtil.fromJson(jsonStr, HotelDetail.class);
 
-                        HotelPriceManager.put(hotelDetail);
+                        HotelDetailManager.put(hotelDetail);
 
                         LOGGER.debug("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
                     } else {
@@ -88,7 +89,7 @@ public class HotelInfoRefreshJob implements InitializingBean {
             Integer count = 0;
             while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 if ( ++count <= Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
-                    EXECUTOR_100.execute(new HotelInfoRefreshThread());
+                    EXECUTOR_100.execute(new HotelDetailRefreshThread());
                 } else {
                     break;
                 }
