@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -20,9 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HotelDetailRefreshJob implements InitializingBean {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailRefreshJob.class);
-
-    private static final BlockingQueue<HotelDetailRefreshThread> HOTEL_INFO_REFRESH_QUEUE =
-            new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
 
