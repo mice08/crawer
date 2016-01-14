@@ -23,8 +23,6 @@ public class HotelDetailManager {
     private static final BlockingQueue<HotelDetail> HOTEL_DETAIL_BLOCKING_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
 
-    private static Lock lock = new ReentrantLock();
-
     static {
         init();
     }
@@ -36,8 +34,6 @@ public class HotelDetailManager {
                 Jedis jedis = null;
 
                 try {
-                    lock.lock();
-
                     jedis = RedisUtil.getJedis();
 
                     Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
@@ -50,7 +46,6 @@ public class HotelDetailManager {
                 } catch (Exception e) {
                     LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
                 } finally {
-                    lock.unlock();
                     RedisUtil.close(jedis);
                 }
                 LOGGER.info("初始化待刷新信息的酒店完成");

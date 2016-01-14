@@ -32,9 +32,11 @@ public class HotelDetailRefreshThread implements Runnable {
                 LOGGER.info("成功刷新酒店：{}的价格", hotelDetail.getHotelId());
             } catch (InterruptedException e) {
                 HotelDetailManager.rollback(hotelDetail);
+                LOGGER.info("刷新酒店的价格失败");
                 break;
             } catch (Exception e) {
                 HotelDetailManager.rollback(hotelDetail);
+                LOGGER.info("刷新酒店的价格失败");
             } finally {
                 ThreadUtil.sleep(Config.REFRESH_PRICE_INTERVAL_TIME);
             }
