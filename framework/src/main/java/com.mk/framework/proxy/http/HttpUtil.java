@@ -94,7 +94,7 @@ public class HttpUtil {
 
             CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
 
-            LOGGER.info("响应码为：{}", closeableHttpResponse.getStatusLine().getStatusCode());
+            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
 
             HttpEntity httpEntity = closeableHttpResponse.getEntity();
 
@@ -108,6 +108,11 @@ public class HttpUtil {
                 LOGGER.info("响应内容：{}", result);
             } else {
                 LOGGER.info("响应内容：{}", result.substring(0, 500));
+            }
+
+            LOGGER.info("响应码为：{}", statusCode);
+            if ( statusCode != 200 ) {
+                throw new IOException("响应码为：" + statusCode);
             }
 
             return result;
