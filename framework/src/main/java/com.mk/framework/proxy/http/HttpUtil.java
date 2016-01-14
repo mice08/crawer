@@ -68,28 +68,23 @@ public class HttpUtil {
 
         try {
             HttpGet httpGet = new HttpGet(urlStr);
+            httpGet.setHeaders(Device.random().getHeaders());
 
-            RequestConfig config;
+            RequestConfig.Builder builder  = RequestConfig.custom();
             if (proxyServer != null) {
                 LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
                 HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-                config = RequestConfig
-                        .custom()
-                        .setProxy(httpHost)
-                        .setSocketTimeout(Config.READ_TIMEOUT)
-                        .setConnectionRequestTimeout(Config.READ_TIMEOUT)
-                        .setConnectTimeout(Config.READ_TIMEOUT)
-                        .build();
+                builder.setProxy(httpHost);
             } else {
                 LOGGER.info("未使用代理");
-                config = RequestConfig
-                        .custom()
-                        .setSocketTimeout(Config.READ_TIMEOUT)
-                        .setConnectionRequestTimeout(Config.READ_TIMEOUT)
-                        .setConnectTimeout(Config.READ_TIMEOUT)
-                        .build();
             }
-            httpGet.setConfig(config);
+
+            builder.setSocketTimeout(Config.READ_TIMEOUT)
+                   .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                   .setConnectTimeout(Config.READ_TIMEOUT);
+
+            httpGet.setConfig(builder.build());
+
 
 
             CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
@@ -135,7 +130,8 @@ public class HttpUtil {
 
     public static void main(String[] args) throws IOException {
         while ( true ) {
-            LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=20160112&checkOutDate=20160113&keywords=&location=&seq=chongqing_city_10958&clickNum=0&isLM=0&type=0"));
+            LOGGER.info(doGetNoProxy("http://pad.qunar.com/"));
+//            LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=20160112&checkOutDate=20160113&keywords=&location=&seq=chongqing_city_10958&clickNum=0&isLM=0&type=0"));
             ThreadUtil.sleep(60000);
         }
 //        LOGGER.info(doGetNoProxy("http://1212.ip138.com/ic.asp"));
