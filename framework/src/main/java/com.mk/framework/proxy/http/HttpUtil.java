@@ -102,7 +102,7 @@ public class HttpUtil {
             if ( result.length() < 500 ) {
                 LOGGER.info("响应内容：{}", result);
             } else {
-                LOGGER.info("响应内容：{}", result.substring(0, 500));
+                LOGGER.info("响应内容：{}", result.substring(0, 499));
             }
 
             LOGGER.info("响应码为：{}", statusCode);
