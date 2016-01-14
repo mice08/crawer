@@ -101,14 +101,7 @@ public class HttpUtil {
 
             String result = new String(bytes, charset);
 
-            if ( StringUtils.isEmpty(result) ) {
-                LOGGER.error("响应内容为空", result);
-            } else if ( result.length() < 100 ) {
-                LOGGER.error("获得响应：{}", result);
-            } else {
-                LOGGER.info("请求成功");
-                LOGGER.debug("获得响应：{}", result);
-            }
+            LOGGER.info("响应码为：{}", closeableHttpResponse.getStatusLine().getStatusCode());
 
             return result;
         } finally {
