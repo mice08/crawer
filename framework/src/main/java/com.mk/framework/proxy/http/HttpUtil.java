@@ -81,6 +81,7 @@ public class HttpUtil {
                         .setConnectTimeout(Config.READ_TIMEOUT)
                         .build();
             } else {
+                LOGGER.info("未使用代理");
                 config = RequestConfig
                         .custom()
                         .setSocketTimeout(Config.READ_TIMEOUT)
