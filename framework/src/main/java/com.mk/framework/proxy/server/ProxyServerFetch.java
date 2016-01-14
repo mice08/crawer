@@ -80,7 +80,9 @@ public class ProxyServerFetch {
             try {
                 HttpUtil.doGet(CHECK_URL, proxyServer);
 
-                BY_BILL.put(proxyServer);
+                if ( !BY_BILL.contains(proxyServer) ) {
+                    BY_BILL.put(proxyServer);
+                }
             } catch (Exception e) {
                 LOGGER.debug("代理IP检测结果：{}", e);
             }
