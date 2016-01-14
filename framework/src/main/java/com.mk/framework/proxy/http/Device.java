@@ -54,7 +54,10 @@ public class Device {
         public Header[] getHeaders() {
             return HeaderConfig
                     .custom()
+                    .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53")
+                    .add("Referer", "http://pad.qunar.com/")
+                    .add("X-Requested-With", "XMLHttpRequest")
                     .toArray();
         }
     }
@@ -64,7 +67,10 @@ public class Device {
         public Header[] getHeaders() {
             return HeaderConfig
                     .custom()
+                    .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53")
+                    .add("Referer", "http://pad.qunar.com/")
+                    .add("X-Requested-With", "XMLHttpRequest")
                     .toArray();
         }
     }
@@ -74,7 +80,10 @@ public class Device {
         public Header[] getHeaders() {
             return HeaderConfig
                     .custom()
+                    .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; U; en-us; KFAPWI Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Silk/3.13 Safari/535.19 Silk-Accelerated=true")
+                    .add("Referer", "http://pad.qunar.com/")
+                    .add("X-Requested-With", "XMLHttpRequest")
                     .toArray();
         }
     }
@@ -84,7 +93,10 @@ public class Device {
         public Header[] getHeaders() {
             return HeaderConfig
                     .custom()
+                    .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JSS15Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Safari/537.36")
+                    .add("Referer", "http://pad.qunar.com/")
+                    .add("X-Requested-With", "XMLHttpRequest")
                     .toArray();
         }
     }
@@ -94,7 +106,10 @@ public class Device {
         public Header[] getHeaders() {
             return HeaderConfig
                     .custom()
+                    .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; Android 4.3; Nexus 7 Build/JSS15Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Safari/537.36")
+                    .add("Referer", "http://pad.qunar.com/")
+                    .add("X-Requested-With", "XMLHttpRequest")
                     .toArray();
         }
     }
