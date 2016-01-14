@@ -94,6 +94,8 @@ public class HttpUtil {
 
             CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
 
+            LOGGER.info("响应码为：{}", closeableHttpResponse.getStatusLine().getStatusCode());
+
             HttpEntity httpEntity = closeableHttpResponse.getEntity();
 
             byte[] bytes = EntityUtils.toByteArray(httpEntity);
@@ -101,8 +103,6 @@ public class HttpUtil {
             String charset = CharsetDetector.guessEncoding(bytes);
 
             String result = new String(bytes, charset);
-
-            LOGGER.info("响应码为：{}", closeableHttpResponse.getStatusLine().getStatusCode());
 
             return result;
         } finally {
