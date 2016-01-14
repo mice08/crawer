@@ -60,7 +60,7 @@ public class HttpUtil {
     }
 
     public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        LOGGER.debug("发送请求：{}", urlStr);
+        LOGGER.info("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -71,7 +71,7 @@ public class HttpUtil {
 
             RequestConfig config;
             if (proxyServer != null) {
-                LOGGER.debug("使用代理：{}", JSONUtil.toJson(proxyServer));
+                LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
                 HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
                 config = RequestConfig
                         .custom()
@@ -102,10 +102,11 @@ public class HttpUtil {
             String result = new String(bytes, charset);
 
             if ( StringUtils.isEmpty(result) ) {
-                LOGGER.warn("响应内容为空", result);
+                LOGGER.error("响应内容为空", result);
             } else if ( result.length() < 100 ) {
-                LOGGER.warn("获得响应：{}", result);
+                LOGGER.error("获得响应：{}", result);
             } else {
+                LOGGER.info("请求成功");
                 LOGGER.debug("获得响应：{}", result);
             }
 
