@@ -44,7 +44,7 @@ public class Config {
     /**
      * 每次通过API获取代理IP的时间间隔，单位：毫秒
      */
-    public static final Integer FETCH_PROXY_TIME_INTERVAL = 2*60*1000;
+    public static final Integer FETCH_PROXY_TIME_INTERVAL = 60*1000;
     /**
      * 用来检测代理IP是否有效的线程数量
      */
