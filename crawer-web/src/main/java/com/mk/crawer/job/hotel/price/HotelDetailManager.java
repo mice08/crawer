@@ -26,31 +26,24 @@ public class HotelDetailManager {
     }
 
     private static void init() {
-        Thread doInit = new Thread() {
-            @Override
-            public void run() {
-                Jedis jedis = null;
+        Jedis jedis = null;
 
-                try {
-                    jedis = RedisUtil.getJedis();
+        try {
+            jedis = RedisUtil.getJedis();
 
-                    Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
+            Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
 
-                    for (String s : jsonSet) {
-                        HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
-                        HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
-                    }
-
-                } catch (Exception e) {
-                    LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
-                } finally {
-                    RedisUtil.close(jedis);
-                }
-                LOGGER.info("初始化待刷新信息的酒店完成");
+            for (String s : jsonSet) {
+                HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+                HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
             }
-        };
-        doInit.setDaemon(true);
-        doInit.start();
+
+        } catch (Exception e) {
+            LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
+        } finally {
+            RedisUtil.close(jedis);
+        }
+        LOGGER.info("初始化待刷新信息的酒店完成");
     }
 
     /**
