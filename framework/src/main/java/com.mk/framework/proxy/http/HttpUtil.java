@@ -104,6 +104,12 @@ public class HttpUtil {
 
             String result = new String(bytes, charset);
 
+            if ( result.length() < 500 ) {
+                LOGGER.info("响应内容：{}", result);
+            } else {
+                LOGGER.info("响应内容：{}", result.substring(0, 500));
+            }
+
             return result;
         } finally {
             if ( closeableHttpClient != null ) {
