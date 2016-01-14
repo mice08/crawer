@@ -10,8 +10,6 @@ import redis.clients.jedis.Transaction;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by 振涛 on 2016/1/13.
