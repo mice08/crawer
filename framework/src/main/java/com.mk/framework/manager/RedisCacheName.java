@@ -28,7 +28,7 @@ public class RedisCacheName {
     /**
      * 待检测有效性的代理IP集合
      */
-    public static final String CRAWLER_PROXY_IP_UNCHECK_SET = "CRAWLER:PROXY_IP:UN_CHECK_SET";
+    public static final String CRAWLER_PROXY_IP_UN_CHECK_SET = "CRAWLER:PROXY_IP:UN_CHECK_SET";
     /**
      * 有效性的代理IP集合
      */

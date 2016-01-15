@@ -149,7 +149,7 @@ public class ProxyServerFetch {
 
             for (ProxyServer proxyServer : proxyServerList) {
                 String jsonStr = JSONUtil.toJson(proxyServer);
-                jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_UNCHECK_SET, jsonStr);
+                jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_UN_CHECK_SET, jsonStr);
             }
 
             RedisUtil.close(jedis);
@@ -166,7 +166,7 @@ public class ProxyServerFetch {
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
                     try {
-                        String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_UNCHECK_SET);
+                        String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_UN_CHECK_SET);
 
                         if ( StringUtils.isEmpty(jsonStr) ) {
                             TimeUnit.SECONDS.sleep(1);
