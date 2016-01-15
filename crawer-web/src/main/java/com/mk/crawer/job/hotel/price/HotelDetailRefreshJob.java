@@ -89,7 +89,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
             LOGGER.info("开始添加刷新酒店信息的线程");
             Integer count = 0;
             while (!SystemStatus.JVM_IS_SHUTDOWN) {
-                if ( ++count <= Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
+                if ( count++ < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                     EXECUTOR_100.execute(new HotelDetailRefreshThread());
                     //一秒钟增加一个，防止同一时刻发送大量请求，导致服务器拒绝服务
                     ThreadUtil.sleep(1000);

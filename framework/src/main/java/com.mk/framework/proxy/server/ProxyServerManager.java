@@ -33,8 +33,10 @@ public class ProxyServerManager {
             proxyServer = queue.take();
 
             while (USING_PROXY_SERVER_SET.contains(proxyServer)) {
+                LOGGER.info("代理IP：{}正在被使用", proxyServer.getIp());
                 proxyServer = queue.take();
             }
+            LOGGER.info("从队列中获取代理IP：{}", proxyServer.getIp());
 
             PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
             USING_PROXY_SERVER_SET.add(proxyServer);

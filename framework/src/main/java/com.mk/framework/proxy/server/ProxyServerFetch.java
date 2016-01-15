@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ProxyServerFetch {
 
-    private static final String CHECK_URL = "http://1212.ip138.com/ic.asp";
+    private static final String CHECK_URL = "http://dev-bypass.imike.cn/ip.json";
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
@@ -80,7 +80,9 @@ public class ProxyServerFetch {
             try {
                 HttpUtil.doGet(CHECK_URL, proxyServer);
 
-                BY_BILL.put(proxyServer);
+                if ( !BY_BILL.contains(proxyServer) ) {
+                    BY_BILL.put(proxyServer);
+                }
             } catch (Exception e) {
                 LOGGER.debug("代理IP检测结果：{}", e);
             }
@@ -92,7 +94,9 @@ public class ProxyServerFetch {
         public void run() {
             while (true) {
                 try {
-                    fetchByBill();
+                    fetchByBillGBJ();
+                    fetchByBillKDL();
+                    fetchByBillDL666();
                 } catch (Exception e) {
                     LOGGER.error("获取新的代理IP出错：", e);
                 } finally {
@@ -148,34 +152,88 @@ public class ProxyServerFetch {
                 new ProxyServerCheckThreadFactory());
     }
 
-    private static List<ProxyServer> list(List<GBJProxy.Proxy> proxyList) {
-        List<ProxyServer> proxyServerList = new LinkedList<>();
+    private static void fetchByBillGBJ() {
+        try {
+            String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_API_GBJ);
 
-        for (GBJProxy.Proxy proxy : proxyList) {
-            ProxyServer proxyServer = new ProxyServer();
-            proxyServer.setIp(proxy.ip);
-            proxyServer.setPort(proxy.port);
+            GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
-            proxyServerList.add(proxyServer);
+            List<ProxyServer> proxyServerList = new LinkedList<>();
+
+            for (GBJProxy.Proxy proxy : gbjProxy.data) {
+                ProxyServer proxyServer = new ProxyServer();
+                proxyServer.setIp(proxy.ip);
+                proxyServer.setPort(proxy.port);
+
+                proxyServerList.add(proxyServer);
+            }
+
+            addToWaitForCheckQueue(proxyServerList);
+
+            LOGGER.info("付费渠道GBJ获取到{}代理IP", proxyServerList.size());
+        } catch (Exception e) {
+            LOGGER.error("获取代理IP发生错误", e);
         }
-
-        return proxyServerList;
     }
 
-    private static void fetchByBill() {
-        String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_LIST_URL);
+    private static void fetchByBillKDL() {
+        try {
+            String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_API_KDL);
 
-        GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
+            KDLProxy kdlProxy = JSONUtil.fromJson(ipListJSONStr, KDLProxy.class);
 
-        List<ProxyServer> proxyServerList = list(gbjProxy.data);
+            List<ProxyServer> proxyServerList = new LinkedList<>();
 
+            for (String s : kdlProxy.data.proxy_list) {
+                String[] temp = s.split(":");
+
+                ProxyServer proxyServer = new ProxyServer();
+                proxyServer.setIp(temp[0]);
+                proxyServer.setPort(Integer.valueOf(temp[1]));
+
+                proxyServerList.add(proxyServer);
+            }
+
+            addToWaitForCheckQueue(proxyServerList);
+
+            LOGGER.info("付费渠道快代理获取到{}代理IP", proxyServerList.size());
+        } catch (Exception e) {
+            LOGGER.error("获取代理IP发生错误", e);
+        }
+    }
+
+    private static void fetchByBillDL666() {
+        try {
+            String ipListStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_API_DL666);
+
+            String[] proxyArray = ipListStr.split("\\r\\n");
+
+            List<ProxyServer> proxyServerList = new LinkedList<>();
+
+            for (String s : proxyArray) {
+                String[] temp = s.split(":");
+
+                ProxyServer proxyServer = new ProxyServer();
+                proxyServer.setIp(temp[0]);
+                proxyServer.setPort(Integer.valueOf(temp[1]));
+
+                proxyServerList.add(proxyServer);
+            }
+
+            addToWaitForCheckQueue(proxyServerList);
+
+            LOGGER.info("付费渠道代理666获取到{}代理IP", proxyServerList.size());
+        } catch (Exception e) {
+            LOGGER.error("获取代理IP发生错误", e);
+        }
+    }
+
+    private static void addToWaitForCheckQueue(List<ProxyServer> proxyServerList) {
         for (ProxyServer proxyServer : proxyServerList) {
             if ( !WAITING_FOR_CHECK.contains(proxyServer) ) {
                 WAITING_FOR_CHECK.add(proxyServer);
             }
         }
-
-        LOGGER.info("付费渠道获取到{}代理IP", proxyServerList.size());
     }
 
     public static BlockingQueue<ProxyServer> byBill() {
@@ -183,6 +241,9 @@ public class ProxyServerFetch {
     }
 
     public static void main(String[] args) throws IOException {
+        fetchByBillGBJ();
+        fetchByBillKDL();
+        fetchByBillDL666();
     }
 
 }
