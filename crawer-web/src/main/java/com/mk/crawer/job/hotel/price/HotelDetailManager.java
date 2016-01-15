@@ -31,7 +31,7 @@ public class HotelDetailManager {
         try {
             jedis = RedisUtil.getJedis();
 
-            Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
+            Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
 
             for (String s : jsonSet) {
                 HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
@@ -75,9 +75,9 @@ public class HotelDetailManager {
 
             transaction = jedis.multi();
 
-            transaction.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, jsonStr);
             transaction.zadd(
-                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET,
+                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET,
                     ScoreUtil.getScore(hotelDetail.getCityName()),
                     jsonStr);
 
@@ -110,9 +110,9 @@ public class HotelDetailManager {
 
             transaction = jedis.multi();
 
-            transaction.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, jsonStr);
             transaction.zadd(
-                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET,
+                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,
                     ScoreUtil.getScore(hotelDetail.getCityName()),
                     jsonStr);
 
@@ -140,7 +140,7 @@ public class HotelDetailManager {
 
             String jsonStr = JSONUtil.toJson(hotelDetail);
 
-            Long reply = jedis.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            Long reply = jedis.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             return reply > 0;
         } finally {
@@ -157,7 +157,7 @@ public class HotelDetailManager {
             String jsonStr = JSONUtil.toJson(hotelDetail);
 
             Long reply = jedis.zadd(
-                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET,
+                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,
                     ScoreUtil.getScore(hotelDetail.getCityName()),
                     jsonStr);
 

@@ -43,7 +43,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
             try {
                 jedis = RedisUtil.getJedis();
 
-                Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWER_CITY_NAME_SET);
+                Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWLER_CITY_NAME_SET);
 
                 for (String s : jsonStrSet) {
                     CityList city = JSONUtil.fromJson(s, CityList.class);
@@ -79,7 +79,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
             Long end = System.currentTimeMillis();
             LOGGER.info("定时任务执行结束，耗时：{}毫秒", end - start);
-            LOGGER.info("酒店信息刷新任务队列，有{}酒店需要刷新。", jedis.scard(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET));
+            LOGGER.info("酒店信息刷新任务队列，有{}酒店需要刷新。", jedis.scard(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET));
         } catch (Exception e) {
             LOGGER.error("定时任务执行出错：", e);
             e.printStackTrace();

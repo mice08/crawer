@@ -61,7 +61,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
 
-                    String jsonStr = jedis.srandmember(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET);
+                    String jsonStr = jedis.srandmember(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET);
 
                     if (!StringUtils.isEmpty(jsonStr)) {
                         HotelDetail hotelDetail = JSONUtil.fromJson(jsonStr, HotelDetail.class);

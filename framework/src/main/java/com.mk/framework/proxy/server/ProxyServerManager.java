@@ -28,7 +28,7 @@ public class ProxyServerManager {
         if ( proxyServer != null ) {
             return proxyServer;
         } else {
-            BlockingQueue<ProxyServer> queue = ProxyServerFetch.byBill();
+            BlockingQueue<ProxyServer> queue = ProxyServerFetch.getProxyQueue();
 
             proxyServer = queue.take();
 
@@ -56,7 +56,7 @@ public class ProxyServerManager {
         try {
             jedis = RedisUtil.getJedis();
 
-            jsonStr = jedis.srandmember(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
+            jsonStr = jedis.srandmember(RedisCacheName.CRAWLER_BAD_PROXY_SERVER_POOL_SET);
 
             if (StringUtils.isEmpty(jsonStr)) {
                 throw new IllegalArgumentException("无法从Redis里面获取到代理IP");
@@ -78,7 +78,7 @@ public class ProxyServerManager {
         try {
             jedis = RedisUtil.getJedis();
             jedis.srem(
-                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    RedisCacheName.CRAWLER_BAD_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer));
         }catch (Exception e){
             throw e;
@@ -96,7 +96,7 @@ public class ProxyServerManager {
         try {
             jedis = RedisUtil.getJedis();
             jedis.sadd(
-                    RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET,
+                    RedisCacheName.CRAWLER_BAD_PROXY_SERVER_POOL_SET,
                     JSONUtil.toJson(proxyServer)
             );
         }catch (Exception e){
@@ -112,7 +112,7 @@ public class ProxyServerManager {
         Jedis jedis = null;
         try {
             jedis = RedisUtil.getJedis();
-            return jedis.scard(RedisCacheName.CRAWER_BAD_PROXY_SERVER_POOL_SET);
+            return jedis.scard(RedisCacheName.CRAWLER_BAD_PROXY_SERVER_POOL_SET);
         }catch (Exception e){
             throw e;
         }finally {
