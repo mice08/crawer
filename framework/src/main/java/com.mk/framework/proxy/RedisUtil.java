@@ -34,7 +34,7 @@ public class RedisUtil {
             }
 
             lock.unlock();
-            LOGGER.error("redis client factory init success");
+            LOGGER.info("redis client factory init success");
         }
     }
 
