@@ -9,6 +9,8 @@ public class HotelDetail {
 
     private String hotelId;
 
+    private String cityName;
+
     public String getHotelId() {
         return hotelId;
     }
@@ -17,16 +19,25 @@ public class HotelDetail {
         this.hotelId = hotelId;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HotelDetail that = (HotelDetail) o;
-        return Objects.equals(hotelId, that.hotelId);
+        return Objects.equals(hotelId, that.hotelId) &&
+                Objects.equals(cityName, that.cityName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hotelId);
+        return Objects.hash(hotelId, cityName);
     }
 }

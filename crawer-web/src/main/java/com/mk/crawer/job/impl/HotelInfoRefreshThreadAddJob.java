@@ -6,6 +6,7 @@ import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.Worker;
 import com.mk.crawer.job.hotel.price.HotelDetail;
+import com.mk.crawer.job.hotel.price.HotelDetailManager;
 import com.mk.framework.AppUtils;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
@@ -27,8 +28,6 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
     private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(HotelInfoRefreshThreadAddJob.class);
 
-   // @Autowired
-    //private IHotelService iHotelService;
     @Autowired
     private QunarHotelService qunarHotelService;
 
@@ -62,9 +61,11 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
                         for (QunarHotel hotel : hotelList) {
                             HotelDetail hotelDetail = new HotelDetail();
                             hotelDetail.setHotelId(hotel.getSourceId());
-                            LOGGER.info("*******************加入酒店属性缓存队列{} ***************",hotel.getHotelName());
+                            hotelDetail.setCityName(hotel.getCityName());
 
-                            jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, JSONUtil.toJson(hotelDetail));
+                            HotelDetailManager.add(hotelDetail);
+
+                            LOGGER.info("*******************加入酒店属性缓存队列{} ***************",hotel.getHotelName());
                         }
                     }
 

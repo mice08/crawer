@@ -78,6 +78,7 @@ public class HotelPriceJobController {
                     for (QunarHotel hotel : hotelList) {
                         HotelDetail hotelDetail = new HotelDetail();
                         hotelDetail.setHotelId(hotel.getSourceId());
+                        hotelDetail.setCityName(hotel.getCityName());
 
                         HotelDetailManager.add(hotelDetail);
 

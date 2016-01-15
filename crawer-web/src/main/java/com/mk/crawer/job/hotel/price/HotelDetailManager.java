@@ -31,7 +31,7 @@ public class HotelDetailManager {
         try {
             jedis = RedisUtil.getJedis();
 
-            Set<String> jsonSet = jedis.smembers(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET);
+            Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
 
             for (String s : jsonSet) {
                 HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
@@ -75,8 +75,11 @@ public class HotelDetailManager {
 
             transaction = jedis.multi();
 
-            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
-            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.zadd(
+                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET,
+                    ScoreUtil.getScore(hotelDetail.getCityName()),
+                    jsonStr);
 
             HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
 
@@ -107,8 +110,11 @@ public class HotelDetailManager {
 
             transaction = jedis.multi();
 
-            transaction.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
-            transaction.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            transaction.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            transaction.zadd(
+                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET,
+                    ScoreUtil.getScore(hotelDetail.getCityName()),
+                    jsonStr);
 
             transaction.exec();
         } catch (Exception e) {
@@ -134,7 +140,7 @@ public class HotelDetailManager {
 
             String jsonStr = JSONUtil.toJson(hotelDetail);
 
-            Long reply = jedis.srem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
+            Long reply = jedis.zrem(RedisCacheName.CRAWER_HOTEL_INFO_REFRESHING_SET, jsonStr);
 
             return reply > 0;
         } finally {
@@ -150,7 +156,10 @@ public class HotelDetailManager {
 
             String jsonStr = JSONUtil.toJson(hotelDetail);
 
-            Long reply = jedis.sadd(RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            Long reply = jedis.zadd(
+                    RedisCacheName.CRAWER_HOTEL_INFO_REFRESH_SET,
+                    ScoreUtil.getScore(hotelDetail.getCityName()),
+                    jsonStr);
 
             return reply > 0;
         } finally {
