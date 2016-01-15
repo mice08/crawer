@@ -203,7 +203,7 @@ public class ProxyServerFetch {
         public void run() {
             Jedis jedis = null;
             try {
-                HttpUtil.doGet(CHECK_URL, proxyServer);
+                //HttpUtil.doGet(CHECK_URL, proxyServer);
 
                 jedis = RedisUtil.getJedis();
 
