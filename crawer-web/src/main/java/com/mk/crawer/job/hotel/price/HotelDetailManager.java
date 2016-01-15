@@ -77,7 +77,7 @@ public class HotelDetailManager {
 
             transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, jsonStr);
             transaction.zadd(
-                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET,
+                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,
                     ScoreUtil.getScore(hotelDetail.getCityName()),
                     jsonStr);
 
