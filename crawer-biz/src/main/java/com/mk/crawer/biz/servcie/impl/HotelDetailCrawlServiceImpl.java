@@ -56,7 +56,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private CommentSumMapper commentSumMapper;
-	
+
 	@Override
 	public void crawl(String hotelId) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -304,12 +304,39 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return isUpdateRequired;
 	}
 
-	private void parseDataNodeForComment(String hotelid, Map<String, Object> dataNode) {
-		if (dataNode.get("comment") != null && Map.class.isAssignableFrom(dataNode.get("comment").getClass())) {
-			Map<String, Object> comment = (Map<String, Object>) dataNode.get("comment");
+	@SuppressWarnings("unchecked")
+	private CommentSum parseDataNodeForCommentSum(String hotelid, Map<String, Object> dataNode) {
+		CommentSum commentSum = new CommentSum();
 
+		if (dataNode.get("comment") != null && Map.class.isAssignableFrom(dataNode.get("comment").getClass())) {
+			Map<String, Object> commentNode = (Map<String, Object>) dataNode.get("comment");
+
+			commentSum.setHotelName(typesafeGetString(commentNode.get("hotelName")));
+			commentSum.setHotelSourceId(hotelid);
+			commentSum.setScore(typesafeGetBigDecimal(commentNode.get("score")));
+			commentSum.setScoreShopMsg(typesafeGetString(commentNode.get("scoreShopMsg")));
+			commentSum.setScoreShopUrl(typesafeGetString(commentNode.get("scoreShopURL")));
+			commentSum.setGoodTotal(typesafeGetBigDecimal(commentNode.get("goodTotal")).longValue());
+			commentSum.setBadTotal(typesafeGetBigDecimal(commentNode.get("badTotal")).longValue());
+			commentSum.setMediumTotal(typesafeGetBigDecimal(commentNode.get("mediumTotal")).longValue());
+			commentSum.setAllTotal(typesafeGetBigDecimal(commentNode.get("allTotal")).longValue());
+			commentSum.setSentenceCmt(typesafeGetString(commentNode.get("onSentenceCmt")));
+			commentSum.setMsg(typesafeGetString(commentNode.get("msg")));
+
+			List<Map<String, Object>> hotTitles = (List<Map<String, Object>>) commentNode.get("hotTitles");
+			if (hotTitles != null && hotTitles.size() > 0) {
+				commentSum.setHotTitles(gson.toJson(hotTitles, new TypeToken<List<Map<String, Object>>>() {
+				}.getType()));
+			}
+
+			List<Map<String, Object>> tagList = (List<Map<String, Object>>) commentNode.get("tagList");
+			if (tagList != null && tagList.size() > 0) {
+				commentSum.setTags(gson.toJson(tagList, new TypeToken<List<Map<String, Object>>>() {
+				}.getType()));
+			}
 		}
 
+		return commentSum;
 	}
 
 	@SuppressWarnings("unchecked")
