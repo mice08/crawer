@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ProxyServerFetch {
 
-    private static final String CHECK_URL = "http://dev-bypass.imike.cn/ip.json";
+    private static final String CHECK_URL = "https://www.baidu.com/";
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
