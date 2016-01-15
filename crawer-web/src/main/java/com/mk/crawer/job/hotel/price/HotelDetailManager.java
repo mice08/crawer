@@ -32,6 +32,7 @@ public class HotelDetailManager {
             jedis = RedisUtil.getJedis();
 
             Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
+            LOGGER.info("正在恢复上次程序关闭前，未处理完的酒店信息队列");
 
             for (String s : jsonSet) {
                 HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
@@ -43,7 +44,7 @@ public class HotelDetailManager {
         } finally {
             RedisUtil.close(jedis);
         }
-        LOGGER.info("初始化待刷新信息的酒店完成");
+        LOGGER.info("恢复待刷新信息的酒店成功");
     }
 
     /**
