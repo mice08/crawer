@@ -26,25 +26,32 @@ public class HotelDetailManager {
     }
 
     private static void init() {
-        Jedis jedis = null;
+        Thread reload = new Thread() {
+            @Override
+            public void run() {
+                Jedis jedis = null;
 
-        try {
-            jedis = RedisUtil.getJedis();
+                try {
+                    jedis = RedisUtil.getJedis();
 
-            Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
-            LOGGER.info("正在恢复上次程序关闭前，未处理完的酒店信息队列");
+                    Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
+                    LOGGER.info("正在恢复上次程序关闭前，未处理完的酒店信息队列");
 
-            for (String s : jsonSet) {
-                HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
-                HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+                    for (String s : jsonSet) {
+                        HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+                        HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+                    }
+
+                    LOGGER.info("恢复待刷新信息的酒店成功");
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                    LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
+                } finally {
+                    RedisUtil.close(jedis);
+                }
             }
-
-        } catch (Exception e) {
-            LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
-        } finally {
-            RedisUtil.close(jedis);
-        }
-        LOGGER.info("恢复待刷新信息的酒店成功");
+        };
+        reload.start();
     }
 
     /**
