@@ -9,8 +9,23 @@
 		</layout>
 	</appender>
 
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>logs/crawlers.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80}[%line] - %msg%n</Pattern>
+		</layout>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>2048MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
 	<root level="info">
-		<appender-ref ref="stdout" />
+		<!--<appender-ref ref="stdout" />-->
+		<appender-ref ref="file" />
 	</root>
 
 </configuration>  
