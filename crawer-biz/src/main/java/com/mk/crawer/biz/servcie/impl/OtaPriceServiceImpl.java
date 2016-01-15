@@ -98,7 +98,7 @@ public class OtaPriceServiceImpl implements OtaPriceService {
                 for (OtaPrice roomPrice:otaPriceList){
                     logger.info("=====hotelSourceId={}&roomTypeKey={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey());
                     init2redis(
-                            String.format("%s:%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
+                            String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
                                     roomPrice.getOtsHotelId(),roomPrice.getOtsRoomTypeId()),
                             roomPrice.getPrice().toString());
                 }
