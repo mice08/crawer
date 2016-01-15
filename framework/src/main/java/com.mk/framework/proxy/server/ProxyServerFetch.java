@@ -15,9 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by 振涛 on 2016/1/6.
@@ -27,12 +24,6 @@ public class ProxyServerFetch {
     private static final String CHECK_URL = "https://www.baidu.com/";
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
-
-    private static final Lock UN_CHECK_LOCK = new ReentrantLock();
-    private static final Lock CHECKED_LOCK = new ReentrantLock();
-
-    private static final Condition UN_CHECK_NOT_EMPTY = UN_CHECK_LOCK.newCondition();
-    private static final Condition CHECKED_NOT_EMPTY = CHECKED_LOCK.newCondition();
 
     private static final BlockingQueue<ProxyServer> CHECKED = new SynchronousQueue<>();
 
@@ -67,15 +58,10 @@ public class ProxyServerFetch {
             while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 try {
                     try {
-                        UN_CHECK_LOCK.lock();
-
                         fetchByBillGBJ();
                         fetchByBillKDL();
                         fetchByBillDL666();
-
-                        UN_CHECK_NOT_EMPTY.signal();
                     } finally {
-                        UN_CHECK_LOCK.unlock();
                         TimeUnit.MILLISECONDS.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
                     }
                 } catch (InterruptedException e) {
@@ -183,12 +169,10 @@ public class ProxyServerFetch {
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
                     try {
-                        UN_CHECK_LOCK.lock();
-
                         String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_UN_CHECK_SET);
 
                         if ( StringUtils.isEmpty(jsonStr) ) {
-                            UN_CHECK_NOT_EMPTY.wait();
+                            TimeUnit.SECONDS.sleep(1);
                         } else {
                             ProxyServer proxyServer = JSONUtil.fromJson(jsonStr, ProxyServer.class);
 
@@ -199,8 +183,6 @@ public class ProxyServerFetch {
 
                     } catch (InterruptedException e) {
                         Thread.interrupted();
-                    } finally {
-                        UN_CHECK_LOCK.unlock();
                     }
                 }
             } finally {
@@ -221,19 +203,14 @@ public class ProxyServerFetch {
         public void run() {
             Jedis jedis = null;
             try {
-                CHECKED_LOCK.lock();
-
                 HttpUtil.doGet(CHECK_URL, proxyServer);
 
                 jedis = RedisUtil.getJedis();
 
                 jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_CHECKED_SET, JSONUtil.toJson(proxyServer));
-
-                CHECKED_NOT_EMPTY.signalAll();
             } catch (Exception e) {
                 LOGGER.debug("代理IP检测结果：{}", e);
             } finally {
-                CHECKED_LOCK.unlock();
                 RedisUtil.close(jedis);
             }
         }
@@ -248,20 +225,16 @@ public class ProxyServerFetch {
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
                     try {
-                        CHECKED_LOCK.lock();
-
                         String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_CHECKED_SET);
 
                         if ( StringUtils.isEmpty(jsonStr) ) {
-                            CHECKED_NOT_EMPTY.wait();
+                            TimeUnit.SECONDS.sleep(1);
                         } else {
                             ProxyServer proxyServer = JSONUtil.fromJson(jsonStr, ProxyServer.class);
                             CHECKED.put(proxyServer);
                         }
                     } catch (InterruptedException e) {
                         Thread.interrupted();
-                    } finally {
-                        CHECKED_LOCK.unlock();
                     }
                 }
             } finally {
