@@ -70,7 +70,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
 
                             HotelDetailManager.put(hotelDetail);
 
-                            LOGGER.debug("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
+                            LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
                         }
                     } else {
                         TimeUnit.SECONDS.sleep(1);
