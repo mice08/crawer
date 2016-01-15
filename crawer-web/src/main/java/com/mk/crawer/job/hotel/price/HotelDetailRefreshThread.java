@@ -3,7 +3,6 @@ package com.mk.crawer.job.hotel.price;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.framework.AppUtils;
 import com.mk.framework.proxy.SystemStatus;
-import com.mk.framework.proxy.ThreadUtil;
 import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;

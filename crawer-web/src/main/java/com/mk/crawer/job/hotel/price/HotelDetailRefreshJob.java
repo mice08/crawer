@@ -4,11 +4,9 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
 import com.mk.framework.proxy.SystemStatus;
-import com.mk.framework.proxy.ThreadUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
 import java.util.Set;
