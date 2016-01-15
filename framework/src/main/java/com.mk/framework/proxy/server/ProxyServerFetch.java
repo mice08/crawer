@@ -42,7 +42,7 @@ public class ProxyServerFetch {
         @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
+            t.setDaemon(false);
             if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
             }
@@ -53,15 +53,17 @@ public class ProxyServerFetch {
     static class Fetch implements Runnable {
         @Override
         public void run() {
-            while (true) {
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
                 try {
-                    fetchByBillGBJ();
-                    fetchByBillKDL();
-                    fetchByBillDL666();
-                } catch (Exception e) {
-                    LOGGER.error("获取新的代理IP出错：", e);
-                } finally {
-                    ThreadUtil.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
+                    try {
+                        fetchByBillGBJ();
+                        fetchByBillKDL();
+                        fetchByBillDL666();
+                    } finally {
+                        TimeUnit.MILLISECONDS.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
                 }
             }
         }
@@ -268,15 +270,15 @@ public class ProxyServerFetch {
 
     private static void initThreads() {
         Thread fetch = new Thread(new Fetch(), "Fetch-proxy-ip-thread");
-        fetch.setDaemon(true);
+        fetch.setDaemon(false);
         fetch.start();
 
         Thread addToCheckingPool = new Thread(new AddToCheckingPool(), "Add-proxy-ip-to-checking-thread-pool");
-        addToCheckingPool.setDaemon(true);
+        addToCheckingPool.setDaemon(false);
         addToCheckingPool.start();
 
         Thread checkedLoad = new Thread(new CheckedLoad(), "Provide-checked-proxy-ip-thread");
-        checkedLoad.setDaemon(true);
+        checkedLoad.setDaemon(false);
         checkedLoad.start();
     }
 
