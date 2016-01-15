@@ -26,6 +26,10 @@ public class RedisCacheName {
     public static final String CRAWLER_HOTEL_INFO_REFRESHING_SET = "CRAWLER:HOTEL:INFO:REFRESHING:SET";
 
     /**
+     * 所有获取到的代理IP集合
+     */
+    public static final String CRAWLER_PROXY_IP_ALL_UN_CHECK_SET = "CRAWLER:PROXY_IP:ALL_UN_CHECK_SET";
+    /**
      * 待检测有效性的代理IP集合
      */
     public static final String CRAWLER_PROXY_IP_UN_CHECK_SET = "CRAWLER:PROXY_IP:UN_CHECK_SET";

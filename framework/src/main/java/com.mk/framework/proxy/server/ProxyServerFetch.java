@@ -166,6 +166,7 @@ public class ProxyServerFetch {
             for (ProxyServer proxyServer : proxyServerList) {
                 String jsonStr = JSONUtil.toJson(proxyServer);
                 jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_UN_CHECK_SET, jsonStr);
+                jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_ALL_UN_CHECK_SET, jsonStr);
             }
 
             RedisUtil.close(jedis);
