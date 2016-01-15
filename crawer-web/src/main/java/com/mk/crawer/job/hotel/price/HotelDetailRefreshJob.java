@@ -9,6 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -60,7 +61,24 @@ public class HotelDetailRefreshJob implements InitializingBean {
 
                 while (!SystemStatus.JVM_IS_SHUTDOWN) {
 
-                    Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0);
+                    Set<String> jsonSet = new HashSet<>();
+
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 1, 1);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 2, 2);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 3, 3);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 4, 4);
+                    }
+
 
                     if (jsonSet.size() > 0) {
                         for (String s : jsonSet) {
