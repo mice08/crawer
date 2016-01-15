@@ -12,7 +12,7 @@
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<Encoding>UTF-8</Encoding>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>logs/crawlers.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>${catalina.home}/logs/crawlers.%d{yyyy-MM-dd}.log</FileNamePattern>
 			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
 		<layout class="ch.qos.logback.classic.PatternLayout">
