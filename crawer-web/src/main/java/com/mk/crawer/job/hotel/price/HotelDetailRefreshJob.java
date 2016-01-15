@@ -64,19 +64,22 @@ public class HotelDetailRefreshJob implements InitializingBean {
                     Set<String> jsonSet = new HashSet<>();
 
                     if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0);
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0, 0, 100);
                     }
                     if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 1, 1);
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 1, 1, 0, 100);
                     }
                     if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 2, 2);
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 2, 2, 0, 100);
                     }
                     if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 3, 3);
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 3, 3, 0, 100);
                     }
                     if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 4, 4);
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 4, 4, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, Double.MAX_VALUE, Double.MAX_VALUE, 0, 100);
                     }
 
 
@@ -111,7 +114,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
                     if ( count++ < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                         EXECUTOR_100.execute(new HotelDetailRefreshThread());
                         //一秒钟增加一个，防止同一时刻发送大量请求，导致服务器拒绝服务
-                        TimeUnit.SECONDS.sleep(1);
+                        TimeUnit.MILLISECONDS.sleep(200);
                     } else {
                         break;
                     }
