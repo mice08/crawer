@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
+import com.mk.crawer.biz.model.crawer.CommentSum;
 import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
 import com.mk.crawer.biz.model.crawer.HotelFacilities;
 import com.mk.crawer.biz.model.crawer.HotelSurround;
@@ -52,6 +54,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private RoomTypeDescMapper roomtypeDescMapper;
 
+	@Autowired
+	private CommentSumMapper commentSumMapper;
+	
 	@Override
 	public void crawl(String hotelId) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -216,6 +221,10 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 	}
 
+	private void persistCommentSum(CommentSum commentSum) throws Exception {
+		commentSumMapper.insert(commentSum);
+	}
+
 	/**
 	 * with no transaction intentionally,
 	 * <p>
@@ -251,7 +260,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				logger.warn(String.format("failed to detection duplication for roomtypeKey:%s; hotelSourceId:%s",
 						roomtype.getRoomtypeKey(), roomtype.getHotelSourceId()), ex);
-				
+
 				isUpdateRequired = false;
 				isRoomtypeUpdateRequired = false;
 			}
@@ -293,6 +302,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		return isUpdateRequired;
+	}
+
+	private void parseDataNodeForComment(String hotelid, Map<String, Object> dataNode) {
+		if (dataNode.get("comment") != null && Map.class.isAssignableFrom(dataNode.get("comment").getClass())) {
+			Map<String, Object> comment = (Map<String, Object>) dataNode.get("comment");
+
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
