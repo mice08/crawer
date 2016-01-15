@@ -96,7 +96,7 @@ public class OtaPriceServiceImpl implements OtaPriceService {
                 priceBean.setCreateTime(validDate);
                 List<OtaPrice> otaPriceList = otaPriceMapper.getOtaPrice(priceBean);
                 for (OtaPrice roomPrice:otaPriceList){
-                    logger.info("=====hotelSourceId={}&roomTypeKey={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey());
+                    logger.info("=====hotelSourceId={}&roomTypeKey={}&otaPrice={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey(),roomPrice.getPrice());
                     init2redis(
                             String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
                                     roomPrice.getOtsHotelId(),roomPrice.getOtsRoomTypeId()),
