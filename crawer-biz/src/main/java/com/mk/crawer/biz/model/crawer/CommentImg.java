@@ -3,103 +3,113 @@ package com.mk.crawer.biz.model.crawer;
 import java.util.Date;
 
 public class CommentImg {
-    private Long id;
+	private Long id;
 
-    private Long hotelId;
+	private Long hotelId;
 
-    private Long commentId;
+	private String hotelSourceId;
 
-    private String url;
+	private Long commentId;
 
-    private String smallUrl;
+	private String url;
 
-    private String tag;
+	private String smallUrl;
 
-    private String title;
+	private String tag;
 
-    private String src;
+	private String title;
 
-    private Date createTime;
+	private String src;
 
-    private Date updateTime;
+	private Date createTime;
 
-    public Long getId() {
-        return id;
-    }
+	private Date updateTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getCommentId() {
-        return commentId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
-    }
+	public Long getHotelId() {
+		return hotelId;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
 
-    public void setUrl(String url) {
-        this.url = url == null ? null : url.trim();
-    }
+	public Long getCommentId() {
+		return commentId;
+	}
 
-    public String getSmallUrl() {
-        return smallUrl;
-    }
+	public void setCommentId(Long commentId) {
+		this.commentId = commentId;
+	}
 
-    public void setSmallUrl(String smallUrl) {
-        this.smallUrl = smallUrl == null ? null : smallUrl.trim();
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getTag() {
-        return tag;
-    }
+	public void setUrl(String url) {
+		this.url = url == null ? null : url.trim();
+	}
 
-    public void setTag(String tag) {
-        this.tag = tag == null ? null : tag.trim();
-    }
+	public String getSmallUrl() {
+		return smallUrl;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setSmallUrl(String smallUrl) {
+		this.smallUrl = smallUrl == null ? null : smallUrl.trim();
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public String getTag() {
+		return tag;
+	}
 
-    public String getSrc() {
-        return src;
-    }
+	public void setTag(String tag) {
+		this.tag = tag == null ? null : tag.trim();
+	}
 
-    public void setSrc(String src) {
-        this.src = src == null ? null : src.trim();
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public String getSrc() {
+		return src;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public void setSrc(String src) {
+		this.src = src == null ? null : src.trim();
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 }

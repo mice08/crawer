@@ -19,6 +19,8 @@ import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
+import com.mk.crawer.biz.model.crawer.Comment;
+import com.mk.crawer.biz.model.crawer.CommentImg;
 import com.mk.crawer.biz.model.crawer.CommentSum;
 import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
 import com.mk.crawer.biz.model.crawer.HotelFacilities;
@@ -117,6 +119,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.error(errorMsg, ex);
 		}
 
+		try {
+			persistCommentComb(hotelComb.getCommentComb());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistCommentSum in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+		
 		Date endTime = new Date();
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("takes %s seconds to finish crawlling hotelid:%s",
@@ -175,6 +184,17 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
 					}
 
+					try {
+						CommentCombination commentComb = parseDataNodeForCommentSum(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (commentComb != null) {
+							hotelComb.setCommentComb(commentComb);
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
 				} else {
 					logger.warn("invalid data node received, skip...");
 					continue;
@@ -221,8 +241,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 	}
 
-	private void persistCommentSum(CommentSum commentSum) throws Exception {
-		commentSumMapper.insert(commentSum);
+	private void persistCommentComb(CommentCombination commentComb) throws Exception {
+
 	}
 
 	/**
@@ -305,11 +325,70 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private CommentSum parseDataNodeForCommentSum(String hotelid, Map<String, Object> dataNode) {
-		CommentSum commentSum = new CommentSum();
+	private CommentCombination parseDataNodeForCommentSum(String hotelid, Map<String, Object> dataNode) {
+		CommentCombination commentComb = new CommentCombination();
 
+		CommentSum commentSum = new CommentSum();
+		Map<Comment, List<CommentImg>> commentDetails = new HashMap<Comment, List<CommentImg>>();
+
+		commentComb.setCommentSum(commentSum);
+		commentComb.setCommentDetails(commentDetails);
+
+		String hotelSourceId = "";
 		if (dataNode.get("comment") != null && Map.class.isAssignableFrom(dataNode.get("comment").getClass())) {
 			Map<String, Object> commentNode = (Map<String, Object>) dataNode.get("comment");
+
+			if (commentNode.get("comment") != null
+					&& List.class.isAssignableFrom(commentNode.get("comment").getClass())) {
+				List<Map<String, Object>> commentsDetails = (List<Map<String, Object>>) commentNode.get("comment");
+
+				for (Map<String, Object> commentsDetail : commentsDetails) {
+					Comment comment = new Comment();
+
+					comment.setContent(typesafeGetString(commentsDetail.get("content")));
+					comment.setDate(typesafeGetString(commentsDetail.get("date")));
+					comment.setGid(typesafeGetString(commentsDetail.get("gid")));
+
+					if (StringUtils.isBlank(hotelSourceId)
+							&& StringUtils.isNotBlank(typesafeGetString(commentsDetail.get("hotelSeq")))) {
+						hotelSourceId = typesafeGetString(commentsDetail.get("hotelSeq"));
+					}
+
+					comment.setHotelSourceId(hotelSourceId);
+					comment.setCommentId(typesafeGetString(commentsDetail.get("commentId")));
+					comment.setScore(typesafeGetBigDecimal(commentsDetail.get("score")));
+					comment.setTitle(typesafeGetString(commentsDetail.get("title")));
+					comment.setAuthor(typesafeGetString(commentsDetail.get("author")));
+
+					comment.setClickUsefulStatus(typesafeGetString(commentsDetail.get("clickUsefulStatus")));
+					comment.setNumOfUseful(typesafeGetDouble(commentsDetail.get("numofUseful")).longValue());
+					comment.setReplyNum(typesafeGetDouble(commentsDetail.get("replyNum")).longValue());
+					comment.setCuid(typesafeGetString(commentsDetail.get("cuid")));
+					comment.setEnc(typesafeGetString(commentsDetail.get("enc")));
+
+					if (!commentDetails.containsKey(comment)) {
+						commentDetails.put(comment, new ArrayList<CommentImg>());
+					}
+
+					List<CommentImg> commentImgs = commentDetails.get(comment);
+					if (commentsDetail.get("imgs") != null
+							&& List.class.isAssignableFrom(commentsDetail.get("imgs").getClass())) {
+						List<Map<String, Object>> imgDetails = (List<Map<String, Object>>) commentsDetail.get("imgs");
+
+						for (Map<String, Object> imgDetail : imgDetails) {
+							CommentImg commentImg = new CommentImg();
+							commentImgs.add(commentImg);
+
+							commentImg.setHotelSourceId(hotelSourceId);
+							commentImg.setUrl(typesafeGetString(imgDetail.get("url")));
+							commentImg.setTag(typesafeGetString(imgDetail.get("tag")));
+							commentImg.setTitle(typesafeGetString(imgDetail.get("title")));
+							commentImg.setSmallUrl(typesafeGetString(imgDetail.get("smallUrl")));
+							commentImg.setSrc(typesafeGetString(imgDetail.get("src")));
+						}
+					}
+				}
+			}
 
 			commentSum.setHotelName(typesafeGetString(commentNode.get("hotelName")));
 			commentSum.setHotelSourceId(hotelid);
@@ -334,9 +413,10 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				commentSum.setTags(gson.toJson(tagList, new TypeToken<List<Map<String, Object>>>() {
 				}.getType()));
 			}
+
 		}
 
-		return commentSum;
+		return commentComb;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -485,6 +565,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		if (attribute != null && String.class.isAssignableFrom(attribute.getClass())) {
 			attrVal = (String) attribute;
+		} else if (attribute != null && Double.class.isAssignableFrom(attribute.getClass())) {
+			attrVal = String.valueOf((Double) attribute);
 		}
 
 		return attrVal;
@@ -646,12 +728,44 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return roomtypeComb;
 	}
 
+	private class CommentCombination {
+		private CommentSum commentSum;
+
+		private Map<Comment, List<CommentImg>> commentDetails;
+
+		public CommentSum getCommentSum() {
+			return commentSum;
+		}
+
+		public void setCommentSum(CommentSum commentSum) {
+			this.commentSum = commentSum;
+		}
+
+		public Map<Comment, List<CommentImg>> getCommentDetails() {
+			return commentDetails;
+		}
+
+		public void setCommentDetails(Map<Comment, List<CommentImg>> commentDetails) {
+			this.commentDetails = commentDetails;
+		}
+	}
+
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;
 
 		private List<HotelSurround> hotelSurrounds;
 
 		private List<HotelFacilities> hotelfacilities;
+
+		private CommentCombination commentComb;
+
+		public CommentCombination getCommentComb() {
+			return commentComb;
+		}
+
+		public void setCommentComb(CommentCombination commentComb) {
+			this.commentComb = commentComb;
+		}
 
 		public List<RoomTypeCombination> getRoomtypeCombs() {
 			return roomtypeCombs;

@@ -4,143 +4,183 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Comment {
-    private Long id;
+	private Long id;
 
-    private Long hotelId;
+	private Long hotelId;
 
-    private String content;
+	private String hotelSourceId;
 
-    private String date;
+	private String commentId;
 
-    private String gid;
+	private Long numOfUseful;
 
-    private BigDecimal score;
+	private String content;
 
-    private String title;
+	private String date;
 
-    private String clickUsefulStatus;
+	private String gid;
 
-    private String author;
+	private BigDecimal score;
 
-    private String imageId;
+	private String title;
 
-    private Long replyNum;
+	private String clickUsefulStatus;
 
-    private String cuid;
+	private String author;
 
-    private Date createTime;
+	private String imageId;
 
-    private Date updateTime;
+	private Long replyNum;
 
-    public Long getId() {
-        return id;
-    }
+	private String cuid;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	private String enc;
+	
+	private Date createTime;
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	private Date updateTime;
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public String getEnc() {
+		return enc;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public void setEnc(String enc) {
+		this.enc = enc;
+	}
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
+	public Long getNumOfUseful() {
+		return numOfUseful;
+	}
 
-    public String getDate() {
-        return date;
-    }
+	public void setNumOfUseful(Long numOfUseful) {
+		this.numOfUseful = numOfUseful;
+	}
 
-    public void setDate(String date) {
-        this.date = date == null ? null : date.trim();
-    }
+	public String getCommentId() {
+		return commentId;
+	}
 
-    public String getGid() {
-        return gid;
-    }
+	public void setCommentId(String commentId) {
+		this.commentId = commentId;
+	}
 
-    public void setGid(String gid) {
-        this.gid = gid == null ? null : gid.trim();
-    }
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
 
-    public BigDecimal getScore() {
-        return score;
-    }
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
 
-    public void setScore(BigDecimal score) {
-        this.score = score;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public Long getHotelId() {
+		return hotelId;
+	}
 
-    public String getClickUsefulStatus() {
-        return clickUsefulStatus;
-    }
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
 
-    public void setClickUsefulStatus(String clickUsefulStatus) {
-        this.clickUsefulStatus = clickUsefulStatus == null ? null : clickUsefulStatus.trim();
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public void setContent(String content) {
+		this.content = content == null ? null : content.trim();
+	}
 
-    public void setAuthor(String author) {
-        this.author = author == null ? null : author.trim();
-    }
+	public String getDate() {
+		return date;
+	}
 
-    public String getImageId() {
-        return imageId;
-    }
+	public void setDate(String date) {
+		this.date = date == null ? null : date.trim();
+	}
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId == null ? null : imageId.trim();
-    }
+	public String getGid() {
+		return gid;
+	}
 
-    public Long getReplyNum() {
-        return replyNum;
-    }
+	public void setGid(String gid) {
+		this.gid = gid == null ? null : gid.trim();
+	}
 
-    public void setReplyNum(Long replyNum) {
-        this.replyNum = replyNum;
-    }
+	public BigDecimal getScore() {
+		return score;
+	}
 
-    public String getCuid() {
-        return cuid;
-    }
+	public void setScore(BigDecimal score) {
+		this.score = score;
+	}
 
-    public void setCuid(String cuid) {
-        this.cuid = cuid == null ? null : cuid.trim();
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public String getClickUsefulStatus() {
+		return clickUsefulStatus;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public void setClickUsefulStatus(String clickUsefulStatus) {
+		this.clickUsefulStatus = clickUsefulStatus == null ? null : clickUsefulStatus.trim();
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author == null ? null : author.trim();
+	}
+
+	public String getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId == null ? null : imageId.trim();
+	}
+
+	public Long getReplyNum() {
+		return replyNum;
+	}
+
+	public void setReplyNum(Long replyNum) {
+		this.replyNum = replyNum;
+	}
+
+	public String getCuid() {
+		return cuid;
+	}
+
+	public void setCuid(String cuid) {
+		this.cuid = cuid == null ? null : cuid.trim();
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 }
