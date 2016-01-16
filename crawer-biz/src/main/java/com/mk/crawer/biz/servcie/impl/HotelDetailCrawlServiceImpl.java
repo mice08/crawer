@@ -127,31 +127,28 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		Date beforeTime = new Date();
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
-		//
-		// try {
-		// persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
-		// } catch (Exception ex) {
-		// String errorMsg = String.format("failed to persistRoomtypeCombs in
-		// hotelid %s", hotelid);
-		// logger.error(errorMsg, ex);
-		// throw new Exception(errorMsg, ex.getCause());
-		// }
-		//
-		// try {
-		// persistHotelFacilities(hotelComb.getHotelfacilities());
-		// } catch (Exception ex) {
-		// String errorMsg = String.format("failed to persistHotelFacilities in
-		// hotelid %s", hotelid);
-		// logger.error(errorMsg, ex);
-		// }
-		//
-		// try {
-		// persistHotelSurround(hotelComb.getHotelSurrounds());
-		// } catch (Exception ex) {
-		// String errorMsg = String.format("failed to persistHotelSurround in
-		// hotelid %s", hotelid);
-		// logger.error(errorMsg, ex);
-		// }
+
+		try {
+			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+			throw new Exception(errorMsg, ex.getCause());
+		}
+
+		try {
+			persistHotelFacilities(hotelComb.getHotelfacilities());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+
+		try {
+			persistHotelSurround(hotelComb.getHotelSurrounds());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
 
 		try {
 			persistCommentComb(hotelComb.getCommentComb());
