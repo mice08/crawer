@@ -1,5 +1,6 @@
 package com.mk.crawer.biz.servcie.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,12 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mk.crawer.biz.mapper.crawer.CommentImgMapper;
+import com.mk.crawer.biz.mapper.crawer.CommentMapper;
 import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
@@ -59,6 +63,29 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private CommentSumMapper commentSumMapper;
 
+	@Autowired
+	private CommentMapper commentMapper;
+
+	@Autowired
+	private CommentImgMapper commentImgMapper;
+
+	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
+		List<String> hotelIds = new ArrayList<String>();
+		if (!StringUtils.isBlank(hotelId)) {
+			hotelIds.add(hotelId);
+		}
+
+		String jsonData = "";
+
+		try {
+			jsonData = FileUtils.readFileToString(hotelDetailFile);
+		} catch (Exception ex) {
+			throw new Exception("failed to readfile from...", ex);
+		}
+
+		processResult(hotelId, jsonData);
+	}
+
 	@Override
 	public void crawl(String hotelId) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -84,8 +111,6 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.debug(invokeUrl);
 		}
 
-		Date beforeTime = new Date();
-
 		String jsonString = "";
 		try {
 			jsonString = HttpUtil.doGet(invokeUrl);
@@ -94,6 +119,12 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			logger.error(errorMsg, ex);
 			throw new Exception(errorMsg, ex.getCause());
 		}
+
+		processResult(hotelid, jsonString);
+	}
+
+	private void processResult(String hotelid, String jsonString) throws Exception {
+		Date beforeTime = new Date();
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
 
@@ -125,12 +156,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			String errorMsg = String.format("failed to persistCommentSum in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 		}
-		
+
 		Date endTime = new Date();
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("takes %s seconds to finish crawlling hotelid:%s",
 					DateUtils.diffSecond(beforeTime, endTime), hotelid));
 		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -242,7 +274,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	}
 
 	private void persistCommentComb(CommentCombination commentComb) throws Exception {
-
+		commentComb.getCommentDetails();
+		CommentSum commentSum = commentComb.getCommentSum();
+		commentSumMapper.insert(commentSum);
 	}
 
 	/**
@@ -402,18 +436,23 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			commentSum.setSentenceCmt(typesafeGetString(commentNode.get("onSentenceCmt")));
 			commentSum.setMsg(typesafeGetString(commentNode.get("msg")));
 
-			List<Map<String, Object>> hotTitles = (List<Map<String, Object>>) commentNode.get("hotTitles");
-			if (hotTitles != null && hotTitles.size() > 0) {
-				commentSum.setHotTitles(gson.toJson(hotTitles, new TypeToken<List<Map<String, Object>>>() {
-				}.getType()));
+			if (commentNode.get("hotTitles") != null
+					&& List.class.isAssignableFrom(commentNode.get("hotTitles").getClass())) {
+				List<String> hotTitles = (List<String>) commentNode.get("hotTitles");
+				if (hotTitles != null && hotTitles.size() > 0) {
+					commentSum.setHotTitles(gson.toJson(hotTitles, new TypeToken<List<String>>() {
+					}.getType()));
+				}
 			}
 
-			List<Map<String, Object>> tagList = (List<Map<String, Object>>) commentNode.get("tagList");
-			if (tagList != null && tagList.size() > 0) {
-				commentSum.setTags(gson.toJson(tagList, new TypeToken<List<Map<String, Object>>>() {
-				}.getType()));
+			if (commentNode.get("tagList") != null
+					&& List.class.isAssignableFrom(commentNode.get("tagList").getClass())) {
+				List<Map<String, Object>> tagList = (List<Map<String, Object>>) commentNode.get("tagList");
+				if (tagList != null && tagList.size() > 0) {
+					commentSum.setTags(gson.toJson(tagList, new TypeToken<List<Map<String, Object>>>() {
+					}.getType()));
+				}
 			}
-
 		}
 
 		return commentComb;
