@@ -34,11 +34,11 @@
 	</delete>
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CommentImg">
-		insert into t_ex_comment_img (id, hotel_id, hotel_source_id,
+		insert into t_ex_comment_img (hotel_id, hotel_source_id,
 		comment_id,
 		url, small_url, tag,
 		title, src)
-		values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT},
+		values (#{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR}, #{commentId,jdbcType=BIGINT},
 		#{url,jdbcType=VARCHAR}, #{smallUrl,jdbcType=VARCHAR},
 		#{tag,jdbcType=VARCHAR},

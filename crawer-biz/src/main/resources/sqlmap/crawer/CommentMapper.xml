@@ -46,24 +46,28 @@
 	</delete>
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.Comment">
-		insert into t_ex_comment (id,
+		insert into t_ex_comment (
 		hotel_id, hotel_source_id, comment_id, num_of_useful, enc, content,
 		date, gid, score, title,
 		click_useful_status, author, image_id,
 		reply_num, cuid)
 		values
-		(#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT},
+		(
+		#{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR},
 		#{commentId,jdbcType=VARCHAR},
 		#{numOfUseful,jdbcType=BIGINT},
 		#{enc,jdbcType=VARCHAR},
 		#{content,jdbcType=VARCHAR},
 		#{date,jdbcType=VARCHAR},
-		#{gid,jdbcType=VARCHAR}, #{score,jdbcType=DECIMAL},
+		#{gid,jdbcType=VARCHAR},
+		#{score,jdbcType=DECIMAL},
 		#{title,jdbcType=VARCHAR},
 		#{clickUsefulStatus,jdbcType=VARCHAR},
-		#{author,jdbcType=VARCHAR}, #{imageId,jdbcType=VARCHAR},
-		#{replyNum,jdbcType=BIGINT}, #{cuid,jdbcType=VARCHAR})
+		#{author,jdbcType=VARCHAR},
+		#{imageId,jdbcType=VARCHAR},
+		#{replyNum,jdbcType=BIGINT},
+		#{cuid,jdbcType=VARCHAR})
 	</insert>
 
 </mapper>
