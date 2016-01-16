@@ -75,7 +75,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
                         ++hotelCount;
 
-                        LOGGER.info("{}加入信息刷新队列，酒店ID为：{}", hotel.getHotelName());
+                        LOGGER.info("{}加入信息刷新队列，酒店ID为：{}", hotel.getHotelName(), hotel.getSourceId());
                     }
 
                     LOGGER.info("共{}家酒店添加到信息刷新队列", hotelCount);

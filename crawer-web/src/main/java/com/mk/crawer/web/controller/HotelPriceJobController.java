@@ -143,7 +143,7 @@ public class HotelPriceJobController {
 
                     ++hotelCount;
 
-                    LOGGER.info("{}加入信息刷新队列，酒店ID为：{}", hotel.getHotelName());
+                    LOGGER.info("{}加入信息刷新队列，酒店ID为：{}", hotel.getHotelName(), hotel.getSourceId());
                }
             }
 
