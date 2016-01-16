@@ -43,7 +43,7 @@
 		from t_ex_comment_sum
 		where id = #{id,jdbcType=BIGINT}
 	</select>
-	
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		t_ex_comment_sum
@@ -52,16 +52,16 @@
 
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CommentSum">
 		insert into t_ex_comment_sum
-		(id, hotel_id, hotel_name, hotel_source_id, score,
+		(hotel_id, hotel_name, hotel_source_id, score,
 		good_total,
-		bad_total, medium_total,
+		bad_total,
+		medium_total,
 		all_total, image_count, hot_titles,
 		tags,
-		sentence_cmt, score_shop_msg,
-		score_shop_url, msg, valid,
-		create_time,
-		update_time)
-		values (#{id,jdbcType=BIGINT},
+		sentence_cmt,
+		score_shop_msg,
+		score_shop_url, msg, valid)
+		values (
 		#{hotelId,jdbcType=BIGINT},#{hotelName,jdbcType=VARCHAR},#{hotelSourceId,jdbcType=VARCHAR},
 		#{score,jdbcType=DECIMAL},
 		#{goodTotal,jdbcType=BIGINT},
@@ -71,9 +71,7 @@
 		#{tags,jdbcType=VARCHAR},
 		#{sentenceCmt,jdbcType=VARCHAR}, #{scoreShopMsg,jdbcType=VARCHAR},
 		#{scoreShopUrl,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR},
-		#{valid,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{valid,jdbcType=VARCHAR})
 	</insert>
 
 

@@ -127,28 +127,31 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		Date beforeTime = new Date();
 
 		HotelCombination hotelComb = this.parseJson(hotelid, jsonString);
-
-		try {
-			persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
-		} catch (Exception ex) {
-			String errorMsg = String.format("failed to persistRoomtypeCombs in hotelid %s", hotelid);
-			logger.error(errorMsg, ex);
-			throw new Exception(errorMsg, ex.getCause());
-		}
-
-		try {
-			persistHotelFacilities(hotelComb.getHotelfacilities());
-		} catch (Exception ex) {
-			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
-			logger.error(errorMsg, ex);
-		}
-
-		try {
-			persistHotelSurround(hotelComb.getHotelSurrounds());
-		} catch (Exception ex) {
-			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
-			logger.error(errorMsg, ex);
-		}
+		//
+		// try {
+		// persistRoomtypeCombs(hotelComb.getRoomtypeCombs());
+		// } catch (Exception ex) {
+		// String errorMsg = String.format("failed to persistRoomtypeCombs in
+		// hotelid %s", hotelid);
+		// logger.error(errorMsg, ex);
+		// throw new Exception(errorMsg, ex.getCause());
+		// }
+		//
+		// try {
+		// persistHotelFacilities(hotelComb.getHotelfacilities());
+		// } catch (Exception ex) {
+		// String errorMsg = String.format("failed to persistHotelFacilities in
+		// hotelid %s", hotelid);
+		// logger.error(errorMsg, ex);
+		// }
+		//
+		// try {
+		// persistHotelSurround(hotelComb.getHotelSurrounds());
+		// } catch (Exception ex) {
+		// String errorMsg = String.format("failed to persistHotelSurround in
+		// hotelid %s", hotelid);
+		// logger.error(errorMsg, ex);
+		// }
 
 		try {
 			persistCommentComb(hotelComb.getCommentComb());
@@ -276,7 +279,27 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private void persistCommentComb(CommentCombination commentComb) throws Exception {
 		commentComb.getCommentDetails();
 		CommentSum commentSum = commentComb.getCommentSum();
-		commentSumMapper.insert(commentSum);
+
+		try {
+			commentSumMapper.insert(commentSum);
+		} catch (Exception ex) {
+			logger.error("failed to insert comment sum...", ex);
+		}
+
+		for (Comment comment : commentComb.getCommentDetails().keySet()) {
+			try {
+				commentMapper.insert(comment);
+
+				List<CommentImg> commentImgs = commentComb.getCommentDetails().get(comment);
+				for (CommentImg commentImg : commentImgs) {
+					commentImgMapper.insert(commentImg);
+				}
+			} catch (Exception ex) {
+				logger.error(
+						String.format("failed to insert comment for hotel:%s, skip...", commentSum.getHotelSourceId()),
+						ex.getCause());
+			}
+		}
 	}
 
 	/**

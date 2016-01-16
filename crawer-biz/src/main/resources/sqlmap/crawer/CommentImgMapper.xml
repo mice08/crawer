@@ -37,14 +37,12 @@
 		insert into t_ex_comment_img (id, hotel_id, hotel_source_id,
 		comment_id,
 		url, small_url, tag,
-		title, src, create_time,
-		update_time)
+		title, src)
 		values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR}, #{commentId,jdbcType=BIGINT},
 		#{url,jdbcType=VARCHAR}, #{smallUrl,jdbcType=VARCHAR},
 		#{tag,jdbcType=VARCHAR},
-		#{title,jdbcType=VARCHAR}, #{src,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{title,jdbcType=VARCHAR}, #{src,jdbcType=VARCHAR})
 	</insert>
 
 </mapper>

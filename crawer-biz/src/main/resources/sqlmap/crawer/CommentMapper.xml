@@ -50,8 +50,7 @@
 		hotel_id, hotel_source_id, comment_id, num_of_useful, enc, content,
 		date, gid, score, title,
 		click_useful_status, author, image_id,
-		reply_num, cuid, create_time,
-		update_time)
+		reply_num, cuid)
 		values
 		(#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT},
 		#{hotelSourceId,jdbcType=VARCHAR},
@@ -64,9 +63,7 @@
 		#{title,jdbcType=VARCHAR},
 		#{clickUsefulStatus,jdbcType=VARCHAR},
 		#{author,jdbcType=VARCHAR}, #{imageId,jdbcType=VARCHAR},
-		#{replyNum,jdbcType=BIGINT}, #{cuid,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP})
+		#{replyNum,jdbcType=BIGINT}, #{cuid,jdbcType=VARCHAR})
 	</insert>
 
 </mapper>
