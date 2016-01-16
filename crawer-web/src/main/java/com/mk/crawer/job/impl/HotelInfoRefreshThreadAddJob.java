@@ -41,12 +41,18 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
             Jedis jedis = null;
 
             try {
+                Integer hotelCount = 0;
+
                 jedis = RedisUtil.getJedis();
 
                 Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWLER_CITY_NAME_SET);
 
+                LOGGER.info("共{}个城市的酒店信息等待更新", jsonStrSet.size());
+
                 for (String s : jsonStrSet) {
                     CityList city = JSONUtil.fromJson(s, CityList.class);
+
+                    LOGGER.info("开始查询{}的酒店列表", city.getCityName());
 
                     QunarHotelExample hotelExample = new QunarHotelExample();
                     hotelExample.createCriteria().andCityNameEqualTo(city.getCityName());
@@ -57,18 +63,22 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
                     LOGGER.info("*******************刷新城市缓存{} ***************",city.getCityName());
 
                     List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
-                    if (hotelList != null){
-                        for (QunarHotel hotel : hotelList) {
-                            HotelDetail hotelDetail = new HotelDetail();
-                            hotelDetail.setHotelId(hotel.getSourceId());
-                            hotelDetail.setCityName(hotel.getCityName());
 
-                            HotelDetailManager.add(hotelDetail);
+                    LOGGER.info("{}共有{}家酒店，将被添加到信息刷新队列", city.getCityName(), hotelList.size());
 
-                            LOGGER.info("*******************加入酒店属性缓存队列{} ***************",hotel.getHotelName());
-                        }
+                    for (QunarHotel hotel : hotelList) {
+                        HotelDetail hotelDetail = new HotelDetail();
+                        hotelDetail.setHotelId(hotel.getSourceId());
+                        hotelDetail.setCityName(hotel.getCityName());
+
+                        HotelDetailManager.add(hotelDetail);
+
+                        ++hotelCount;
+
+                        LOGGER.info("{}加入信息刷新队列，酒店ID为：{}", hotel.getHotelName());
                     }
 
+                    LOGGER.info("共{}家酒店添加到信息刷新队列", hotelCount);
                 }
             }
             finally {
