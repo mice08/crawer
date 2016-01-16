@@ -25,7 +25,7 @@ public class ProxyServerFetch {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
-    private static final BlockingQueue<ProxyServer> CHECKED = new SynchronousQueue<>();
+    private static final BlockingQueue<ProxyServer> CHECKED = new ArrayBlockingQueue<>(Config.CHECKED_PROXY_IP_QUEUE_SIZE);
 
     private static ThreadPoolExecutor CHECKING_EXECUTOR;
 
@@ -233,12 +233,15 @@ public class ProxyServerFetch {
                             ProxyServer proxyServer = JSONUtil.fromJson(jsonStr, ProxyServer.class);
                             CHECKED.put(proxyServer);
                         }
+
+                        LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
                     } catch (InterruptedException e) {
                         Thread.interrupted();
                     }
                 }
             } finally {
                 RedisUtil.close(jedis);
+                LOGGER.info("载入有效代理的进程结束");
             }
         }
     }

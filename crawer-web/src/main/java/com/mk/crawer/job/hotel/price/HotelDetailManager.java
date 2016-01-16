@@ -40,6 +40,7 @@ public class HotelDetailManager {
                     for (String s : jsonSet) {
                         HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
                         HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+                        LOGGER.info("酒店加入待刷新队列：{}", s);
                     }
 
                     LOGGER.info("恢复待刷新信息的酒店成功");

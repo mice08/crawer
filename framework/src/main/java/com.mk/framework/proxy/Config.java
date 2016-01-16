@@ -49,5 +49,9 @@ public class Config {
      * 用来检测代理IP是否有效的线程数量
      */
     public static final Integer CHECK_PROXY_THREAD_COUNT = 100;
+    /**
+     * 可用代理IP队列大小
+     */
+    public static final Integer CHECKED_PROXY_IP_QUEUE_SIZE =2000;
 
 }
