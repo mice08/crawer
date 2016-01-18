@@ -1,5 +1,8 @@
 package com.mk.crawer.biz.mapper.crawer;
 
+import java.util.List;
+import java.util.Map;
+
 import com.mk.crawer.biz.model.crawer.CommentSum;
 
 public interface CommentSumMapper {
@@ -8,5 +11,7 @@ public interface CommentSumMapper {
     int insert(CommentSum record);
 
     CommentSum selectByPrimaryKey(Long id);
-
+    
+    List<Map<String, Object>> selectScoreByOtsId(Long hotelId);
+    
 }

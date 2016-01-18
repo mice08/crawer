@@ -25,4 +25,10 @@
 		#{hotelId,jdbcType=BIGINT}
 	</update>
 
+	<select id="selectAllIds" resultType="java.util.Map">
+		select
+		id 
+		from t_hotel_subject
+	</select>
+	
 </mapper>
