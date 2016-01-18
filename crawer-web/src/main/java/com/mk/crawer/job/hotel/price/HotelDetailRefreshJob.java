@@ -114,7 +114,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
                     if ( count++ < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
                         EXECUTOR_100.execute(new HotelDetailRefreshThread());
                         //一秒钟增加一个，防止同一时刻发送大量请求，导致服务器拒绝服务
-                        TimeUnit.MILLISECONDS.sleep(200);
+                        TimeUnit.MILLISECONDS.sleep(Config.THREAD_INIT_INTERVAL_TIME);
                     } else {
                         break;
                     }
