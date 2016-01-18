@@ -25,5 +25,9 @@ public class Config {
      * 单个价格刷新线程每次进行价格刷新的时间间隔
      */
     public static final Integer REFRESH_PRICE_INTERVAL_TIME = 60 * 1000;
+    /**
+     * 刷新酒店信息的线程池每个线程加入线程池的时间间隔
+     */
+    public static final Integer THREAD_INIT_INTERVAL_TIME = 200;
 
 }
