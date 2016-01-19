@@ -12,6 +12,6 @@ public interface CommentSumMapper {
 
     CommentSum selectByPrimaryKey(Long id);
     
-    List<Map<String, Object>> selectScoreByOtsId(Long hotelId);
+    List<Map<String, Object>> selectScoreByOtsId(String hotelId);
     
 }

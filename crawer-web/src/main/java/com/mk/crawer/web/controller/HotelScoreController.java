@@ -81,7 +81,7 @@ public class HotelScoreController {
 
 				BigDecimal scoreVal = null;
 				try {
-					List<Map<String, Object>> scores = commentSumMapper.selectScoreByOtsId(hotelId);
+					List<Map<String, Object>> scores = commentSumMapper.selectScoreByOtsId(String.valueOf(hotelId));
 
 					if (scores != null && scores.size() > 0) {
 						Map<String, Object> score = scores.get(0);
