@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,60 +54,99 @@ public class HotelScoreController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels) {
-		HashMap<String, Object> result = new HashMap<String, Object>();
+	private void processHotelScore(String hotelId) {
+
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("about to process comments for %s hotels", hotelId));
+		}
+
+		BigDecimal scoreVal = null;
+		try {
+			List<Map<String, Object>> scores = commentSumMapper.selectScoreByOtsId(hotelId);
+
+			if (scores != null && scores.size() > 0) {
+				Map<String, Object> score = scores.get(0);
+				scoreVal = (BigDecimal) score.get("score");
+			}
+		} catch (Exception e) {
+			logger.error(String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelId), e);
+		}
 
 		try {
-			List<Map<String, Object>> allIds = subjectMapper.selectAllIds();
+			if (scoreVal != null) {
+				subjectMapper.updateByHotelId(new HotelSubject(0L, Long.valueOf(hotelId), scoreVal));
+			} else {
+				logger.warn(String.format("empty score for hotelId:%s", hotelId));
+			}
+		} catch (Exception e) {
+			logger.error(String.format("processHotelScore by hotelId:%s; scoreVal:%s", hotelId, scoreVal),
+					e);
+		}
+	}
 
-			if (allIds == null) {
+	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels, String hotelId) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+		if (StringUtils.isNotBlank(hotelId)) {
+			processHotelScore(hotelId);
+		} else {
+			try {
+				List<Map<String, Object>> allIds = subjectMapper.selectAllIds();
+
+				if (allIds == null) {
+					result.put("success", false);
+					result.put("message", "no hotels have been selected...");
+
+					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+				}
+
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("about to process comments for %s hotels", allIds.size()));
+				}
+
+				Integer size = maxHotels != null ? maxHotels : allIds.size();
+
+				for (int i = 0; i < size; i++) {
+					Map<String, Object> allId = allIds.get(i);
+
+					Long hotelIdLong = (Long) allId.get("id");
+
+					BigDecimal scoreVal = null;
+					try {
+						List<Map<String, Object>> scores = commentSumMapper
+								.selectScoreByOtsId(String.valueOf(hotelIdLong));
+
+						if (scores != null && scores.size() > 0) {
+							Map<String, Object> score = scores.get(0);
+							scoreVal = (BigDecimal) score.get("score");
+						}
+					} catch (Exception e) {
+						logger.error(
+								String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelIdLong),
+								e);
+						continue;
+					}
+
+					try {
+						if (scoreVal != null) {
+							subjectMapper.updateByHotelId(new HotelSubject(0L, Long.valueOf(hotelId), scoreVal));
+						}
+					} catch (Exception e) {
+						logger.error(String.format("subjectMapper.updateByHotelId by hotelId:%s; scoreVal:%s", hotelId,
+								scoreVal), e);
+						continue;
+					}
+
+					logger.info(String.format("load score completed for %s hotels", size));
+				}
+			} catch (Exception ex) {
+				logger.error("failed to process loadscore...", ex);
+
 				result.put("success", false);
-				result.put("message", "no hotels have been selected...");
-
 				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 			}
-
-			if (logger.isInfoEnabled()) {
-				logger.info(String.format("about to process comments for %s hotels", allIds.size()));
-			}
-
-			Integer size = maxHotels != null ? maxHotels : allIds.size();
-
-			for (int i = 0; i < size; i++) {
-				Map<String, Object> allId = allIds.get(i);
-
-				Long hotelId = (Long) allId.get("id");
-
-				BigDecimal scoreVal = null;
-				try {
-					List<Map<String, Object>> scores = commentSumMapper.selectScoreByOtsId(String.valueOf(hotelId));
-
-					if (scores != null && scores.size() > 0) {
-						Map<String, Object> score = scores.get(0);
-						scoreVal = (BigDecimal) score.get("score");
-					}
-				} catch (Exception e) {
-					logger.error(String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelId), e);
-					continue;
-				}
-
-				try {
-					if (scoreVal != null) {
-						subjectMapper.updateByHotelId(new HotelSubject(0L, Long.valueOf(hotelId), scoreVal));
-					}
-				} catch (Exception e) {
-					logger.error(String.format("subjectMapper.updateByHotelId by hotelId:%s; scoreVal:%s", hotelId,
-							scoreVal), e);
-					continue;
-				}
-			}
-		} catch (Exception ex) {
-			logger.error("failed to process loadscore...", ex);
-
-			result.put("success", false);
-			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 		}
 
 		result.put("success", true);

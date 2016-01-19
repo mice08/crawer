@@ -348,7 +348,9 @@
 
 		<profile>
 			<id>shanghai-simulation</id>
-
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<label>simulation</label>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -399,9 +401,7 @@
 
 		<profile>
 			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+
 			<properties>
 				<label>simulation</label>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
