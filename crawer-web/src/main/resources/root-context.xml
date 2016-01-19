@@ -4,7 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<import resource="db-context.xml" />
-	<!--  <import resource="schedule-context.xml" />-->
+	<import resource="schedule-context.xml" />
 
 
 </beans>
