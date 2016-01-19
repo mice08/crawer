@@ -14,4 +14,6 @@ public interface CommentSumMapper {
     
     List<Map<String, Object>> selectScoreByOtsId(String hotelId);
     
+    List<Map<String, Object>> selectOtsHotelId();
+    
 }

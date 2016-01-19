@@ -56,6 +56,14 @@
 		#{hotelId,jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectOtsHotelId" resultType="map">
+		select
+		ots_hotel_id
+		from
+		ots_ex_hotel_mapping
+		where ex_hotel_id IS NOT NULL AND ots_hotel_id IS NOT NULL and valid = 'T'
+	</select>
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		t_ex_comment_sum

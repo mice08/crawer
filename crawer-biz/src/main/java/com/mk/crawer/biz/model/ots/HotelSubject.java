@@ -3,7 +3,7 @@ package com.mk.crawer.biz.model.ots;
 import java.math.BigDecimal;
 
 public class HotelSubject {
-	private Long id;
+	private Long id = 0L;
 	
 	private Long hotelId;
 	
@@ -33,9 +33,8 @@ public class HotelSubject {
 		this.score = score;
 	}
 
-	public HotelSubject(Long id, Long hotelId, BigDecimal score) {
+	public HotelSubject(Long hotelId, BigDecimal score) {
 		super();
-		this.id = id;
 		this.hotelId = hotelId;
 		this.score = score;
 	}

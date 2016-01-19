@@ -1,6 +1,7 @@
 package com.mk.crawer.web.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class HotelScoreController {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		try {
-			HotelSubject hotelSubject = new HotelSubject(0L, Long.valueOf(hotelId), new BigDecimal(score));
+			HotelSubject hotelSubject = new HotelSubject(Long.valueOf(hotelId), new BigDecimal(score));
 			subjectMapper.updateByHotelId(hotelSubject);
 		} catch (Exception ex) {
 			String errorMessage = String.format("failed to subjectMapper.updateByHotelId by hotelId:%s; score:%s",
@@ -74,14 +75,26 @@ public class HotelScoreController {
 
 		try {
 			if (scoreVal != null) {
-				subjectMapper.updateByHotelId(new HotelSubject(0L, Long.valueOf(hotelId), scoreVal));
+				subjectMapper.updateByHotelId(new HotelSubject(Long.valueOf(hotelId), scoreVal));
 			} else {
 				logger.warn(String.format("empty score for hotelId:%s", hotelId));
 			}
 		} catch (Exception e) {
-			logger.error(String.format("processHotelScore by hotelId:%s; scoreVal:%s", hotelId, scoreVal),
-					e);
+			logger.error(String.format("processHotelScore by hotelId:%s; scoreVal:%s", hotelId, scoreVal), e);
 		}
+	}
+
+	private List<Long> convertIds(List<Map<String, Object>> allIds) {
+		List<Long> allIdConverted = new ArrayList<Long>();
+
+		for (Map<String, Object> allId : allIds) {
+			Long id = (Long) allId.get("id");
+			if (id != null) {
+				allIdConverted.add(id);
+			}
+		}
+
+		return allIdConverted;
 	}
 
 	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -93,9 +106,11 @@ public class HotelScoreController {
 			processHotelScore(hotelId);
 		} else {
 			try {
-				List<Map<String, Object>> allIds = subjectMapper.selectAllIds();
+				List<Long> allOtsHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
 
-				if (allIds == null) {
+				List<Long> allHotelIds = convertIds(subjectMapper.selectAllIds());
+
+				if (allHotelIds == null) {
 					result.put("success", false);
 					result.put("message", "no hotels have been selected...");
 
@@ -103,35 +118,34 @@ public class HotelScoreController {
 				}
 
 				if (logger.isInfoEnabled()) {
-					logger.info(String.format("about to process comments for %s hotels", allIds.size()));
+					logger.info(String.format("about to process comments for %s hotels", allHotelIds.size()));
 				}
 
-				Integer size = maxHotels != null ? maxHotels : allIds.size();
+				Integer size = maxHotels != null ? maxHotels : allHotelIds.size();
 
 				for (int i = 0; i < size; i++) {
-					Map<String, Object> allId = allIds.get(i);
-
-					Long hotelIdLong = (Long) allId.get("id");
+					Long otsId = allOtsHotelIds.get(i);
 
 					BigDecimal scoreVal = null;
 					try {
-						List<Map<String, Object>> scores = commentSumMapper
-								.selectScoreByOtsId(String.valueOf(hotelIdLong));
+						List<Map<String, Object>> scores = commentSumMapper.selectScoreByOtsId(String.valueOf(otsId));
 
 						if (scores != null && scores.size() > 0) {
 							Map<String, Object> score = scores.get(0);
 							scoreVal = (BigDecimal) score.get("score");
 						}
 					} catch (Exception e) {
-						logger.error(
-								String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelIdLong),
-								e);
+						logger.error(String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", otsId), e);
 						continue;
 					}
 
 					try {
 						if (scoreVal != null) {
-							subjectMapper.updateByHotelId(new HotelSubject(0L, Long.valueOf(hotelId), scoreVal));
+							if (allHotelIds.contains(otsId)) {
+								subjectMapper.updateByHotelId(new HotelSubject(Long.valueOf(otsId), scoreVal));
+							} else {
+								subjectMapper.insert(new HotelSubject(Long.valueOf(otsId), scoreVal));
+							}
 						}
 					} catch (Exception e) {
 						logger.error(String.format("subjectMapper.updateByHotelId by hotelId:%s; scoreVal:%s", hotelId,
