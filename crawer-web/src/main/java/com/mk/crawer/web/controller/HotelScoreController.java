@@ -110,10 +110,48 @@ public class HotelScoreController {
 		return allIdConverted;
 	}
 
-	@RequestMapping(value = "/comments/loadhotels", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/comments/loadhotelids", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> loadScore(String type) {
+	public ResponseEntity<Map<String, Object>> loadHotelIds(String type, String target) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
+
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("request received for /comments/loadhotelids, type:%s; target:%s", type, target));
+		}
+
+		if (StringUtils.isNotBlank(type) && type.equals("load")) {
+			try {
+				if (StringUtils.isNotBlank(target) && target.equals("crawer")) {
+					loadCrawerHotelIds();
+				} else if (StringUtils.isNotBlank(target) && target.equals("ots")) {
+					loadOtsHotelIds();
+				}
+			} catch (Exception ex) {
+				logger.error("failed to load in /comments/loadhotelids...", ex);
+
+				result.put("success", false);
+				result.put("errorMessage", "failed to load in /comments/loadhotelids...");
+				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+			}
+		} else if (StringUtils.isNotBlank(type) && type.equals("unload")) {
+			try {
+				if (StringUtils.isNotBlank(target) && target.equals("crawer")) {
+					unloadCrawerHotelIds();
+				} else if (StringUtils.isNotBlank(target) && target.equals("ots")) {
+					unloadOtsHotelIds();
+				}
+			} catch (Exception ex) {
+				logger.error("failed to unload in /comments/loadhotelids...", ex);
+
+				result.put("success", false);
+				result.put("errorMessage", "failed to unload in /comments/loadhotelids...");
+				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+			}
+		} else {
+			result.put("success", false);
+			result.put("errorMessage", "command not supported");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+		}
 
 		result.put("success", true);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
@@ -127,7 +165,113 @@ public class HotelScoreController {
 		return String.format("%s:otsids", this.getClass().getCanonicalName());
 	}
 
-	private List<Long> loadCrawerHotelIds() throws Exception {
+	private void unloadOtsHotelIds() throws Exception {
+		Jedis jedis = null;
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			jedis.del(getOtsHotelKey());
+		} catch (Exception ex) {
+			throw new Exception("failed to unloadOtsHotelIds...", ex);
+		} finally {
+			try {
+				jedis.close();
+			} catch (Exception ex) {
+				/**
+				 * intentionally ignore...
+				 */
+			}
+		}
+	}
+
+	private void unloadCrawerHotelIds() throws Exception {
+		Jedis jedis = null;
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			jedis.del(getCrawerHotelKey());
+		} catch (Exception ex) {
+			throw new Exception("failed to unloadCrawerHotelIds...", ex);
+		} finally {
+			try {
+				jedis.close();
+			} catch (Exception ex) {
+				/**
+				 * intentionally ignore...
+				 */
+			}
+		}
+	}
+
+	private void loadOtsHotelIds() throws Exception {
+		List<Map<String, Object>> hotels = null;
+		List<Long> allOtsHotelIds = null;
+		Jedis jedis = null;
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			hotels = subjectMapper.selectAllIds();
+
+			if (hotels != null && hotels.size() > 0) {
+				allOtsHotelIds = convertIds(hotels);
+			}
+
+			if (allOtsHotelIds != null && allOtsHotelIds.size() > 0) {
+				String otsJson = gson.toJson(allOtsHotelIds, new TypeToken<List<Long>>() {
+				}.getType());
+
+				jedis.set(getOtsHotelKey(), otsJson);
+			}
+		} catch (Exception ex) {
+			throw new Exception("failed to selectOtsHotelIds in autoLoadOtsHotelIds...", ex);
+		} finally {
+			try {
+				jedis.close();
+			} catch (Exception ex) {
+				/**
+				 * intentionally ignore...
+				 */
+			}
+		}
+	}
+
+	private void loadCrawerHotelIds() throws Exception {
+		List<Long> allCrawerHotelIds = null;
+		List<Map<String, Object>> hotels = null;
+		Jedis jedis = null;
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			hotels = commentSumMapper.selectOtsHotelId();
+
+			if (hotels != null && hotels.size() > 0) {
+				allCrawerHotelIds = convertIds(hotels);
+			}
+
+			if (allCrawerHotelIds != null && allCrawerHotelIds.size() > 0) {
+				String crawerJson = gson.toJson(allCrawerHotelIds, new TypeToken<List<Long>>() {
+				}.getType());
+
+				jedis.set(getCrawerHotelKey(), crawerJson);
+			}
+		} catch (Exception ex) {
+			throw new Exception("failed to selectOtsHotelIds in loadCrawerHotelIds...", ex);
+		} finally {
+			try {
+				jedis.close();
+			} catch (Exception ex) {
+				/**
+				 * intentionally ignore this
+				 */
+			}
+		}
+	}
+
+	private List<Long> autoLoadCrawerHotelIds() throws Exception {
 		List<Map<String, Object>> hotels = null;
 		List<Long> allCrawerHotelIds = null;
 		Jedis jedis = null;
@@ -146,7 +290,8 @@ public class HotelScoreController {
 
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format(
-						"takes %s to finish loading tens of thousands ids from jedis in loadCrawerHotelIds", seconds));
+						"takes %s to finish loading tens of thousands ids from jedis in autoLoadCrawerHotelIds",
+						seconds));
 			}
 		} catch (Exception ex) {
 			logger.error("failed to load ids from jedis", ex);
@@ -163,7 +308,8 @@ public class HotelScoreController {
 
 				if (logger.isInfoEnabled()) {
 					logger.info(String.format(
-							"takes %s to finish loading tens of thousands ids from db in loadCrawerHotelIds", seconds));
+							"takes %s to finish loading tens of thousands ids from db in autoLoadCrawerHotelIds",
+							seconds));
 				}
 
 				if (allCrawerHotelIds != null && allCrawerHotelIds.size() > 0) {
@@ -175,7 +321,7 @@ public class HotelScoreController {
 			}
 
 		} catch (Exception ex) {
-			throw new Exception("failed to selectOtsHotelIds in loadCrawerHotelIds...", ex);
+			throw new Exception("failed to selectOtsHotelIds in autoLoadCrawerHotelIds...", ex);
 		}
 
 		try {
@@ -183,13 +329,13 @@ public class HotelScoreController {
 				jedis.close();
 			}
 		} catch (Exception ex) {
-			logger.warn("failed to close jedis in loadCrawerHotelIds...", ex);
+			logger.warn("failed to close jedis in autoLoadCrawerHotelIds...", ex);
 		}
 
 		return allCrawerHotelIds;
 	}
 
-	private List<Long> loadOtsHotelIds() throws Exception {
+	private List<Long> autoLoadOtsHotelIds() throws Exception {
 		List<Map<String, Object>> hotels = null;
 		List<Long> allOtsHotelIds = null;
 		Jedis jedis = null;
@@ -206,9 +352,9 @@ public class HotelScoreController {
 			}
 
 			if (logger.isInfoEnabled()) {
-				logger.info(
-						String.format("takes %s to finish loading tens of thousands ids from jedis in loadOtsHotelIds",
-								DateUtils.diffSecond(before, new Date())));
+				logger.info(String.format(
+						"takes %s to finish loading tens of thousands ids from jedis in autoLoadOtsHotelIds",
+						DateUtils.diffSecond(before, new Date())));
 			}
 		} catch (Exception ex) {
 			logger.error("failed to load ids from jedis", ex);
@@ -223,9 +369,9 @@ public class HotelScoreController {
 				allOtsHotelIds = convertIds(hotels);
 
 				if (logger.isInfoEnabled()) {
-					logger.info(
-							String.format("takes %s to finish loading tens of thousands ids from db in loadOtsHotelIds",
-									DateUtils.diffSecond(before, new Date())));
+					logger.info(String.format(
+							"takes %s to finish loading tens of thousands ids from db in autoLoadOtsHotelIds",
+							DateUtils.diffSecond(before, new Date())));
 				}
 
 				if (allOtsHotelIds != null && allOtsHotelIds.size() > 0) {
@@ -235,9 +381,8 @@ public class HotelScoreController {
 					jedis.set(getOtsHotelKey(), otsJson);
 				}
 			}
-
 		} catch (Exception ex) {
-			throw new Exception("failed to selectOtsHotelIds in loadOtsHotelIds...", ex);
+			throw new Exception("failed to selectOtsHotelIds in autoLoadOtsHotelIds...", ex);
 		}
 
 		try {
@@ -245,7 +390,7 @@ public class HotelScoreController {
 				jedis.close();
 			}
 		} catch (Exception ex) {
-			logger.warn("failed to close jedis in loadOtsHotelIds...", ex);
+			logger.warn("failed to close jedis in autoLoadOtsHotelIds...", ex);
 		}
 
 		return allOtsHotelIds;
@@ -272,9 +417,9 @@ public class HotelScoreController {
 			}
 		} else {
 			try {
-				List<Long> allCrawerHotelIds = loadCrawerHotelIds();
+				List<Long> allCrawerHotelIds = autoLoadCrawerHotelIds();
 
-				List<Long> allOtsHotelIds = loadOtsHotelIds();
+				List<Long> allOtsHotelIds = autoLoadOtsHotelIds();
 
 				if (allOtsHotelIds == null || allOtsHotelIds.size() == 0) {
 					result.put("success", false);
