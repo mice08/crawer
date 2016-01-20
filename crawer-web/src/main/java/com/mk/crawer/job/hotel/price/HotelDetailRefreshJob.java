@@ -47,7 +47,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
         @Override
         public void run() {
             LOGGER.info("开始添加刷新酒店信息的线程");
-            while (!SystemStatus.JVM_IS_SHUTDOWN) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     ProxyServer proxyServer = ProxyServerManager.take();
                     HotelDetail hotelDetail = HotelDetailManager.take();
@@ -59,7 +59,6 @@ public class HotelDetailRefreshJob implements InitializingBean {
                         TimeUnit.SECONDS.sleep(1);
                     }
                 } catch (InterruptedException e) {
-                    Thread.interrupted();
                 }
             }
             LOGGER.info("结束添加刷新酒店信息的线程");
