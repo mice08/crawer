@@ -2,6 +2,7 @@ package com.mk.crawer.web.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
 import com.mk.crawer.biz.mapper.ots.HotelSubjectMapper;
 import com.mk.crawer.biz.model.ots.HotelSubject;
+import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.framework.proxy.RedisUtil;
+
+import redis.clients.jedis.Jedis;
 
 @Controller
 public class HotelScoreController {
@@ -31,6 +38,8 @@ public class HotelScoreController {
 
 	@Autowired
 	private CommentSumMapper commentSumMapper;
+
+	private final Gson gson = new Gson();
 
 	@RequestMapping(value = "/comments/updatescore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -101,6 +110,127 @@ public class HotelScoreController {
 		return allIdConverted;
 	}
 
+	@RequestMapping(value = "/comments/loadhotels", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> loadScore(String type) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+		result.put("success", true);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+
+	private final String getCrawerHotelKey() {
+		return String.format("%s:crawerids", this.getClass().getCanonicalName());
+	}
+
+	private final String getOtsHotelKey() {
+		return String.format("%s:otsids", this.getClass().getCanonicalName());
+	}
+
+	private List<Long> loadCrawerHotelIds() throws Exception {
+		List<Map<String, Object>> hotels = null;
+		List<Long> allCrawerHotelIds = null;
+		Jedis jedis = null;
+		Date before = new Date();
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			String crawerJson = jedis.get(getCrawerHotelKey());
+			if (StringUtils.isNotBlank(crawerJson)) {
+				allCrawerHotelIds = gson.fromJson(crawerJson, new TypeToken<List<Long>>() {
+				}.getType());
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info(String.format(
+						"takes %s to finish loading tens of thousands ids from jedis in loadCrawerHotelIds",
+						DateUtils.diffSecond(before, new Date())));
+			}
+		} catch (Exception ex) {
+			logger.error("failed to load ids from jedis", ex);
+		} finally {
+			try {
+				if (jedis != null) {
+					jedis.close();
+				}
+			} catch (Exception ex) {
+				logger.warn("failed to close jedis in loadCrawerHotelIds...", ex);
+			}
+		}
+
+		try {
+			if (allCrawerHotelIds == null || allCrawerHotelIds.size() == 0) {
+				hotels = commentSumMapper.selectOtsHotelId();
+
+				allCrawerHotelIds = convertIds(hotels);
+
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format(
+							"takes %s to finish loading tens of thousands ids from db in loadCrawerHotelIds",
+							DateUtils.diffSecond(before, new Date())));
+				}
+			}
+
+		} catch (Exception ex) {
+			throw new Exception("failed to selectOtsHotelIds in loadCrawerHotelIds...", ex);
+		}
+
+		return allCrawerHotelIds;
+	}
+
+	private List<Long> loadOtsHotelIds() throws Exception {
+		List<Map<String, Object>> hotels = null;
+		List<Long> allOtsHotelIds = null;
+		Jedis jedis = null;
+		Date before = new Date();
+
+		try {
+			jedis = RedisUtil.getJedis();
+
+			String otsJson = jedis.get(getOtsHotelKey());
+			if (StringUtils.isNotBlank(otsJson)) {
+				allOtsHotelIds = gson.fromJson(otsJson, new TypeToken<List<Long>>() {
+				}.getType());
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info(
+						String.format("takes %s to finish loading tens of thousands ids from jedis in loadOtsHotelIds",
+								DateUtils.diffSecond(before, new Date())));
+			}
+		} catch (Exception ex) {
+			logger.error("failed to load ids from jedis", ex);
+		} finally {
+			try {
+				if (jedis != null) {
+					jedis.close();
+				}
+			} catch (Exception ex) {
+				logger.warn("failed to close jedis in loadOtsHotelIds...", ex);
+			}
+		}
+
+		try {
+			if (allOtsHotelIds == null || allOtsHotelIds.size() == 0) {
+				hotels = subjectMapper.selectAllIds();
+
+				allOtsHotelIds = convertIds(hotels);
+
+				if (logger.isInfoEnabled()) {
+					logger.info(
+							String.format("takes %s to finish loading tens of thousands ids from db in loadOtsHotelIds",
+									DateUtils.diffSecond(before, new Date())));
+				}
+			}
+
+		} catch (Exception ex) {
+			throw new Exception("failed to selectOtsHotelIds in loadOtsHotelIds...", ex);
+		}
+
+		return allOtsHotelIds;
+	}
+
 	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels, String hotelId) {
@@ -122,9 +252,9 @@ public class HotelScoreController {
 			}
 		} else {
 			try {
-				List<Long> allCrawerHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
+				List<Long> allCrawerHotelIds = loadCrawerHotelIds();
 
-				List<Long> allOtsHotelIds = convertIds(subjectMapper.selectAllIds());
+				List<Long> allOtsHotelIds = loadOtsHotelIds();
 
 				if (allOtsHotelIds == null || allOtsHotelIds.size() == 0) {
 					result.put("success", false);
