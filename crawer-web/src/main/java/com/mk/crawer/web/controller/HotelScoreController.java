@@ -122,16 +122,9 @@ public class HotelScoreController {
 			}
 		} else {
 			try {
-				List<Long> allOtsHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
+				List<Long> allCrawerHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
 
-				List<Long> allHotelIds = convertIds(subjectMapper.selectAllIds());
-
-				if (allHotelIds == null || allHotelIds.size() == 0) {
-					result.put("success", false);
-					result.put("message", "no hotels have been selected for allOtsHotelIds...");
-
-					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-				}
+				List<Long> allOtsHotelIds = convertIds(subjectMapper.selectAllIds());
 
 				if (allOtsHotelIds == null || allOtsHotelIds.size() == 0) {
 					result.put("success", false);
@@ -140,14 +133,22 @@ public class HotelScoreController {
 					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 				}
 
-				if (logger.isInfoEnabled()) {
-					logger.info(String.format("about to process comments for %s hotels", allHotelIds.size()));
+				if (allCrawerHotelIds == null || allCrawerHotelIds.size() == 0) {
+					result.put("success", false);
+					result.put("message", "no hotels have been selected for allCrawerHotelIds...");
+
+					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 				}
 
-				Integer size = maxHotels != null ? maxHotels : allOtsHotelIds.size();
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("about to process comments for otsHotels:%s; crawerHotels:%s",
+							allOtsHotelIds.size(), allCrawerHotelIds.size()));
+				}
+
+				Integer size = maxHotels != null ? maxHotels : allCrawerHotelIds.size();
 
 				for (int i = 0; i < size; i++) {
-					Long otsId = allOtsHotelIds.get(i);
+					Long otsId = allCrawerHotelIds.get(i);
 
 					BigDecimal scoreVal = null;
 					try {
@@ -164,7 +165,7 @@ public class HotelScoreController {
 
 					try {
 						if (scoreVal != null) {
-							if (allHotelIds.contains(otsId)) {
+							if (allOtsHotelIds.contains(otsId)) {
 								if (logger.isInfoEnabled()) {
 									logger.info(String.format("about to updateByHotelId otsId:%s scoreVal:%s", otsId,
 											scoreVal));
