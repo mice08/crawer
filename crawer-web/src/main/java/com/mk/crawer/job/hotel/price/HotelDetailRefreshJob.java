@@ -1,20 +1,13 @@
 package com.mk.crawer.job.hotel.price;
 
-import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.JSONUtil;
-import com.mk.framework.proxy.RedisUtil;
 import com.mk.framework.proxy.SystemStatus;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -50,77 +43,24 @@ public class HotelDetailRefreshJob implements InitializingBean {
         }
     }
 
-
-    class RedisRefreshPriceListener implements Runnable {
-        @Override
-        public void run() {
-            Jedis jedis = null;
-
-            try {
-                jedis = RedisUtil.getJedis();
-
-                while (!SystemStatus.JVM_IS_SHUTDOWN) {
-
-                    Set<String> jsonSet = new HashSet<>();
-
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0, 0, 100);
-                    }
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 1, 1, 0, 100);
-                    }
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 2, 2, 0, 100);
-                    }
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 3, 3, 0, 100);
-                    }
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 4, 4, 0, 100);
-                    }
-                    if ( jsonSet.size() == 0 ) {
-                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, Double.MAX_VALUE, Double.MAX_VALUE, 0, 100);
-                    }
-
-
-                    if (jsonSet.size() > 0) {
-                        for (String s : jsonSet) {
-                            HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
-
-                            HotelDetailManager.put(hotelDetail);
-
-                            LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
-                        }
-                    } else {
-                        TimeUnit.SECONDS.sleep(1);
-                    }
-                }
-            } catch (InterruptedException e) {
-                Thread.interrupted();
-                LOGGER.error("监听酒店价格刷新线程发生错误：",e);
-            } finally {
-                RedisUtil.close(jedis);
-            }
-        }
-    }
-
     class StartRefreshThread implements Runnable {
         @Override
         public void run() {
             LOGGER.info("开始添加刷新酒店信息的线程");
-            try {
-                Integer count = 0;
-                while (!SystemStatus.JVM_IS_SHUTDOWN) {
-                    if ( count++ < Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT ) {
-                        EXECUTOR_100.execute(new HotelDetailRefreshThread());
-                        //一秒钟增加一个，防止同一时刻发送大量请求，导致服务器拒绝服务
-                        TimeUnit.MILLISECONDS.sleep(Config.THREAD_INIT_INTERVAL_TIME);
-                    } else {
-                        break;
+            while (!SystemStatus.JVM_IS_SHUTDOWN) {
+                try {
+                    ProxyServer proxyServer = ProxyServerManager.take();
+                    HotelDetail hotelDetail = HotelDetailManager.take();
+                    HotelDetailRefreshThread refreshThread =
+                            new HotelDetailRefreshThread(proxyServer, hotelDetail);
+                    try {
+                        EXECUTOR_100.execute(refreshThread);
+                    } catch (RejectedExecutionException e) {
+                        TimeUnit.SECONDS.sleep(1);
                     }
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
                 }
-            } catch (InterruptedException e) {
-                Thread.interrupted();
             }
             LOGGER.info("结束添加刷新酒店信息的线程");
         }
@@ -131,7 +71,7 @@ public class HotelDetailRefreshJob implements InitializingBean {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                EXECUTOR_100.shutdownNow();
+                EXECUTOR_100.shutdown();
                 LOGGER.info("刷新酒店价格任务的线程池关闭");
             }
         });
@@ -147,18 +87,12 @@ public class HotelDetailRefreshJob implements InitializingBean {
                 Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                 Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(),
+                new LinkedBlockingQueue<Runnable>(Config.HOT_CITY_100_CONCURRENCY_THREAD_COUNT),
                 new HotelInfoRefreshThreadFactory());
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
-        redisRefreshPriceListener.setDaemon(false);
-        redisRefreshPriceListener.start();
-
-        Thread startRefreshThread = new Thread(new StartRefreshThread(), "StartRefreshThread");
-        startRefreshThread.setDaemon(false);
-        startRefreshThread.start();
+        EXECUTOR_100.execute(new StartRefreshThread());
     }
 }
