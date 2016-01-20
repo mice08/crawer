@@ -3,13 +3,16 @@ package com.mk.crawer.job.hotel.price;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
+import com.mk.framework.proxy.SystemStatus;
 import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 振涛 on 2016/1/13.
@@ -21,38 +24,100 @@ public class HotelDetailManager {
     private static final BlockingQueue<HotelDetail> HOTEL_DETAIL_BLOCKING_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
 
-    static {
-        init();
-    }
+    private static class RedisRefreshPriceListener implements Runnable {
+        @Override
+        public void run() {
+            Jedis jedis = null;
 
-    private static void init() {
-        Thread reload = new Thread() {
-            @Override
-            public void run() {
-                Jedis jedis = null;
+            try {
+                jedis = RedisUtil.getJedis();
 
-                try {
-                    jedis = RedisUtil.getJedis();
+                while (!Thread.currentThread().isInterrupted()) {
 
-                    Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
-                    LOGGER.info("正在恢复上次程序关闭前，未处理完的酒店信息队列");
+                    Set<String> jsonSet = new HashSet<>();
 
-                    for (String s : jsonSet) {
-                        HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
-                        HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
-                        LOGGER.info("酒店加入待刷新队列：{}", s);
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 0, 0, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 1, 1, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 2, 2, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 3, 3, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, 4, 4, 0, 100);
+                    }
+                    if ( jsonSet.size() == 0 ) {
+                        jsonSet = jedis.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, Double.MAX_VALUE, Double.MAX_VALUE, 0, 100);
                     }
 
-                    LOGGER.info("恢复待刷新信息的酒店成功");
-                } catch (InterruptedException e) {
-                    Thread.interrupted();
-                    LOGGER.error("初始化待刷新信息的酒店时发生错误：", e);
-                } finally {
-                    RedisUtil.close(jedis);
+
+                    if (jsonSet.size() > 0) {
+                        for (String s : jsonSet) {
+                            HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+
+                            put(hotelDetail);
+
+                            LOGGER.info("酒店：{}加入待刷新价格队列", hotelDetail.getHotelId());
+                        }
+                    } else {
+                        TimeUnit.SECONDS.sleep(1);
+                    }
                 }
+            } catch (InterruptedException e) {
+                LOGGER.error("监听酒店价格刷新线程被中断：",e);
+            } finally {
+                RedisUtil.close(jedis);
             }
-        };
-        reload.start();
+        }
+    }
+
+    private static class ReloadRefreshingQueue implements Runnable {
+        @Override
+        public void run() {
+            Jedis jedis = null;
+
+            try {
+                jedis = RedisUtil.getJedis();
+
+                Set<String> jsonSet = jedis.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESHING_SET, 0, Long.MAX_VALUE);
+                LOGGER.info("正在恢复上次程序关闭前，未处理完的酒店信息队列");
+
+                for (String s : jsonSet) {
+                    HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+                    HOTEL_DETAIL_BLOCKING_QUEUE.put(hotelDetail);
+                    LOGGER.info("酒店加入待刷新队列：{}", s);
+                }
+
+                LOGGER.info("恢复待刷新信息的酒店成功");
+            } catch (InterruptedException e) {
+                LOGGER.error("初始化待刷新信息的酒店时线程被中断：", e);
+            } finally {
+                RedisUtil.close(jedis);
+            }
+        }
+    }
+
+    static {
+        final Thread reloadRefreshingQueue = new Thread(new ReloadRefreshingQueue(), "ReloadRefreshingQueue");
+        reloadRefreshingQueue.setDaemon(false);
+        reloadRefreshingQueue.start();
+
+        final Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
+        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                reloadRefreshingQueue.interrupt();
+                redisRefreshPriceListener.interrupt();
+            }
+        });
     }
 
     /**

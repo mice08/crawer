@@ -2,9 +2,9 @@ package com.mk.framework.proxy.http;
 
 import com.mk.framework.proxy.Config;
 import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.ThreadUtil;
 import com.mk.framework.proxy.server.ProxyServer;
-import com.mk.framework.proxy.server.ProxyServerManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -43,24 +43,25 @@ public class HttpUtil {
     }
 
     public static String doGet(String url) throws Exception {
-        ProxyServer proxyServer = ProxyServerManager.random();
+        ProxyServer proxyServer = ThreadContext.PROXY_SERVER_THREAD_LOCAL.get();
+
+        if ( proxyServer == null ) {
+            throw new NullPointerException("没有为该线程绑定代理服务器对象");
+        }
 
         String result;
         try {
             result = HttpUtil.doGet(url, proxyServer);
         } catch (Exception e) {
             removeContext();
-            ProxyServerManager.remove(proxyServer);
             throw e;
         }
 
         if ( StringUtils.isEmpty(result)  ) {
             removeContext();
-            ProxyServerManager.remove(proxyServer);
             throw new Exception("响应内容为空");
         } else if ( result.length() < 100 ) {
             removeContext();
-            ProxyServerManager.remove(proxyServer);
             throw new Exception(result);
         }
 
