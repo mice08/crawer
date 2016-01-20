@@ -56,7 +56,7 @@
 		#{hotelId,jdbcType=VARCHAR}
 	</select>
 
-	<select id="selectOtsHotelId" resultType="map">
+	<select id="selectOtsHotelId" fetchSize="1000000" resultType="map">
 		select
 		id
 		from

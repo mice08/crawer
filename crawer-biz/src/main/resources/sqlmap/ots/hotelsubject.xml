@@ -25,7 +25,7 @@
 		#{hotelId,jdbcType=BIGINT}
 	</update>
 
-	<select id="selectAllIds" resultType="java.util.Map">
+	<select id="selectAllIds" fetchSize="1000000" resultType="java.util.Map">
 		select
 		id 
 		from t_hotel_subject

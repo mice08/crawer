@@ -100,7 +100,7 @@ public class HotelScoreController {
 
 		return allIdConverted;
 	}
-
+	
 	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels, String hotelId) {
