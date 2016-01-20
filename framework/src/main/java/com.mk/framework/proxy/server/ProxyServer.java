@@ -1,15 +1,28 @@
 package com.mk.framework.proxy.server;
 
 import java.util.Objects;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 振涛 on 2016/1/6.
  */
-public class ProxyServer implements Comparable {
+public class ProxyServer implements Delayed {
 
+    /**
+     * IP地址
+     */
     private String ip;
 
+    /**
+     * 端口
+     */
     private Integer port;
+
+    /**
+     * 可见时间，单位纳秒
+     */
+    private transient Long visibleTime;
 
     public String getIp() {
         return ip;
@@ -27,6 +40,10 @@ public class ProxyServer implements Comparable {
         this.port = port;
     }
 
+    public void intervalTime(int interval, TimeUnit unit) {
+        this.visibleTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(interval, unit);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,10 +59,20 @@ public class ProxyServer implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Delayed o) {
+        if (o == null) return 1;
         if (this == o) return 0;
-        ProxyServer that = (ProxyServer) o;
-
-        return ip.compareTo(that.ip);
+        if ( o instanceof ProxyServer ) {
+            ProxyServer proxyServer = (ProxyServer) o;
+            return this.visibleTime.compareTo(proxyServer.visibleTime);
+        } else {
+            return -1;
+        }
     }
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        return visibleTime - System.nanoTime();
+    }
+
 }

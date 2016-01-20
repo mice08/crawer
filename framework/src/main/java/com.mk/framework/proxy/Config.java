@@ -34,8 +34,16 @@ public class Config {
      */
     public static final Integer CHECK_PROXY_THREAD_COUNT = 100;
     /**
+     * 待检测的代理IP队列长度
+     */
+    public static final Integer UN_CHECK_PROXY_IP_QUEUE_SIZE = 2000;
+    /**
      * 可用代理IP队列大小
      */
     public static final Integer CHECKED_PROXY_IP_QUEUE_SIZE =2000;
+    /**
+     * IP使用后可以再次获取的时间间隔，单位：毫秒
+     */
+    public static final Integer VISIBLE_TIME_INTERVAL = 60 * 1000;
 
 }

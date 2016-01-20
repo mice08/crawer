@@ -4,13 +4,15 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.Config;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
-import com.mk.framework.proxy.SystemStatus;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -25,20 +27,18 @@ public class ProxyServerFetch {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
-    private static final BlockingQueue<ProxyServer> CHECKED = new ArrayBlockingQueue<>(Config.CHECKED_PROXY_IP_QUEUE_SIZE);
+    private static ThreadPoolExecutor EXECUTOR;
 
-    private static ThreadPoolExecutor CHECKING_EXECUTOR;
-
-    static class ProxyServerCheckThreadFactory implements ThreadFactory {
+    static class ProxyServerFetchThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
         final ThreadGroup group;
         final AtomicInteger threadNumber = new AtomicInteger(1);
         final String namePrefix;
 
-        public ProxyServerCheckThreadFactory() {
+        public ProxyServerFetchThreadFactory() {
             SecurityManager s = System.getSecurityManager();
             group = (s != null)? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            namePrefix = "Proxy-server-checking-pool-" + poolNumber.getAndIncrement() + "-thread-";
+            namePrefix = "Proxy-server-fetch-pool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         @Override
@@ -55,7 +55,7 @@ public class ProxyServerFetch {
     static class Fetch implements Runnable {
         @Override
         public void run() {
-            while (!SystemStatus.JVM_IS_SHUTDOWN) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     try {
                         fetchByBillGBJ();
@@ -65,7 +65,6 @@ public class ProxyServerFetch {
                         TimeUnit.MILLISECONDS.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
                     }
                 } catch (InterruptedException e) {
-                    Thread.interrupted();
                 }
             }
         }
@@ -167,7 +166,7 @@ public class ProxyServerFetch {
             try {
                 jedis = RedisUtil.getJedis();
 
-                while (!SystemStatus.JVM_IS_SHUTDOWN) {
+                while (!Thread.currentThread().isInterrupted()) {
                     try {
                         String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_UN_CHECK_SET);
 
@@ -178,11 +177,13 @@ public class ProxyServerFetch {
 
                             Check check = new Check(proxyServer);
 
-                            CHECKING_EXECUTOR.execute(check);
+                            try {
+                                EXECUTOR.execute(check);
+                            } catch (RejectedExecutionException e) {
+                                TimeUnit.SECONDS.sleep(1);
+                            }
                         }
-
                     } catch (InterruptedException e) {
-                        Thread.interrupted();
                     }
                 }
             } finally {
@@ -201,9 +202,17 @@ public class ProxyServerFetch {
 
         @Override
         public void run() {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+
             Jedis jedis = null;
             try {
-                //HttpUtil.doGet(CHECK_URL, proxyServer);
+                URL url = new URL(CHECK_URL);
+
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyServer.getIp(), proxyServer.getPort()));
+
+                url.openConnection(proxy);
 
                 jedis = RedisUtil.getJedis();
 
@@ -216,45 +225,17 @@ public class ProxyServerFetch {
         }
     }
 
-    static class CheckedLoad implements Runnable {
-        @Override
-        public void run() {
-            Jedis jedis = null;
-            try {
-                jedis = RedisUtil.getJedis();
-
-                while (!SystemStatus.JVM_IS_SHUTDOWN) {
-                    try {
-                        String jsonStr = jedis.spop(RedisCacheName.CRAWLER_PROXY_IP_CHECKED_SET);
-
-                        if ( StringUtils.isEmpty(jsonStr) ) {
-                            TimeUnit.SECONDS.sleep(1);
-                        } else {
-                            ProxyServer proxyServer = JSONUtil.fromJson(jsonStr, ProxyServer.class);
-                            CHECKED.put(proxyServer);
-                        }
-
-                        LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
-                    } catch (InterruptedException e) {
-                        Thread.interrupted();
-                    }
-                }
-            } finally {
-                RedisUtil.close(jedis);
-                LOGGER.info("载入有效代理的进程结束");
-            }
-        }
-    }
+    public static void start() {}
 
     static {
         initExecutor();
 
-        initThreads();
+        addToThreadPool();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                CHECKING_EXECUTOR.shutdownNow();
+                EXECUTOR.shutdown();
                 LOGGER.info("检测代理IP是否有效的线程池关闭");
             }
         });
@@ -262,35 +243,21 @@ public class ProxyServerFetch {
 
     private static void initExecutor() {
         LOGGER.info("初始化线程池");
-        if ( CHECKING_EXECUTOR != null ) {
-            CHECKING_EXECUTOR.shutdown();
+        if ( EXECUTOR != null ) {
+            EXECUTOR.shutdown();
         }
 
-        CHECKING_EXECUTOR = new ThreadPoolExecutor(
+        EXECUTOR = new ThreadPoolExecutor(
                 Config.CHECK_PROXY_THREAD_COUNT,
                 Config.CHECK_PROXY_THREAD_COUNT,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(),
-                new ProxyServerCheckThreadFactory());
+                new LinkedBlockingQueue<Runnable>(Config.UN_CHECK_PROXY_IP_QUEUE_SIZE),
+                new ProxyServerFetchThreadFactory());
     }
 
-    private static void initThreads() {
-        Thread fetch = new Thread(new Fetch(), "Fetch-proxy-ip-thread");
-        fetch.setDaemon(false);
-        fetch.start();
-
-        Thread addToCheckingPool = new Thread(new AddToCheckingPool(), "Add-proxy-ip-to-checking-thread-pool");
-        addToCheckingPool.setDaemon(false);
-        addToCheckingPool.start();
-
-        Thread checkedLoad = new Thread(new CheckedLoad(), "Provide-checked-proxy-ip-thread");
-        checkedLoad.setDaemon(false);
-        checkedLoad.start();
-    }
-
-
-    public static BlockingQueue<ProxyServer> getProxyQueue() {
-        return CHECKED;
+    private static void addToThreadPool() {
+        EXECUTOR.execute(new Fetch());
+        EXECUTOR.execute(new AddToCheckingPool());
     }
 
     public static void main(String[] args) throws IOException {
