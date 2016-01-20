@@ -126,9 +126,16 @@ public class HotelScoreController {
 
 				List<Long> allHotelIds = convertIds(subjectMapper.selectAllIds());
 
-				if (allHotelIds == null) {
+				if (allHotelIds == null || allHotelIds.size() == 0) {
 					result.put("success", false);
-					result.put("message", "no hotels have been selected...");
+					result.put("message", "no hotels have been selected for allOtsHotelIds...");
+
+					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+				}
+
+				if (allOtsHotelIds == null || allOtsHotelIds.size() == 0) {
+					result.put("success", false);
+					result.put("message", "no hotels have been selected for allOtsHotelIds...");
 
 					return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 				}
@@ -137,7 +144,7 @@ public class HotelScoreController {
 					logger.info(String.format("about to process comments for %s hotels", allHotelIds.size()));
 				}
 
-				Integer size = maxHotels != null ? maxHotels : allHotelIds.size();
+				Integer size = maxHotels != null ? maxHotels : allOtsHotelIds.size();
 
 				for (int i = 0; i < size; i++) {
 					Long otsId = allOtsHotelIds.get(i);

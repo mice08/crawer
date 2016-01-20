@@ -58,7 +58,7 @@
 
 	<select id="selectOtsHotelId" resultType="map">
 		select
-		ots_hotel_id
+		id
 		from
 		ots_ex_hotel_mapping
 		where ex_hotel_id IS NOT NULL AND ots_hotel_id IS NOT NULL and valid = 'T'
