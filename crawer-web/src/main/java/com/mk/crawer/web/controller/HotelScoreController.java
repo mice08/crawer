@@ -101,15 +101,6 @@ public class HotelScoreController {
 		return allIdConverted;
 	}
 
-	private List<Long> loadAllOtsHotels()
-	{
-		List<Long> allOtsHotelIds = null;
-		
-		allOtsHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
-		
-		return allOtsHotelIds;
-	}
-	
 	@RequestMapping(value = "/comments/loadscore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels, String hotelId) {
