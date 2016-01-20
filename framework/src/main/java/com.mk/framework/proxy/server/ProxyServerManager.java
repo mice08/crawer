@@ -1,7 +1,9 @@
 package com.mk.framework.proxy.server;
 
 import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.*;
+import com.mk.framework.proxy.Config;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
@@ -68,37 +70,27 @@ public class ProxyServerManager {
     }
 
     public static ProxyServer take() throws InterruptedException {
-        ProxyServer proxyServer = ThreadContext.PROXY_SERVER_THREAD_LOCAL.get();
+        ProxyServer proxyServer = CHECKED.take();
 
-        if ( proxyServer != null ) {
-            return proxyServer;
-        } else {
-
+        while (USING_PROXY_SERVER_SET.contains(proxyServer)) {
+            LOGGER.info("代理IP：{}正在被使用", proxyServer.getIp());
             proxyServer = CHECKED.take();
-
-            while (USING_PROXY_SERVER_SET.contains(proxyServer)) {
-                LOGGER.info("代理IP：{}正在被使用", proxyServer.getIp());
-                proxyServer = CHECKED.take();
-            }
-            LOGGER.info("从队列中获取代理IP：{}", proxyServer.getIp());
-
-            ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
-            USING_PROXY_SERVER_SET.add(proxyServer);
-
-            return proxyServer;
         }
+        LOGGER.info("从队列中获取代理IP：{}", proxyServer.getIp());
+
+        USING_PROXY_SERVER_SET.add(proxyServer);
+
+        return proxyServer;
     }
 
     public static void put(ProxyServer proxyServer) throws InterruptedException {
         proxyServer.intervalTime(Config.VISIBLE_TIME_INTERVAL, TimeUnit.MILLISECONDS);
         CHECKED.put(proxyServer);
 
-        ThreadContext.PROXY_SERVER_THREAD_LOCAL.remove();
         USING_PROXY_SERVER_SET.remove(proxyServer);
     }
 
     public static void remove(ProxyServer proxyServer) {
-        ThreadContext.PROXY_SERVER_THREAD_LOCAL.remove();
         USING_PROXY_SERVER_SET.remove(proxyServer);
     }
 
