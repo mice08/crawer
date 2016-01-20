@@ -58,7 +58,7 @@ public class HotelScoreController {
 
 	private void processHotelScore(String hotelId) throws Exception {
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("about to process comments for %s hotels", hotelId));
+			logger.info(String.format("about to process comments for %s hotel", hotelId));
 		}
 
 		BigDecimal scoreVal = null;
@@ -75,6 +75,10 @@ public class HotelScoreController {
 
 		try {
 			if (scoreVal != null) {
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("about to updateByHotelId hotelid:%s; scoreVal:%s", hotelId, scoreVal));
+				}
+
 				subjectMapper.updateByHotelId(new HotelSubject(Long.valueOf(hotelId), scoreVal));
 			} else {
 				logger.warn(String.format("empty score for hotelId:%s", hotelId));
@@ -154,8 +158,17 @@ public class HotelScoreController {
 					try {
 						if (scoreVal != null) {
 							if (allHotelIds.contains(otsId)) {
+								if (logger.isInfoEnabled()) {
+									logger.info(String.format("about to updateByHotelId otsId:%s scoreVal:%s", otsId,
+											scoreVal));
+								}
+
 								subjectMapper.updateByHotelId(new HotelSubject(Long.valueOf(otsId), scoreVal));
 							} else {
+								if (logger.isInfoEnabled()) {
+									logger.info(String.format("about to insert otsId:%s scoreVal:%s", otsId, scoreVal));
+								}
+
 								subjectMapper.insert(new HotelSubject(Long.valueOf(otsId), scoreVal));
 							}
 						}
@@ -164,9 +177,9 @@ public class HotelScoreController {
 								scoreVal), e);
 						continue;
 					}
-
-					logger.info(String.format("load score completed for %s hotels", size));
 				}
+
+				logger.info(String.format("load score completed for %s hotels", size));
 			} catch (Exception ex) {
 				logger.error("failed to process loadscore...", ex);
 
