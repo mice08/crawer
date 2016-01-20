@@ -1,6 +1,6 @@
 package com.mk.crawer.job.hotel.price;
 
-import com.mk.framework.proxy.SystemStatus;
+import com.mk.crawer.job.SwitchUtil;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
 import org.slf4j.Logger;
@@ -54,7 +54,12 @@ public class HotelDetailRefreshJob implements InitializingBean {
                     HotelDetailRefreshThread refreshThread =
                             new HotelDetailRefreshThread(proxyServer, hotelDetail);
                     try {
-                        EXECUTOR_100.execute(refreshThread);
+                        if (SwitchUtil.HotelDetailRefresh.isOpen()) {
+                            EXECUTOR_100.execute(refreshThread);
+                        } else {
+                            LOGGER.info("刷新酒店信息的任务暂时暂停");
+                            TimeUnit.SECONDS.sleep(1);
+                        }
                     } catch (RejectedExecutionException e) {
                         TimeUnit.SECONDS.sleep(1);
                     }

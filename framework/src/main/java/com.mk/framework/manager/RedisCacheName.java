@@ -47,4 +47,8 @@ public class RedisCacheName {
     /********动态价格-门市价***********/
     public static final String DYNAMIC_PRICE_MARKET = "DYNAMIC:PRICE:MARKET:";
 
+    /**
+     * 开关：酒店信息刷新任务
+     */
+    public static final String CRAWLER_SWITCH_HOTEL_DETAIL_REFRESH_KEY = "CRAWLER:SWITCH:HOTEL_DETAIL_REFRESH_KEY";
 }
