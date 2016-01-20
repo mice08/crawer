@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +19,8 @@ import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 
 @Controller
 public class HotelDetailController {
-	private final Logger logger = Logger.getLogger(HotelDetailController.class);
-	
+	private final Logger logger = LoggerFactory.getLogger(HotelDetailController.class);
+
 	@Autowired
 	private HotelDetailCrawlService hotelDetailService;
 
@@ -33,7 +34,7 @@ public class HotelDetailController {
 		} catch (Exception ex) {
 			logger.error("failed to do hotelDetailService.crawl", ex);
 		}
-		
+
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 }

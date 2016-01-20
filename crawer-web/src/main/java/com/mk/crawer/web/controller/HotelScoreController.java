@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import com.mk.crawer.biz.model.ots.HotelSubject;
 
 @Controller
 public class HotelScoreController {
-	private final Logger logger = Logger.getLogger(HotelScoreController.class);
+	private final Logger logger = LoggerFactory.getLogger(HotelDetailController.class);
 
 	@Autowired
 	private HotelSubjectMapper subjectMapper;
@@ -55,8 +56,7 @@ public class HotelScoreController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
-	private void processHotelScore(String hotelId) {
-
+	private void processHotelScore(String hotelId) throws Exception {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("about to process comments for %s hotels", hotelId));
 		}
@@ -70,7 +70,7 @@ public class HotelScoreController {
 				scoreVal = (BigDecimal) score.get("score");
 			}
 		} catch (Exception e) {
-			logger.error(String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelId), e);
+			throw new Exception(String.format("failed to commentSumMapper.selectScoreByOtsId by id:%s", hotelId), e);
 		}
 
 		try {
@@ -80,7 +80,7 @@ public class HotelScoreController {
 				logger.warn(String.format("empty score for hotelId:%s", hotelId));
 			}
 		} catch (Exception e) {
-			logger.error(String.format("processHotelScore by hotelId:%s; scoreVal:%s", hotelId, scoreVal), e);
+			throw new Exception(String.format("processHotelScore by hotelId:%s; scoreVal:%s", hotelId, scoreVal), e);
 		}
 	}
 
@@ -102,8 +102,20 @@ public class HotelScoreController {
 	public ResponseEntity<Map<String, Object>> loadScore(Integer maxHotels, String hotelId) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("about to loadscore for maxHotels:%s; hotelId:%s", maxHotels, hotelId));
+		}
+
 		if (StringUtils.isNotBlank(hotelId)) {
-			processHotelScore(hotelId);
+			try {
+				processHotelScore(hotelId);
+			} catch (Exception ex) {
+				logger.error("failed to processHotelScore...", ex);
+
+				result.put("success", false);
+				result.put("errorMessage", "failed to processHotelScore...");
+				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+			}
 		} else {
 			try {
 				List<Long> allOtsHotelIds = convertIds(commentSumMapper.selectOtsHotelId());
@@ -159,6 +171,7 @@ public class HotelScoreController {
 				logger.error("failed to process loadscore...", ex);
 
 				result.put("success", false);
+				result.put("errorMessage", "failed to process loadscore...");
 				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 			}
 		}
