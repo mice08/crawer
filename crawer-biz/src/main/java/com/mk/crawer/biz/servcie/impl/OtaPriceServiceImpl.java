@@ -53,6 +53,10 @@ public class OtaPriceServiceImpl implements OtaPriceService {
         result.put("SUCCESS", true);
         return result;
     }
+    public void catheOtaPrice() {
+        HotelMapping hotelMapping = new HotelMapping();
+        catheOtaPrice(hotelMapping);
+    }
     public Map<String,Object> catheOtaPrice(HotelMapping record){
         Map<String, Object> result = new HashMap<String, Object>();
         HotelMappingExample example = new HotelMappingExample();
@@ -69,39 +73,47 @@ public class OtaPriceServiceImpl implements OtaPriceService {
         int  hotelCount= hotelMappingService.countByExample(example);
         int pageSize=1000;
         int count=hotelCount/pageSize;
-        for (int i=0;i<=count;i++){
-            example.setPageSize(pageSize);
-            example.setPageIndex(i*pageSize);
-            List<HotelMapping> hotelMappingList =hotelMappingService.selectByExample(example);
-            if (CollectionUtils.isEmpty(hotelMappingList)){
-                logger.info("=====hotelMappingList is empty=====");
-                result.put("message","hotelMappingList is empty");
-                result.put("SUCCESS", false);
-                return result;
+        Jedis jedis = RedisUtil.getJedis();
+        try {
+            for (int i=0;i<=count;i++){
+                example.setPageSize(pageSize);
+                example.setPageIndex(i*pageSize);
+                List<HotelMapping> hotelMappingList =hotelMappingService.selectByExample(example);
+                if (CollectionUtils.isEmpty(hotelMappingList)){
+                    logger.info("=====hotelMappingList is empty=====");
+                    result.put("message","hotelMappingList is empty");
+                    result.put("SUCCESS", false);
+                    return result;
+                }
+                for (HotelMapping hotelMapping:hotelMappingList){
+                    if(hotelMapping.getExHotelId()==null){
+                        continue;
+                    }
+                    OtaPrice priceBean = new OtaPrice();
+                    priceBean.setExHotelId(hotelMapping.getExHotelId());
+                    OtaPrice otaPrice =otaPriceMapper.getValidDate(priceBean);
+                    if (otaPrice==null||otaPrice.getCreateTime()==null){
+                        logger.info("=====otaPrice is null=====");
+                        continue;
+                    }
+                    logger.info("=====hotelSourceId={}&roomTypeKey={}&createTime={}=====",otaPrice.getHotelSourceId(),otaPrice.getRoomTypeKey(),otaPrice.getCreateTime());
+                    Calendar calendar=DateUtils.getCalendar(otaPrice.getCreateTime().substring(0,10));
+                    String validDate=DateUtils.formatDate(calendar.getTime());
+                    priceBean.setCreateTime(validDate);
+                    List<OtaPrice> otaPriceList = otaPriceMapper.getOtaPrice(priceBean);
+                    for (OtaPrice roomPrice:otaPriceList){
+                        logger.info("=====hotelSourceId={}&roomTypeKey={}&otaPrice={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey(),roomPrice.getPrice());
+                        jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
+                                roomPrice.getOtsHotelId(),roomPrice.getOtsRoomTypeId()),
+                                roomPrice.getPrice().toString());
+                    }
+                }
             }
-            for (HotelMapping hotelMapping:hotelMappingList){
-                if(hotelMapping.getExHotelId()==null){
-                    continue;
-                }
-                OtaPrice priceBean = new OtaPrice();
-                priceBean.setExHotelId(hotelMapping.getExHotelId());
-                OtaPrice otaPrice =otaPriceMapper.getValidDate(priceBean);
-                if (otaPrice==null||otaPrice.getCreateTime()==null){
-                    logger.info("=====otaPrice is null=====");
-                    continue;
-                }
-                logger.info("=====hotelSourceId={}&roomTypeKey={}&createTime={}=====",otaPrice.getHotelSourceId(),otaPrice.getRoomTypeKey(),otaPrice.getCreateTime());
-                Calendar calendar=DateUtils.getCalendar(otaPrice.getCreateTime().substring(0,10));
-                String validDate=DateUtils.formatDate(calendar.getTime());
-                priceBean.setCreateTime(validDate);
-                List<OtaPrice> otaPriceList = otaPriceMapper.getOtaPrice(priceBean);
-                for (OtaPrice roomPrice:otaPriceList){
-                    logger.info("=====hotelSourceId={}&roomTypeKey={}&otaPrice={}=====",roomPrice.getHotelSourceId(),roomPrice.getRoomTypeKey(),roomPrice.getPrice());
-                    init2redis(
-                            String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_OTA,
-                                    roomPrice.getOtsHotelId(),roomPrice.getOtsRoomTypeId()),
-                            roomPrice.getPrice().toString());
-                }
+        }catch (Exception e) {
+            throw e;
+        } finally {
+            if (null != jedis) {
+                jedis.close();
             }
         }
 
@@ -111,16 +123,4 @@ public class OtaPriceServiceImpl implements OtaPriceService {
         return result;
     }
 
-    final private void init2redis(String key, String value) {
-        Jedis jedis = RedisUtil.getJedis();
-        try {
-            jedis.set(key, value);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (null != jedis) {
-                jedis.close();
-            }
-        }
-    }
 }
