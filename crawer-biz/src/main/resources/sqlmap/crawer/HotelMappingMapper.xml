@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.HotelMappingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.HotelMapping" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ots_hotel_id" property="otsHotelId" jdbcType="BIGINT" />
+    <result column="ots_hotel_name" property="otsHotelName" jdbcType="VARCHAR" />
+    <result column="ex_hotel_id" property="exHotelId" jdbcType="VARCHAR" />
+    <result column="ex_hotel_name" property="exHotelName" jdbcType="VARCHAR" />
+    <result column="site" property="site" jdbcType="VARCHAR" />
+    <result column="valid" property="valid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, ots_hotel_id, ots_hotel_name, ex_hotel_id, ex_hotel_name, site, valid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.HotelMappingExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from ots_ex_hotel_mapping
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ots_ex_hotel_mapping
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ots_ex_hotel_mapping
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
+    insert into ots_ex_hotel_mapping (id, ots_hotel_id, ots_hotel_name, 
+      ex_hotel_id, ex_hotel_name, site, 
+      valid)
+    values (#{id,jdbcType=BIGINT}, #{otsHotelId,jdbcType=BIGINT}, #{otsHotelName,jdbcType=VARCHAR}, 
+      #{exHotelId,jdbcType=VARCHAR}, #{exHotelName,jdbcType=VARCHAR}, #{site,jdbcType=VARCHAR}, 
+      #{valid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
+    insert into ots_ex_hotel_mapping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="otsHotelId != null" >
+        ots_hotel_id,
+      </if>
+      <if test="otsHotelName != null" >
+        ots_hotel_name,
+      </if>
+      <if test="exHotelId != null" >
+        ex_hotel_id,
+      </if>
+      <if test="exHotelName != null" >
+        ex_hotel_name,
+      </if>
+      <if test="site != null" >
+        site,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelId != null" >
+        #{otsHotelId,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelName != null" >
+        #{otsHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelId != null" >
+        #{exHotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelName != null" >
+        #{exHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null" >
+        #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelMappingExample" resultType="java.lang.Integer" >
+    select count(*) from ots_ex_hotel_mapping
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
+    update ots_ex_hotel_mapping
+    <set >
+      <if test="otsHotelId != null" >
+        ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelName != null" >
+        ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelId != null" >
+        ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelName != null" >
+        ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null" >
+        site = #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.HotelMapping" >
+    update ots_ex_hotel_mapping
+    set ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
+      ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
+      ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
+      ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
+      site = #{site,jdbcType=VARCHAR},
+      valid = #{valid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

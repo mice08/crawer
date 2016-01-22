@@ -1,174 +1,465 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.mk</groupId>
-    <artifactId>crawers</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mk</groupId>
+	<artifactId>crawers</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-    <modules>
-        <module>crawer-api</module>
-        <module>crawer-biz</module>
-        <module>crawer-web</module>
+	<modules>
+		<module>crawer-api</module>
+		<module>crawer-biz</module>
+		<module>crawer-web</module>
+		<module>framework</module>
 
-    </modules>
-    <build>
-        <finalName>crawer</finalName>
-    </build>
-
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.20.80:8081/mkrepo/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java-version>1.7</java-version>
-        <spring.version>4.0.0.RELEASE</spring.version>
-        <org.aspectj-version>1.7.3</org.aspectj-version>
-        <slf4j.version>1.7.12</slf4j.version>
-        <logback.version>1.1.2</logback.version>
-    </properties>
-    <profiles>
-
-        <profile>
-            <id>shanghai-clu</id>
-            <properties>
-                <label>product</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.4.1.242:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>imike-writer</jdbc.user>
-                <jdbc.password>Imike-writer</jdbc.password>
-                <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.4.1.14:26379,10.4.1.210:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
-                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
-                <weChat.web.scope>snsapi_login</weChat.web.scope>
-                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-            </properties>
-        </profile>
-        <profile>
-            <id>bgp-clu</id>
-            <properties>
-                <label>product</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>imike-writer</jdbc.user>
-                <jdbc.password>Imike-writer</jdbc.password>
-                <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
-                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
-                <weChat.web.scope>snsapi_login</weChat.web.scope>
-                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>shanghai-simulation</id>
-
-            <properties>
-                <label>simulation</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>LZBV5D5ak</jdbc.password>
-                <spring.redis.sentinel.master>ota2-test-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.4.20.206:26379</spring.redis.sentinel.nodes>
-                <!--<spring.redis.sentinel.master>mymaster</spring.redis.sentinel.master>-->
-                <!--<spring.redis.sentinel.nodes>192.168.70.52:26379</spring.redis.sentinel.nodes>-->
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
-                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
-                <weChat.web.scope>snsapi_login</weChat.web.scope>
-                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>test</id>
-
-            <properties>
-                <label>test</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.4.17.242:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>ota2developer</jdbc.user>
-                <jdbc.password>www.imike.com</jdbc.password>
-
-            </properties>
-        </profile>
-
-        <profile>
-            <id>bgp-simulation</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <label>simulation</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>LZBV5D5ak</jdbc.password>
-                <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
-                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
-                <weChat.web.scope>snsapi_login</weChat.web.scope>
-                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-            </properties>
-        </profile>
+	</modules>
 
 
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <label>simulation</label>
-                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>LZBV5D5ak</jdbc.password>
-                <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
-                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
-                <weChat.web.scope>snsapi_login</weChat.web.scope>
-                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
-            </properties>
-        </profile>
-    </profiles>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient-cache</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>httpclient</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient-cache</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>httpclient</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.5.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- db -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>4.0.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.26</version>
+		</dependency>
+		<dependency>
+			<groupId>tk.mybatis</groupId>
+			<artifactId>mapper</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.1.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>foundation-service</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-client</artifactId>
+			<version>1.3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-container-default</artifactId>
+			<version>1.5.5</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>google-collections</artifactId>
+					<groupId>com.google.collections</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-classworlds</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>cn.easyproject</groupId>
+			<artifactId>easyocr</artifactId>
+			<version>3.0.4-RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.7</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<finalName>crawer</finalName>
+	</build>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>public</id>
+			<name>Public Repositories</name>
+			<url>http://192.168.20.80:8081/mkrepo</url>
+			<!--<url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url> -->
+			<!--<url>http://repository.sonatype.org/content/groups/public/</url> -->
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>public</id>
+			<name>Public Repositories</name>
+			<url>http://192.168.20.80:8081/mkrepo</url>
+			<!--<url>http://10.10.144.74:8081/nexus/contentgit/repositories/releases/</url> -->
+			<!--<url>http://repository.sonatype.org/content/groups/public/</url> -->
+		</pluginRepository>
+	</pluginRepositories>
+
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java-version>1.7</java-version>
+		<spring.version>4.0.0.RELEASE</spring.version>
+		<org.aspectj-version>1.7.3</org.aspectj-version>
+		<slf4j.version>1.7.12</slf4j.version>
+		<logback.version>1.1.2</logback.version>
+		<spring-security.version>3.2.6.RELEASE</spring-security.version>
+	</properties>
+	<profiles>
+
+		<profile>
+			<id>shanghai-clu</id>
+			<properties>
+				<label>product</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.4.1.242:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>imike-writer</ots.jdbc.user>
+				<ots.jdbc.password>Imike-writer</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.4.1.242:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>imike-writer</crawer.jdbc.user>
+				<crawer.jdbc.password>Imike-writer</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.4.1.14:26379,10.4.1.210:26379</spring.redis.sentinel.nodes>
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+			</properties>
+		</profile>
+		<profile>
+			<id>bgp-clu</id>
+			<properties>
+				<label>product</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>imike-writer</ots.jdbc.user>
+				<ots.jdbc.password>Imike-writer</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>imike-writer</crawer.jdbc.user>
+				<crawer.jdbc.password>Imike-writer</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>shanghai-simulation</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<label>simulation</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>root</ots.jdbc.user>
+				<ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>root</crawer.jdbc.user>
+				<crawer.jdbc.password>LZBV5D5ak</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ota2-test-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.4.20.206:26379</spring.redis.sentinel.nodes>
+				<!--<spring.redis.sentinel.master>mymaster</spring.redis.sentinel.master> -->
+				<!--<spring.redis.sentinel.nodes>192.168.70.52:26379</spring.redis.sentinel.nodes> -->
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+			</properties>
+		</profile>
+
+
+		<profile>
+			<id>bgp-simulation</id>
+			<properties>
+				<label>simulation</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>root</ots.jdbc.user>
+				<ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>root</crawer.jdbc.user>
+				<crawer.jdbc.password>LZBV5D5ak</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+			</properties>
+		</profile>
+
+
+		<profile>
+			<id>dev</id>
+
+			<properties>
+				<label>simulation</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>root</ots.jdbc.user>
+				<ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>root</crawer.jdbc.user>
+				<crawer.jdbc.password>LZBV5D5ak</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+				<qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
+				<qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
+				<qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
+				<qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+				<qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+				<qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>dev2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<label>simulation</label>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<ots.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+				<ots.jdbc.user>root</ots.jdbc.user>
+				<ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
+				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+				<crawer.jdbc.user>root</crawer.jdbc.user>
+				<crawer.jdbc.password>LZBV5D5ak</crawer.jdbc.password>
+				<spring.redis.sentinel.master>ota2-test-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>10.4.20.206:26379</spring.redis.sentinel.nodes>
+				<jedis.pool.maxidl>20</jedis.pool.maxidl>
+				<jedis.pool.minidl>8</jedis.pool.minidl>
+				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+				<weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+				<weChat.web.scope>snsapi_login</weChat.web.scope>
+				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+				<qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
+				<qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
+				<qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
+				<qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+				<qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+				<qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>

@@ -1,71 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:lang="http://www.springframework.org/schema/lang"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:oxm="http://www.springframework.org/schema/oxm"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
-   	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd  
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
-    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd  
-    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
-    http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.0.xsd  
-  	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.0.xsd  
-   	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd  
-  	http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.0.xsd  
- 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd  
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:jms="http://www.springframework.org/schema/jms" xmlns:lang="http://www.springframework.org/schema/lang"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	   xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+   	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+    http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+  	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.0.xsd
+   	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+  	http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.0.xsd
+ 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
-  
-   <context:component-scan base-package="com.mk.bypass">
+
+	<context:component-scan base-package="com.mk">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-    <context:property-placeholder location="classpath:db.properties"/>
-    <bean id="umemberDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${umember.jdbc.driverClassName}"/>
-        <property name="url" value="${umember.jdbc.url}"/>
-        <property name="username" value="${umember.jdbc.username}"/>
-        <property name="password" value="${umember.jdbc.password}"/>
-    </bean>
+	<context:property-placeholder location="classpath:db.properties"/>
+	<bean id="otsDataSource"  class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
 
-	<bean id="blackListDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${blacklist.jdbc.driverClassName}"/>
-		<property name="url" value="${blacklist.jdbc.url}"/>
-		<property name="username" value="${blacklist.jdbc.username}"/>
-		<property name="password" value="${blacklist.jdbc.password}"/>
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="url" value="${ots.jdbc.urls}"/>
+		<property name="username" value="${ots.jdbc.usernames}"/>
+		<property name="password" value="${ots.jdbc.passwords}"/>
 	</bean>
 
-	<bean id="umemberSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="umemberDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/umember/*.xml"/>
+	<bean id="crawerDataSource"  class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+
+		<property name="testOnBorrow" value="true" />
+		<property name="url" value="${crawler.jdbc.url}"/>
+		<property name="username" value="${crawler.jdbc.username}"/>
+		<property name="password" value="${crawler.jdbc.password}"/>
+	</bean>
+
+	<bean id="otsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="otsDataSource"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/ots/*.xml"/>
 
 	</bean>
-	<bean id="blackListSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="blackListDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/blacklist/*.xml"/>
+	<bean id="crawerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="crawerDataSource"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml"/>
 
 	</bean>
 
-
-    <bean id="umemberTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="umemberDataSource"/>
-    </bean>
-
-	<bean id="blackListTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="blackListDataSource"/>
+	<bean id="otsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="otsDataSource"/>
 	</bean>
 
+	<bean id="crawerTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="crawerDataSource"/>
+	</bean>
 
 
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
-    <tx:annotation-driven transaction-manager="umemberTransactionManager" proxy-target-class="true"/>
-<tx:advice id="txadvice" transaction-manager="umemberTransactionManager">
+	<tx:annotation-driven transaction-manager="otsTransactionManager" proxy-target-class="true"/>
+	<tx:advice id="txadvice" transaction-manager="otsTransactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -81,9 +105,8 @@
 		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
 	</aop:config>
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-	<tx:annotation-driven transaction-manager="blackListTransactionManager" proxy-target-class="true"/>
-	<tx:advice id="blackListTxadvice" transaction-manager="blackListTransactionManager">
+	<tx:annotation-driven transaction-manager="crawerTransactionManager" proxy-target-class="true"/>
+	<tx:advice id="crawerTxadvice" transaction-manager="crawerTransactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -95,22 +118,21 @@
 		</tx:attributes>
 	</tx:advice>
 	<aop:config expose-proxy="true">
-		<aop:pointcut id="blackListtxPointcut" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="blackListTxadvice" pointcut-ref="blackListtxPointcut" />
+		<aop:pointcut id="crawerTxPointcut" expression="execution(* com.mk..service..*.*(..))" />
+		<aop:advisor advice-ref="crawerTxadvice" pointcut-ref="crawerTxPointcut" />
 	</aop:config>
 
+	<bean name="otsScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.crawer.biz.mapper.ots"/>
 
-	<bean name="umemberScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.umember"/>
-
-		<property name="sqlSessionFactoryBeanName" value="umemberSqlSessionFactory"></property>
+		<property name="sqlSessionFactoryBeanName" value="otsSqlSessionFactory"></property>
 	</bean>
 
-	<bean name="blackListScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.crawer.biz.mapper.blacklist"/>
 
-		<property name="sqlSessionFactoryBeanName" value="blackListSqlSessionFactory"></property>
+
+	<bean name="crawerScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.crawer.biz.mapper.crawer"/>
+		<property name="sqlSessionFactoryBeanName" value="crawerSqlSessionFactory"></property>
 	</bean>
-
 
 </beans>

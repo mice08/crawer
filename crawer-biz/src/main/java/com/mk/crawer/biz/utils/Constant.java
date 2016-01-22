@@ -281,4 +281,7 @@ public class Constant {
 	public static final Double NANJI_POINT_LAT = -140.976563;
 	public static final Double NANJI_POINT_LON = -88.075329;
 
+	public static String qunar_touch_hostlist = new PropertiesUtil().getValue("common.properties", "qunar.touch.hostlist");
+	public static String qunar_map_hostlist = new PropertiesUtil().getValue("common.properties", "qunar.map.hostlist");
+
 }
