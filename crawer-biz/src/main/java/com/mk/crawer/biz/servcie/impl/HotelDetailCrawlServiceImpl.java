@@ -195,6 +195,18 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
+						CommentCombination commentComb = parseDataNodeForCommentSum(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (commentComb != null) {
+							hotelComb.setCommentComb(commentComb);
+							hotelid = commentComb.getCommentSum().getHotelSourceId();
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
+					try {
 						List<HotelFacilities> hotelFacilities = parseDataNodeForHotelFacilities(hotelid,
 								(Map<String, Object>) jsonNode);
 
@@ -211,17 +223,6 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 						if (hotelSurrounds != null) {
 							hotelComb.setHotelSurrounds(hotelSurrounds);
-						}
-					} catch (Exception ex) {
-						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
-					}
-
-					try {
-						CommentCombination commentComb = parseDataNodeForCommentSum(hotelid,
-								(Map<String, Object>) jsonNode);
-
-						if (commentComb != null) {
-							hotelComb.setCommentComb(commentComb);
 						}
 					} catch (Exception ex) {
 						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
@@ -538,6 +539,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(traffic.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);
 			}
 		}
 
@@ -551,6 +553,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);				
 			}
 		}
 
@@ -564,6 +567,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);				
 			}
 		}
 
@@ -577,6 +581,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);				
 			}
 		}
 
