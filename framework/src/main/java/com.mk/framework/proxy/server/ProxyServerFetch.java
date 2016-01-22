@@ -6,6 +6,9 @@ import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
@@ -21,13 +24,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-public class ProxyServerFetch {
+@Component
+public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final String CHECK_URL = "https://www.baidu.com/";
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerFetch.class);
 
     private static ThreadPoolExecutor EXECUTOR;
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        initExecutor();
+
+        addToThreadPool();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                EXECUTOR.shutdown();
+                LOGGER.info("检测代理IP是否有效的线程池关闭");
+            }
+        });
+    }
 
     static class ProxyServerFetchThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
@@ -184,6 +203,7 @@ public class ProxyServerFetch {
                             }
                         }
                     } catch (InterruptedException e) {
+                        break;
                     }
                 }
             } finally {
@@ -223,22 +243,6 @@ public class ProxyServerFetch {
                 RedisUtil.close(jedis);
             }
         }
-    }
-
-    public static void start() {}
-
-    static {
-        initExecutor();
-
-        addToThreadPool();
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                EXECUTOR.shutdown();
-                LOGGER.info("检测代理IP是否有效的线程池关闭");
-            }
-        });
     }
 
     private static void initExecutor() {

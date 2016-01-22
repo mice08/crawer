@@ -3,8 +3,10 @@ package com.mk.crawer.job.hotel.price;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
-import com.mk.framework.proxy.SystemStatus;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
@@ -17,12 +19,32 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 振涛 on 2016/1/13.
  */
-public class HotelDetailManager {
+@Component
+public class HotelDetailManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailManager.class);
 
     private static final BlockingQueue<HotelDetail> HOTEL_DETAIL_BLOCKING_QUEUE =
             new ArrayBlockingQueue<>(Config.WAIT_FOR_REFRESH_HOTEL_PRICE_QUEUE_SIZE);
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        final Thread reloadRefreshingQueue = new Thread(new ReloadRefreshingQueue(), "ReloadRefreshingQueue");
+        reloadRefreshingQueue.setDaemon(false);
+        reloadRefreshingQueue.start();
+
+        final Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
+        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                reloadRefreshingQueue.interrupt();
+                redisRefreshPriceListener.interrupt();
+            }
+        });
+    }
 
     private static class RedisRefreshPriceListener implements Runnable {
         @Override
@@ -100,24 +122,6 @@ public class HotelDetailManager {
                 RedisUtil.close(jedis);
             }
         }
-    }
-
-    static {
-        final Thread reloadRefreshingQueue = new Thread(new ReloadRefreshingQueue(), "ReloadRefreshingQueue");
-        reloadRefreshingQueue.setDaemon(false);
-        reloadRefreshingQueue.start();
-
-        final Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
-        redisRefreshPriceListener.setDaemon(false);
-        redisRefreshPriceListener.start();
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                reloadRefreshingQueue.interrupt();
-                redisRefreshPriceListener.interrupt();
-            }
-        });
     }
 
     /**

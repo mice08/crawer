@@ -4,7 +4,8 @@ import com.mk.crawer.job.SwitchUtil;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
@@ -14,11 +15,24 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by 振涛 on 2016/1/8.
  */
 @Component
-public class HotelDetailRefreshJob implements InitializingBean {
+public class HotelDetailRefreshJob implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelDetailRefreshJob.class);
 
     private static final ThreadPoolExecutor EXECUTOR_100 = initExecutor();
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                EXECUTOR_100.shutdown();
+                LOGGER.info("刷新酒店价格任务的线程池关闭");
+            }
+        });
+
+        EXECUTOR_100.execute(new StartRefreshThread());
+    }
 
     static class HotelInfoRefreshThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
@@ -64,21 +78,12 @@ public class HotelDetailRefreshJob implements InitializingBean {
                         TimeUnit.SECONDS.sleep(1);
                     }
                 } catch (InterruptedException e) {
+                    break;
                 }
             }
             LOGGER.info("结束添加刷新酒店信息的线程");
         }
 
-    }
-
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                EXECUTOR_100.shutdown();
-                LOGGER.info("刷新酒店价格任务的线程池关闭");
-            }
-        });
     }
 
     private static ThreadPoolExecutor initExecutor() {
@@ -95,8 +100,4 @@ public class HotelDetailRefreshJob implements InitializingBean {
                 new HotelInfoRefreshThreadFactory());
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        EXECUTOR_100.execute(new StartRefreshThread());
-    }
 }
