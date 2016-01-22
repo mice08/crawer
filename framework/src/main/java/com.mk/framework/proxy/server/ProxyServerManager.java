@@ -45,6 +45,7 @@ public class ProxyServerManager {
                             LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
                         }
                     } catch (InterruptedException e) {
+                        break;
                     }
                 }
             } finally {
