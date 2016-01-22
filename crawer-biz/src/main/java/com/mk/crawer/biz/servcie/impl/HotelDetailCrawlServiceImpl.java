@@ -433,6 +433,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 							CommentImg commentImg = new CommentImg();
 							commentImgs.add(commentImg);
 
+							commentImg.setCommentId(typesafeGetBigDecimal(imgDetail.get("commentId")).longValue());
 							commentImg.setHotelSourceId(hotelSourceId);
 							commentImg.setUrl(typesafeGetString(imgDetail.get("url")));
 							commentImg.setTag(typesafeGetString(imgDetail.get("tag")));
