@@ -594,12 +594,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> traffic : traffics) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("traffic");
 				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(traffic.get("name")));
 				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -608,12 +609,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> park : parks) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("park");
 				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -622,12 +624,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> restaurant : restaurants) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("restaurant");
 				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -636,12 +639,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> ent : ents) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("ent");
 				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
