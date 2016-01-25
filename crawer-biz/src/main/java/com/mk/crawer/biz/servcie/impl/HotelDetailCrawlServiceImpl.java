@@ -567,18 +567,54 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			String rnum = (String)dinfo.get("rnum");
 			String whenOpen = (String)dinfo.get("whenOpen");
 			String hotelSeq = (String)dinfo.get("hotelSeq");
-			hotelInfo.setHotelName(name);
-			hotelInfo.setSourceId(hotelSeq);
-			hotelInfo.setHotelAddress(addr);
-			hotelInfo.setWhenBuilt(btime);
-			hotelInfo.setCityName(city);
-			hotelInfo.setDangci(dangci);
-			hotelInfo.setGpoint(gpoint);
-			hotelInfo.setPhoneNumber(phone);
-			hotelInfo.setDesc(desc);
-			hotelInfo.setCommentScore(new BigDecimal(score));
-			hotelInfo.setWhenFitment(whenFitment);
-			hotelInfo.setHotelArea(area);
+			if (StringUtils.isNotBlank(name)){
+				hotelInfo.setHotelName(name);
+			}
+
+			if (StringUtils.isNotBlank(hotelSeq)){
+				hotelInfo.setSourceId(hotelSeq);
+			}
+
+			if (StringUtils.isNotBlank(addr)){
+				hotelInfo.setHotelAddress(addr);
+			}
+
+			if (StringUtils.isNotBlank(btime)){
+				hotelInfo.setWhenBuilt(btime);
+			}
+
+			if (StringUtils.isNotBlank(city)){
+				hotelInfo.setCityName(city);
+			}
+
+			if (dangci != null){
+				hotelInfo.setDangci(dangci);
+
+			}
+
+			if (StringUtils.isNotBlank(gpoint)){
+				hotelInfo.setGpoint(gpoint);
+			}
+
+			if (StringUtils.isNotBlank(phone)){
+				hotelInfo.setPhoneNumber(phone);
+			}
+
+			if (StringUtils.isNotBlank(desc)){
+				hotelInfo.setDesc(desc);
+			}
+
+			if (StringUtils.isNotBlank(score)){
+				hotelInfo.setCommentScore(new BigDecimal(score));
+			}
+			if (StringUtils.isNotBlank(whenFitment)){
+				hotelInfo.setWhenFitment(whenFitment);
+			}
+
+			if (StringUtils.isNotBlank(area)){
+				hotelInfo.setHotelArea(area);
+			}
+
 		}
 
 		return hotelInfo;
