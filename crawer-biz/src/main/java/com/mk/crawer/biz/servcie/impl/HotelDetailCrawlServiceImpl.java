@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mk.crawer.biz.mapper.crawer.*;
+import com.mk.crawer.biz.model.crawer.*;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mk.crawer.biz.mapper.crawer.CommentImgMapper;
-import com.mk.crawer.biz.mapper.crawer.CommentMapper;
-import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
-import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
-import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
-import com.mk.crawer.biz.model.crawer.Comment;
-import com.mk.crawer.biz.model.crawer.CommentImg;
-import com.mk.crawer.biz.model.crawer.CommentSum;
-import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
-import com.mk.crawer.biz.model.crawer.HotelFacilities;
-import com.mk.crawer.biz.model.crawer.HotelSurround;
-import com.mk.crawer.biz.model.crawer.RoomType;
-import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
-import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.framework.proxy.http.HttpUtil;
@@ -68,6 +53,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private CommentImgMapper commentImgMapper;
+
+	@Autowired
+	private QunarHotelMapper qunarHotelMapper;
 
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -140,6 +128,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			persistHotelFacilities(hotelComb.getHotelfacilities());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+
+		try {
+			persistHotelInfo(hotelComb.getHotelInfo());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelInfo in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 		}
 
@@ -218,6 +213,18 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
+						QunarHotel hotelInfo = parseDataNodeForHotelInfo(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (hotelInfo != null) {
+							hotelComb.setHotelInfo(hotelInfo);
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
+
+					try {
 						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
 								(Map<String, Object>) jsonNode);
 
@@ -253,6 +260,17 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				logger.error("failed to hotelFacilitiesMapper.insert", ex);
 			}
+		}
+	}
+
+
+	private void persistHotelInfo(QunarHotel hotel) throws Exception {
+		try {
+			if (StringUtils.isNotBlank(hotel.getSourceId())){
+				qunarHotelMapper.updateByPrimaryKeySelective(hotel);
+			}
+			} catch (Exception ex) {
+			logger.error("failed to qunarHotelMapper.updateByPrimaryKeySelective", ex);
 		}
 	}
 
@@ -522,6 +540,48 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		return hotelFacilities;
+	}
+
+
+
+
+	private QunarHotel parseDataNodeForHotelInfo(String hotelid, Map<String, Object> dataNode)
+			throws HotelDetailParseException {
+		QunarHotel hotelInfo = new QunarHotel();
+
+		if (dataNode.get("dinfo") != null && Map.class.isAssignableFrom(dataNode.get("dinfo").getClass())) {
+			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
+
+
+			String name = (String)dinfo.get("name");
+			String phone = (String)dinfo.get("phone");
+			String desc = (String)dinfo.get("desc");
+			String city = (String)dinfo.get("city");
+			String score = (String)dinfo.get("score");
+			String area = (String)dinfo.get("area");
+			String gpoint = (String)dinfo.get("gpoint");
+			Integer dangci = Integer.valueOf((String)dinfo.get("dangci"));
+			String whenFitment = (String)dinfo.get("whenFitment");
+			String addr = (String)dinfo.get("add");
+			String btime = (String)dinfo.get("btime");
+			String rnum = (String)dinfo.get("rnum");
+			String whenOpen = (String)dinfo.get("whenOpen");
+			String hotelSeq = (String)dinfo.get("hotelSeq");
+			hotelInfo.setHotelName(name);
+			hotelInfo.setSourceId(hotelSeq);
+			hotelInfo.setHotelAddress(addr);
+			hotelInfo.setWhenBuilt(btime);
+			hotelInfo.setCityName(city);
+			hotelInfo.setDangci(dangci);
+			hotelInfo.setGpoint(gpoint);
+			hotelInfo.setPhoneNumber(phone);
+			hotelInfo.setOneSentence(desc);
+			hotelInfo.setCommentScore(new BigDecimal(score));
+			hotelInfo.setWhenFitment(whenFitment);
+			hotelInfo.setHotelArea(area);
+		}
+
+		return hotelInfo;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -818,6 +878,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;
 
+		private QunarHotel hotelInfo;
+
 		private List<HotelSurround> hotelSurrounds;
 
 		private List<HotelFacilities> hotelfacilities;
@@ -854,6 +916,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		public void setHotelfacilities(List<HotelFacilities> hotelfacilities) {
 			this.hotelfacilities = hotelfacilities;
+		}
+
+		public QunarHotel getHotelInfo() {
+			return hotelInfo;
+		}
+
+		public void setHotelInfo(QunarHotel hotelInfo) {
+			this.hotelInfo = hotelInfo;
 		}
 	}
 
