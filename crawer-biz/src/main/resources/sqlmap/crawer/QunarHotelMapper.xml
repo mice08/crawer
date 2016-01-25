@@ -63,6 +63,7 @@
     <result column="when_fitment" jdbcType="VARCHAR" property="whenFitment" />
     <result column="near_address" jdbcType="VARCHAR" property="nearAddress" />
     <result column="is_lp" jdbcType="VARCHAR" property="isLp" />
+    <result column="hotel_desc" jdbcType="VARCHAR" property="desc" />
     <result column="is_top500" jdbcType="VARCHAR" property="isTop500" />
     <result column="is_cwt" jdbcType="VARCHAR" property="isCwt" />
     <result column="theme" jdbcType="VARCHAR" property="theme" />
@@ -130,7 +131,7 @@
     quality_label_list, pack_operate_type, browse_month, special_rec, hour_room_rec_lm, 
     city_name, when_built, comment_score, comment_count, hotel_area, policy_info, mini_retail_price, 
     has_internet_access, wifi_access, trading_area, image_id, when_fitment, near_address, 
-    is_lp, is_top500, is_cwt, theme, hotel_stars, is_web_free, dangci, has_wifiIn_room, 
+    is_lp, is_top500, is_cwt, theme, hotel_stars, is_web_free, dangci, has_wifiIn_room, hotel_desc,
     has_parking_area2, hotel_name, hotel_address, gpoint, rank_info, logic_bit, mobile_price, 
     mobile_room_status, activity, price, discount, tag_name, bpoint, phone_number, hotel_brand, 
     one_sentence, short_name, create_time, update_time
@@ -189,7 +190,7 @@
       mobile_room_status, activity, price, 
       discount, tag_name, bpoint, 
       phone_number, hotel_brand, one_sentence, 
-      short_name, create_time, update_time
+      short_name, create_time, update_time,hotel_desc
       )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{isLmFullRoom,jdbcType=CHAR}, 
       #{distance,jdbcType=VARCHAR}, #{specialPriceBit,jdbcType=INTEGER}, #{hasFiveFtarHongbao,jdbcType=CHAR}, 
@@ -219,7 +220,7 @@
       #{mobileRoomStatus,jdbcType=INTEGER}, #{activity,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{discount,jdbcType=DECIMAL}, #{tagName,jdbcType=VARCHAR}, #{bpoint,jdbcType=VARCHAR}, 
       #{phoneNumber,jdbcType=VARCHAR}, #{hotelBrand,jdbcType=VARCHAR}, #{oneSentence,jdbcType=VARCHAR}, 
-      #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{desc,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.QunarHotel">
@@ -486,6 +487,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="desc != null">
+        hotel_desc,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -748,6 +752,10 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -1018,6 +1026,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -1107,9 +1118,277 @@
       hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
       one_sentence = #{oneSentence,jdbcType=VARCHAR},
       short_name = #{shortName,jdbcType=VARCHAR},
+       hotel_desc = #{desc,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <update id="updateByHotelSourceId" parameterType="com.mk.crawer.biz.model.crawer.QunarHotel">
+    update t_qunar_hotel
+    <set>
+
+      <if test="isLmFullRoom != null">
+        is_lm_full_room = #{isLmFullRoom,jdbcType=CHAR},
+      </if>
+      <if test="distance != null">
+        distance = #{distance,jdbcType=VARCHAR},
+      </if>
+      <if test="specialPriceBit != null">
+        special_price_bit = #{specialPriceBit,jdbcType=INTEGER},
+      </if>
+      <if test="hasFiveFtarHongbao != null">
+        has_five_ftar_hongbao = #{hasFiveFtarHongbao,jdbcType=CHAR},
+      </if>
+      <if test="hasSigninRed != null">
+        has_signIn_red = #{hasSigninRed,jdbcType=CHAR},
+      </if>
+      <if test="showRedPack != null">
+        show_red_pack = #{showRedPack,jdbcType=CHAR},
+      </if>
+      <if test="wapInfo != null">
+        wap_info = #{wapInfo,jdbcType=INTEGER},
+      </if>
+      <if test="hourResultInfo != null">
+        hour_result_info = #{hourResultInfo,jdbcType=INTEGER},
+      </if>
+      <if test="wapType != null">
+        wap_type = #{wapType,jdbcType=INTEGER},
+      </if>
+      <if test="hasBnbHongbao != null">
+        has_bnb_hongbao = #{hasBnbHongbao,jdbcType=CHAR},
+      </if>
+      <if test="hasBnb9Hongbao != null">
+        has_bnb9_hongbao = #{hasBnb9Hongbao,jdbcType=CHAR},
+      </if>
+      <if test="ppcimgUrl != null">
+        ppcImg_url = #{ppcimgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="jpM != null">
+        jp_m = #{jpM,jdbcType=INTEGER},
+      </if>
+      <if test="corrDist != null">
+        corr_dist = #{corrDist,jdbcType=VARCHAR},
+      </if>
+      <if test="isLm != null">
+        is_lm = #{isLm,jdbcType=INTEGER},
+      </if>
+      <if test="lmPrice != null">
+        lm_price = #{lmPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="lmOldPrice != null">
+        lm_old_price = #{lmOldPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="lmFullRoom != null">
+        lm_full_room = #{lmFullRoom,jdbcType=CHAR},
+      </if>
+      <if test="avgPrice != null">
+        avg_price = #{avgPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="hasGroupBuy != null">
+        has_group_buy = #{hasGroupBuy,jdbcType=CHAR},
+      </if>
+      <if test="hasTeHui != null">
+        has_te_hui = #{hasTeHui,jdbcType=CHAR},
+      </if>
+      <if test="hasDay7 != null">
+        has_day7 = #{hasDay7,jdbcType=CHAR},
+      </if>
+      <if test="hasChainPrice != null">
+        has_chain_price = #{hasChainPrice,jdbcType=CHAR},
+      </if>
+      <if test="supportHongBao != null">
+        support_hong_bao = #{supportHongBao,jdbcType=CHAR},
+      </if>
+      <if test="hasExclusive != null">
+        has_exclusive = #{hasExclusive,jdbcType=CHAR},
+      </if>
+      <if test="hasGift != null">
+        has_gift = #{hasGift,jdbcType=CHAR},
+      </if>
+      <if test="hasDay7Crash != null">
+        has_day7_crash = #{hasDay7Crash,jdbcType=CHAR},
+      </if>
+      <if test="hasQuick != null">
+        has_quick = #{hasQuick,jdbcType=CHAR},
+      </if>
+      <if test="servicePics != null">
+        service_pics = #{servicePics,jdbcType=CHAR},
+      </if>
+      <if test="hasFiveStarDacu != null">
+        has_five_star_dacu = #{hasFiveStarDacu,jdbcType=CHAR},
+      </if>
+      <if test="hasDistancePreference != null">
+        has_distance_preference = #{hasDistancePreference,jdbcType=CHAR},
+      </if>
+      <if test="lmLowestPrice != null">
+        lm_lowest_price = #{lmLowestPrice,jdbcType=CHAR},
+      </if>
+      <if test="hasFiveDiscount != null">
+        has_five_discount = #{hasFiveDiscount,jdbcType=CHAR},
+      </if>
+      <if test="showCanUserGold != null">
+        show_can_user_gold = #{showCanUserGold,jdbcType=CHAR},
+      </if>
+      <if test="showRetureGold != null">
+        show_reture_gold = #{showRetureGold,jdbcType=CHAR},
+      </if>
+      <if test="bundlingRate != null">
+        bundling_rate = #{bundlingRate,jdbcType=INTEGER},
+      </if>
+      <if test="timeLimitPrice != null">
+        time_limit_price = #{timeLimitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="topList != null">
+        top_list = #{topList,jdbcType=INTEGER},
+      </if>
+      <if test="recommendDesc != null">
+        recommend_desc = #{recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelLabel != null">
+        hotel_label = #{hotelLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityLabelList != null">
+        quality_label_list = #{qualityLabelList,jdbcType=VARCHAR},
+      </if>
+      <if test="packOperateType != null">
+        pack_operate_type = #{packOperateType,jdbcType=INTEGER},
+      </if>
+      <if test="browseMonth != null">
+        browse_month = #{browseMonth,jdbcType=INTEGER},
+      </if>
+      <if test="specialRec != null">
+        special_rec = #{specialRec,jdbcType=INTEGER},
+      </if>
+      <if test="hourRoomRecLm != null">
+        hour_room_rec_lm = #{hourRoomRecLm,jdbcType=CHAR},
+      </if>
+      <if test="cityName != null">
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="whenBuilt != null">
+        when_built = #{whenBuilt,jdbcType=VARCHAR},
+      </if>
+      <if test="commentScore != null">
+        comment_score = #{commentScore,jdbcType=DECIMAL},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="hotelArea != null">
+        hotel_area = #{hotelArea,jdbcType=VARCHAR},
+      </if>
+      <if test="policyInfo != null">
+        policy_info = #{policyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="miniRetailPrice != null">
+        mini_retail_price = #{miniRetailPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hasInternetAccess != null">
+        has_internet_access = #{hasInternetAccess,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiAccess != null">
+        wifi_access = #{wifiAccess,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingArea != null">
+        trading_area = #{tradingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="imageId != null">
+        image_id = #{imageId,jdbcType=VARCHAR},
+      </if>
+      <if test="whenFitment != null">
+        when_fitment = #{whenFitment,jdbcType=VARCHAR},
+      </if>
+      <if test="nearAddress != null">
+        near_address = #{nearAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isLp != null">
+        is_lp = #{isLp,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop500 != null">
+        is_top500 = #{isTop500,jdbcType=VARCHAR},
+      </if>
+      <if test="isCwt != null">
+        is_cwt = #{isCwt,jdbcType=VARCHAR},
+      </if>
+      <if test="theme != null">
+        theme = #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelStars != null">
+        hotel_stars = #{hotelStars,jdbcType=DECIMAL},
+      </if>
+      <if test="isWebFree != null">
+        is_web_free = #{isWebFree,jdbcType=VARCHAR},
+      </if>
+      <if test="dangci != null">
+        dangci = #{dangci,jdbcType=INTEGER},
+      </if>
+      <if test="hasWifiinRoom != null">
+        has_wifiIn_room = #{hasWifiinRoom,jdbcType=INTEGER},
+      </if>
+      <if test="hasParkingArea2 != null">
+        has_parking_area2 = #{hasParkingArea2,jdbcType=INTEGER},
+      </if>
+      <if test="hotelName != null">
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelAddress != null">
+        hotel_address = #{hotelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="gpoint != null">
+        gpoint = #{gpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="rankInfo != null">
+        rank_info = #{rankInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="logicBit != null">
+        logic_bit = #{logicBit,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePrice != null">
+        mobile_price = #{mobilePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="mobileRoomStatus != null">
+        mobile_room_status = #{mobileRoomStatus,jdbcType=INTEGER},
+      </if>
+      <if test="activity != null">
+        activity = #{activity,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null">
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="tagName != null">
+        tag_name = #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="bpoint != null">
+        bpoint = #{bpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelBrand != null">
+        hotel_brand = #{hotelBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="oneSentence != null">
+        one_sentence = #{oneSentence,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="desc != null">
+        hotel_desc = #{desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where source_id = #{sourceId,jdbcType=VARCHAR}
   </update>
 
   <select id="seletAllHotelCity" resultType="map">

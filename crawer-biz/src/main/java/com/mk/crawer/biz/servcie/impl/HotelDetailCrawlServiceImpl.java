@@ -267,7 +267,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private void persistHotelInfo(QunarHotel hotel) throws Exception {
 		try {
 			if (StringUtils.isNotBlank(hotel.getSourceId())){
-				qunarHotelMapper.updateByPrimaryKeySelective(hotel);
+				qunarHotelMapper.updateByHotelSourceId(hotel);
 			}
 			} catch (Exception ex) {
 			logger.error("failed to qunarHotelMapper.updateByPrimaryKeySelective", ex);
@@ -575,7 +575,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			hotelInfo.setDangci(dangci);
 			hotelInfo.setGpoint(gpoint);
 			hotelInfo.setPhoneNumber(phone);
-			hotelInfo.setOneSentence(desc);
+			hotelInfo.setDesc(desc);
 			hotelInfo.setCommentScore(new BigDecimal(score));
 			hotelInfo.setWhenFitment(whenFitment);
 			hotelInfo.setHotelArea(area);

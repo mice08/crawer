@@ -178,6 +178,8 @@ public class QunarHotel {
 
     private Date updateTime;
 
+    private String desc;
+
     public Long getId() {
         return id;
     }
@@ -872,5 +874,13 @@ public class QunarHotel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
