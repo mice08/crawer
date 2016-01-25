@@ -193,9 +193,9 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
 
                 hotel.setBpoint(attrsMap.get("bpoint"));
                 hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
-                //hotel.setHotelBrand(attrsMap.get("hotelBrand"));
-                //hotel.setShortName(attrsMap.get("shortName"));
-                //hotel.setOneSentence(attrsMap.get("oneSentence"));
+                hotel.setHotelBrand(attrsMap.get("hotelBrand"));
+                hotel.setShortName(attrsMap.get("shortName"));
+                hotel.setOneSentence(attrsMap.get("oneSentence"));
 
             }
             QunarHotelExample hotelExample = new QunarHotelExample();
