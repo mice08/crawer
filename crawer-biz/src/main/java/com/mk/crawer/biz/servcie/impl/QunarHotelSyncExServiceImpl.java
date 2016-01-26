@@ -93,7 +93,18 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
         String fromDate=DateUtils.getCertainDate(1);
         String toDate=DateUtils.getCertainDate(2);
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
-        String hotelResult= HttpUtil.doGetNoProxy(url);
+        String hotelResult= "";
+        try{
+            hotelResult= HttpUtil.doGet(url);
+
+        }catch (Exception e){
+            try{
+                hotelResult= HttpUtil.doGet(url);
+
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
+        }
 //        try{
 //            hotelResult= URLEncoder.encode(hotelResult, "GBK");
 //        }catch (Exception e){
