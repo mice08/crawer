@@ -6,7 +6,6 @@ import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -96,11 +95,11 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
         String hotelResult= "";
         try{
-            hotelResult= HttpUtils.get_data(url,"GET");
+            hotelResult= HttpUtil.doGet(url);
 
         }catch (Exception e){
             try{
-                hotelResult= HttpUtils.get_data(url,"GET");
+                hotelResult= HttpUtil.doGet(url);
 
             }catch (Exception e1){
                 e1.printStackTrace();
