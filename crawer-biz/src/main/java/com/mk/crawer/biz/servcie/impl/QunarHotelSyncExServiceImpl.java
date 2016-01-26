@@ -205,7 +205,11 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
                 QunarHotel existHotel=checkHotelExist.get(0);
                 hotel.setId(existHotel.getId());
                 hotel.setUpdateTime(new Date());
-                qunarHotelService.updateByPrimaryKeySelective(hotel);
+                if (StringUtils.isEmpty(existHotel.getPhoneNumber())) {
+                    qunarHotelService.updateByPrimaryKeySelective(hotel);
+                }else {
+                    logger.info("====================phone is exist continue====================",hotel.getSourceId());
+                }
                 logger.info("====================update t_qunar_hotel values(source_id={})===================="
                         ,hotel.getSourceId());
             }
