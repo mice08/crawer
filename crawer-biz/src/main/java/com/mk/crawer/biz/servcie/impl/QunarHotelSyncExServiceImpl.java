@@ -94,17 +94,7 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
         String fromDate=DateUtils.getCertainDate(1);
         String toDate=DateUtils.getCertainDate(2);
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
-        String hotelResult= "";
-        try{
-            hotelResult= HttpUtils.get_data(url,"GET");
-
-        }catch (Exception e){
-            try{
-                hotelResult= HttpUtils.get_data(url,"GET");
-            }catch (Exception e1){
-                e1.printStackTrace();
-            }
-        }
+        String hotelResult=HttpUtil.doGetNoProxy(url);
 //        try{
 //            hotelResult= URLEncoder.encode(hotelResult, "GBK");
 //        }catch (Exception e){
@@ -204,9 +194,9 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
 
                 hotel.setBpoint(attrsMap.get("bpoint"));
                 hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
-                hotel.setHotelBrand(attrsMap.get("hotelBrand"));
-                hotel.setShortName(attrsMap.get("shortName"));
-                hotel.setOneSentence(attrsMap.get("oneSentence"));
+                //hotel.setHotelBrand(attrsMap.get("hotelBrand"));
+                //hotel.setShortName(attrsMap.get("shortName"));
+                //hotel.setOneSentence(attrsMap.get("oneSentence"));
 
             }
             QunarHotelExample hotelExample = new QunarHotelExample();
