@@ -94,6 +94,7 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
         String fromDate=DateUtils.getCertainDate(1);
         String toDate=DateUtils.getCertainDate(2);
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
+        logger.info(String.format("\n========{}=========\n"),url);
         String hotelResult=HttpUtil.doGetNoProxy(url);
 //        try{
 //            hotelResult= URLEncoder.encode(hotelResult, "GBK");
@@ -102,6 +103,7 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
 //        }
         Map<String,String> urlMaps=getJsonList(hotelResult);
         if(urlMaps==null){
+            logger.info("\n==========hotelResult={}============\n",hotelResult);
             logger.info("====================qunarHotelSyncEx city={}  continue because url reslut is null====================",city.getCityName());
             resultMap.put("message","urlMaps is null");
             resultMap.put("SUCCESS", false);
