@@ -615,6 +615,10 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelInfo.setHotelArea(area);
 			}
 
+			if (StringUtils.isNotBlank(rnum)){
+				hotelInfo.setRnum(rnum);
+			}
+
 		}
 
 		return hotelInfo;

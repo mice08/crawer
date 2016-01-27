@@ -96,6 +96,8 @@ public class QunarHotel {
 
     private Integer specialRec;
 
+    private String rnum;
+
     private String hourRoomRecLm;
 
     private String cityName;
@@ -179,6 +181,15 @@ public class QunarHotel {
     private Date updateTime;
 
     private String desc;
+
+
+    public String getRnum() {
+        return rnum;
+    }
+
+    public void setRnum(String rnum) {
+        this.rnum = rnum;
+    }
 
     public Long getId() {
         return id;

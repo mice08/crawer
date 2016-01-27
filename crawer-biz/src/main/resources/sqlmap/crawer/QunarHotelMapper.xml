@@ -87,6 +87,7 @@
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
     <result column="hotel_brand" jdbcType="VARCHAR" property="hotelBrand" />
     <result column="one_sentence" jdbcType="VARCHAR" property="oneSentence" />
+    <result column="rnum" jdbcType="VARCHAR" property="rnum" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -133,7 +134,7 @@
     has_internet_access, wifi_access, trading_area, image_id, when_fitment, near_address, 
     is_lp, is_top500, is_cwt, theme, hotel_stars, is_web_free, dangci, has_wifiIn_room, hotel_desc,
     has_parking_area2, hotel_name, hotel_address, gpoint, rank_info, logic_bit, mobile_price, 
-    mobile_room_status, activity, price, discount, tag_name, bpoint, phone_number, hotel_brand, 
+    mobile_room_status, activity, price, discount, tag_name, bpoint, phone_number, hotel_brand,rnum,
     one_sentence, short_name, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.mk.crawer.biz.model.crawer.QunarHotelExample" resultMap="BaseResultMap">
@@ -190,7 +191,7 @@
       mobile_room_status, activity, price, 
       discount, tag_name, bpoint, 
       phone_number, hotel_brand, one_sentence, 
-      short_name, create_time, update_time,hotel_desc
+      short_name, create_time, update_time,hotel_desc,rnum
       )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{isLmFullRoom,jdbcType=CHAR}, 
       #{distance,jdbcType=VARCHAR}, #{specialPriceBit,jdbcType=INTEGER}, #{hasFiveFtarHongbao,jdbcType=CHAR}, 
@@ -220,7 +221,8 @@
       #{mobileRoomStatus,jdbcType=INTEGER}, #{activity,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{discount,jdbcType=DECIMAL}, #{tagName,jdbcType=VARCHAR}, #{bpoint,jdbcType=VARCHAR}, 
       #{phoneNumber,jdbcType=VARCHAR}, #{hotelBrand,jdbcType=VARCHAR}, #{oneSentence,jdbcType=VARCHAR}, 
-      #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{desc,jdbcType=VARCHAR}
+      #{shortName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+       #{desc,jdbcType=VARCHAR},#{rnum,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.QunarHotel">
@@ -490,6 +492,9 @@
       <if test="desc != null">
         hotel_desc,
       </if>
+      <if test="desc != null">
+        rnum,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -756,6 +761,9 @@
 
       <if test="desc != null">
         #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="rnum != null">
+        #{rnum,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -1029,6 +1037,9 @@
       <if test="desc != null">
         #{desc,jdbcType=VARCHAR},
       </if>
+      <if test="rnum != null">
+        #{rnum,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -1119,6 +1130,7 @@
       one_sentence = #{oneSentence,jdbcType=VARCHAR},
       short_name = #{shortName,jdbcType=VARCHAR},
        hotel_desc = #{desc,jdbcType=VARCHAR},
+      rnum = #{rnum,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -1386,6 +1398,9 @@
       </if>
       <if test="desc != null">
         hotel_desc = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="rnum != null">
+        rnum = #{rnum,jdbcType=VARCHAR},
       </if>
     </set>
     where source_id = #{sourceId,jdbcType=VARCHAR}
