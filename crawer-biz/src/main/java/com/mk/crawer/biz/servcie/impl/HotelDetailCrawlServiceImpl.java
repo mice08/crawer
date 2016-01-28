@@ -20,6 +20,7 @@ import com.mk.crawer.biz.mapper.crawer.CommentMapper;
 import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
+import com.mk.crawer.biz.mapper.crawer.QunarHotelMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
@@ -29,6 +30,7 @@ import com.mk.crawer.biz.model.crawer.CommentSum;
 import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
 import com.mk.crawer.biz.model.crawer.HotelFacilities;
 import com.mk.crawer.biz.model.crawer.HotelSurround;
+import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.RoomType;
 import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
 import com.mk.crawer.biz.model.crawer.RoomTypeImg;
@@ -69,6 +71,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private CommentImgMapper commentImgMapper;
+
+	@Autowired
+	private QunarHotelMapper qunarHotelMapper;
 
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -141,6 +146,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			persistHotelFacilities(hotelComb.getHotelfacilities());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistHotelFacilities in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+
+		try {
+			persistHotelInfo(hotelComb.getHotelInfo());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelInfo in hotelid %s", hotelid);
 			logger.error(errorMsg, ex);
 		}
 
@@ -219,6 +231,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
+						QunarHotel hotelInfo = parseDataNodeForHotelInfo(hotelid, (Map<String, Object>) jsonNode);
+
+						if (hotelInfo != null) {
+							hotelComb.setHotelInfo(hotelInfo);
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
+					try {
 						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
 								(Map<String, Object>) jsonNode);
 
@@ -254,6 +276,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				logger.error("failed to hotelFacilitiesMapper.insert", ex);
 			}
+		}
+	}
+
+	private void persistHotelInfo(QunarHotel hotel) throws Exception {
+		try {
+			if (StringUtils.isNotBlank(hotel.getSourceId())) {
+				qunarHotelMapper.updateByHotelSourceId(hotel);
+			}
+		} catch (Exception ex) {
+			logger.error("failed to qunarHotelMapper.updateByPrimaryKeySelective", ex);
 		}
 	}
 
@@ -543,6 +575,79 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return hotelFacilities;
 	}
 
+	private QunarHotel parseDataNodeForHotelInfo(String hotelid, Map<String, Object> dataNode)
+			throws HotelDetailParseException {
+		QunarHotel hotelInfo = new QunarHotel();
+
+		if (dataNode.get("dinfo") != null && Map.class.isAssignableFrom(dataNode.get("dinfo").getClass())) {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
+
+			String name = (String) dinfo.get("name");
+			String phone = (String) dinfo.get("phone");
+			String desc = (String) dinfo.get("desc");
+			String city = (String) dinfo.get("city");
+			String score = (String) dinfo.get("score");
+			String area = (String) dinfo.get("area");
+			String gpoint = (String) dinfo.get("gpoint");
+			Integer dangci = Integer.valueOf((String) dinfo.get("dangci"));
+			String whenFitment = (String) dinfo.get("whenFitment");
+			String addr = (String) dinfo.get("add");
+			String btime = (String) dinfo.get("btime");
+			String hotelSeq = (String) dinfo.get("hotelSeq");
+			if (StringUtils.isNotBlank(name)) {
+				hotelInfo.setHotelName(name);
+			}
+
+			if (StringUtils.isNotBlank(hotelSeq)) {
+				hotelInfo.setSourceId(hotelSeq);
+			}
+
+			if (StringUtils.isNotBlank(addr)) {
+				hotelInfo.setHotelAddress(addr);
+			}
+
+			if (StringUtils.isNotBlank(btime)) {
+				hotelInfo.setWhenBuilt(btime);
+			}
+
+			if (StringUtils.isNotBlank(city)) {
+				hotelInfo.setCityName(city);
+			}
+
+			if (dangci != null) {
+				hotelInfo.setDangci(dangci);
+
+			}
+
+			if (StringUtils.isNotBlank(gpoint)) {
+				hotelInfo.setGpoint(gpoint);
+			}
+
+			if (StringUtils.isNotBlank(phone)) {
+				hotelInfo.setPhoneNumber(phone);
+			}
+
+			if (StringUtils.isNotBlank(desc)) {
+				hotelInfo.setDesc(desc);
+			}
+
+			if (StringUtils.isNotBlank(score)) {
+				hotelInfo.setCommentScore(new BigDecimal(score));
+			}
+			if (StringUtils.isNotBlank(whenFitment)) {
+				hotelInfo.setWhenFitment(whenFitment);
+			}
+
+			if (StringUtils.isNotBlank(area)) {
+				hotelInfo.setHotelArea(area);
+			}
+
+		}
+
+		return hotelInfo;
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<HotelSurround> parseDataNodeForHotelSurrounds(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
@@ -553,12 +658,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> traffic : traffics) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("traffic");
 				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(traffic.get("name")));
 				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -567,12 +673,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> park : parks) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("park");
 				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
 				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -581,12 +688,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> restaurant : restaurants) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("restaurant");
 				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
 				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -595,12 +703,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> ent : ents) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("ent");
 				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
 				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -853,6 +962,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;
 
+		private QunarHotel hotelInfo;
+
 		private List<HotelSurround> hotelSurrounds;
 
 		private List<HotelFacilities> hotelfacilities;
@@ -889,6 +1000,14 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		public void setHotelfacilities(List<HotelFacilities> hotelfacilities) {
 			this.hotelfacilities = hotelfacilities;
+		}
+
+		public QunarHotel getHotelInfo() {
+			return hotelInfo;
+		}
+
+		public void setHotelInfo(QunarHotel hotelInfo) {
+			this.hotelInfo = hotelInfo;
 		}
 	}
 
