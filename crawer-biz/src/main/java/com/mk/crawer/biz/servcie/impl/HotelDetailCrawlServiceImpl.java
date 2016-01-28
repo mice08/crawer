@@ -31,6 +31,7 @@ import com.mk.crawer.biz.model.crawer.HotelFacilities;
 import com.mk.crawer.biz.model.crawer.HotelSurround;
 import com.mk.crawer.biz.model.crawer.RoomType;
 import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
+import com.mk.crawer.biz.model.crawer.RoomTypeImg;
 import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
@@ -315,6 +316,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
 			List<RoomTypePrice> roomtypePrices = roomtypeComb.getRoomtypePrices();
+			List<RoomTypeImg> roomtypeImgs = roomtypeComb.getRoomtypeImgs();
+
 			boolean isRoomtypeUpdateRequired = false;
 
 			try {
@@ -356,6 +359,21 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 						}
 					}
 				}
+
+				if (roomtypeImgs != null) {
+					for (RoomTypeImg roomtypeImg : roomtypeImgs) {
+						Map<String, Object> roomtypeImgMap = new HashMap<String, Object>();
+						roomtypeImgMap.put("title", roomtypeImg.getTitle());
+						roomtypeImgMap.put("author", roomtypeImg.getAuthor());
+						roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
+
+						try {
+							roomtypeMapper.insertImg(roomtypeImgMap);
+						} catch (Exception ex) {
+							logger.error("failed to roomtypeMapper.insertImg", ex);
+						}
+					}
+				}
 			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("update roomtype %s", roomtype.getRoomtypeKey()));
@@ -374,6 +392,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 				}
 			}
+
 		}
 
 		return isUpdateRequired;
@@ -553,7 +572,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
 			}
 		}
 
@@ -567,7 +586,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
 			}
 		}
 
@@ -581,7 +600,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
-				hotelSurround.setHotelSourceId(hotelid);				
+				hotelSurround.setHotelSourceId(hotelid);
 			}
 		}
 
@@ -790,6 +809,22 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
+		if (roomComb.containsKey("images") && roomComb.get("images") != null
+				&& List.class.isAssignableFrom(roomComb.get("images").getClass())) {
+			List<Map<String, Object>> images = (List<Map<String, Object>>) roomComb.get("images");
+			List<RoomTypeImg> roomtypeImgs = new ArrayList<RoomTypeImg>();
+			roomtypeComb.setRoomtypeImgs(roomtypeImgs);
+
+			for (Map<String, Object> image : images) {
+				RoomTypeImg roomtypeImg = new RoomTypeImg();
+				roomtypeImgs.add(roomtypeImg);
+
+				roomtypeImg.setTitle(typesafeGetString(image.get("title")));
+				roomtypeImg.setAuthor(typesafeGetString(image.get("author")));
+				roomtypeImg.setBaseUrl(typesafeGetString(image.get("baseUrl")));
+			}
+		}
+
 		return roomtypeComb;
 	}
 
@@ -860,9 +895,19 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	private class RoomTypeCombination {
 		private RoomType roomtype;
 
+		private List<RoomTypeImg> roomtypeImgs;
+
 		private List<RoomTypeDesc> roomtypeDescs;
 
 		private List<RoomTypePrice> roomtypePrices;
+
+		public List<RoomTypeImg> getRoomtypeImgs() {
+			return roomtypeImgs;
+		}
+
+		public void setRoomtypeImgs(List<RoomTypeImg> roomtypeImgs) {
+			this.roomtypeImgs = roomtypeImgs;
+		}
 
 		public List<RoomTypePrice> getRoomtypePrices() {
 			return roomtypePrices;

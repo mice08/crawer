@@ -15,4 +15,6 @@ public interface RoomTypeMapper {
 	RoomType selectByPrimaryKey(Long id);
 
 	List<RoomType> selectByKeys(Map<String, Object> parameters);
+	
+	void insertImg(Map<String, Object> parameters);
 }
