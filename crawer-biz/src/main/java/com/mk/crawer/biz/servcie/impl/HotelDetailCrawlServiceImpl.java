@@ -391,27 +391,27 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 						}
 					}
 				}
-
-				if (roomtypeImgs != null) {
-					for (RoomTypeImg roomtypeImg : roomtypeImgs) {
-						Map<String, Object> roomtypeImgMap = new HashMap<String, Object>();
-						roomtypeImgMap.put("title", roomtypeImg.getTitle());
-						roomtypeImgMap.put("author", roomtypeImg.getAuthor());
-						roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
-
-						try {
-							roomtypeMapper.insertImg(roomtypeImgMap);
-						} catch (Exception ex) {
-							logger.error("failed to roomtypeMapper.insertImg", ex);
-						}
-					}
-				}
 			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("update roomtype %s", roomtype.getRoomtypeKey()));
 				}
 			}
 
+			if (roomtypeImgs != null) {
+				for (RoomTypeImg roomtypeImg : roomtypeImgs) {
+					Map<String, Object> roomtypeImgMap = new HashMap<String, Object>();
+					roomtypeImgMap.put("title", roomtypeImg.getTitle());
+					roomtypeImgMap.put("author", roomtypeImg.getAuthor());
+					roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
+
+					try {
+						roomtypeMapper.insertImg(roomtypeImgMap);
+					} catch (Exception ex) {
+						logger.error("failed to roomtypeMapper.insertImg", ex);
+					}
+				}
+			}
+			
 			if (roomtypePrices != null) {
 				for (RoomTypePrice roomtypePrice : roomtypePrices) {
 					try {
