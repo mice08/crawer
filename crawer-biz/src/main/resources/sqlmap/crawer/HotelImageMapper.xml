@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.HotelMappingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.HotelImage" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="city_url" property="cityUrl" jdbcType="VARCHAR" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="hotel_address" property="hotelAddress" jdbcType="VARCHAR" />
+    <result column="big" property="big" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="src" property="src" jdbcType="VARCHAR" />
+    <result column="ugc" property="ugc" jdbcType="CHAR" />
+    <result column="osrc" property="osrc" jdbcType="VARCHAR" />
+    <result column="cre_date" property="creDate" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="width" property="width" jdbcType="BIGINT" />
+    <result column="height" property="height" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, city_name, city_url, hotel_source_id, hotel_name, hotel_address, big, url, tag, src, ugc, osrc, cre_date, title, author, width, height, create_time, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_ex_hotel_hotel_image
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_ex_hotel_hotel_image
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" >
+    insert into t_ex_hotel_hotel_image (
+        id,
+        city_name,
+        city_url,
+        hotel_source_id,
+        hotel_name,
+        hotel_address,
+        big,
+        url,
+        tag,
+        src,
+        ugc,
+        osrc,
+        cre_date,
+        title,
+        author,
+        width,
+        height,
+        create_time,
+        update_time)
+
+    values (#{id,jdbcType=BIGINT}, #{otsHotelId,jdbcType=BIGINT}, #{otsHotelName,jdbcType=VARCHAR}, 
+      #{exHotelId,jdbcType=VARCHAR}, #{exHotelName,jdbcType=VARCHAR}, #{site,jdbcType=VARCHAR}, 
+      #{valid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" >
+    insert into t_ex_hotel_hotel_image
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="otsHotelId != null" >
+        ots_hotel_id,
+      </if>
+      <if test="otsHotelName != null" >
+        ots_hotel_name,
+      </if>
+      <if test="exHotelId != null" >
+        ex_hotel_id,
+      </if>
+      <if test="exHotelName != null" >
+        ex_hotel_name,
+      </if>
+      <if test="site != null" >
+        site,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelId != null" >
+        #{otsHotelId,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelName != null" >
+        #{otsHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelId != null" >
+        #{exHotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelName != null" >
+        #{exHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null" >
+        #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" resultType="java.lang.Integer" >
+    select count(*) from t_ex_hotel_hotel_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" >
+    update t_ex_hotel_hotel_image
+    <set >
+      <if test="otsHotelId != null" >
+        ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
+      </if>
+      <if test="otsHotelName != null" >
+        ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelId != null" >
+        ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="exHotelName != null" >
+        ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null" >
+        site = #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" >
+    update t_ex_hotel_hotel_image
+    set ots_hotel_id = #{otsHotelId,jdbcType=BIGINT},
+      ots_hotel_name = #{otsHotelName,jdbcType=VARCHAR},
+      ex_hotel_id = #{exHotelId,jdbcType=VARCHAR},
+      ex_hotel_name = #{exHotelName,jdbcType=VARCHAR},
+      site = #{site,jdbcType=VARCHAR},
+      valid = #{valid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

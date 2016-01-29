@@ -6,6 +6,7 @@ import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -93,7 +94,8 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
         String fromDate=DateUtils.getCertainDate(1);
         String toDate=DateUtils.getCertainDate(2);
         String url=Constant.qunar_touch_hostlist+"?city="+city.getCityName()+"&fromDate="+fromDate+"&toDate="+toDate;
-        String hotelResult= HttpUtil.doGetNoProxy(url);
+        logger.info(String.format("\n========{}=========\n"),url);
+        String hotelResult=HttpUtil.doGetNoProxy(url);
 //        try{
 //            hotelResult= URLEncoder.encode(hotelResult, "GBK");
 //        }catch (Exception e){
@@ -101,6 +103,7 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
 //        }
         Map<String,String> urlMaps=getJsonList(hotelResult);
         if(urlMaps==null){
+            logger.info("\n==========hotelResult={}============\n",hotelResult);
             logger.info("====================qunarHotelSyncEx city={}  continue because url reslut is null====================",city.getCityName());
             resultMap.put("message","urlMaps is null");
             resultMap.put("SUCCESS", false);
@@ -193,9 +196,9 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
 
                 hotel.setBpoint(attrsMap.get("bpoint"));
                 hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
-                hotel.setHotelBrand(attrsMap.get("hotelBrand"));
-                hotel.setShortName(attrsMap.get("shortName"));
-                hotel.setOneSentence(attrsMap.get("oneSentence"));
+                //hotel.setHotelBrand(attrsMap.get("hotelBrand"));
+                //hotel.setShortName(attrsMap.get("shortName"));
+                //hotel.setOneSentence(attrsMap.get("oneSentence"));
 
             }
             QunarHotelExample hotelExample = new QunarHotelExample();
@@ -205,7 +208,11 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
                 QunarHotel existHotel=checkHotelExist.get(0);
                 hotel.setId(existHotel.getId());
                 hotel.setUpdateTime(new Date());
-                qunarHotelService.updateByPrimaryKeySelective(hotel);
+                if (StringUtils.isEmpty(existHotel.getPhoneNumber())) {
+                    qunarHotelService.updateByPrimaryKeySelective(hotel);
+                }else {
+                    logger.info("====================phone is exist continue====================",hotel.getSourceId());
+                }
                 logger.info("====================update t_qunar_hotel values(source_id={})===================="
                         ,hotel.getSourceId());
             }
