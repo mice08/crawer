@@ -46,13 +46,15 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, hotel_id, hotel_source_id, count, roomtype_key, bed_type,
+		id, hotel_id, hotel_source_id, count, roomtype_key,
+		bed_type,
 		room_name, room_type,
 		area, network_price,
 		room_category,
 		rt_area,
 		rt_floor, rt_broadband,
-		rt_bedtype, rt_addbed, bath, window, wifi,
+		rt_bedtype, rt_addbed, bath, window,
+		wifi,
 		max_customers,
 		add_bed_price, currency_sign, extra_bed, order_all,
 		mprice,
@@ -75,7 +77,8 @@
 		select
 		<include refid="Base_Column_List" />
 		from t_ex_roomtype
-		where roomtype_key = #{roomtypeKey,jdbcType=VARCHAR} AND hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR}
+		where roomtype_key = #{roomtypeKey,jdbcType=VARCHAR}
+		AND hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -84,18 +87,35 @@
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
 
+	<insert id="insertImg" parameterType="java.util.Map">
+		insert into
+		t_ex_roomtype_img (
+		hotel_id, hotel_source_id, roomtype_key, title,
+		baseUrl, author)
+		values (
+		#{hotelId,jdbcType=BIGINT},
+		#{hotelSourceId,jdbcType=VARCHAR},
+		#{roomtypeKey,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR}, #{baseUrl,jdbcType=VARCHAR},
+		#{author,jdbcType=VARCHAR})
+	</insert>
+
 	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomType">
 		insert into t_ex_roomtype (
 		hotel_id, hotel_source_id, roomtype_key, count, bed_type,
-		room_name, room_type,
+		room_name,
+		room_type,
 		area,
 		network_price, room_category, rt_area,
-		rt_floor, rt_broadband,
+		rt_floor,
+		rt_broadband,
 		rt_bedtype,
 		rt_addbed, bath, window,
-		wifi, max_customers, add_bed_price,
+		wifi, max_customers,
+		add_bed_price,
 		currency_sign, extra_bed, order_all,
-		mprice, has_quick_check_in,
+		mprice,
+		has_quick_check_in,
 		have_coupons,
 		outer_show, district_name)
 		values (
