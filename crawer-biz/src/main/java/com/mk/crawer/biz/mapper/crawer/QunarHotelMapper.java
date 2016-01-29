@@ -22,5 +22,8 @@ public interface QunarHotelMapper {
     int updateByPrimaryKeySelective(QunarHotel record);
 
     int updateByPrimaryKey(QunarHotel record);
+
+    int updateByHotelSourceId(QunarHotel record);
+
     List<Map<String,String>> seletAllHotelCity();
 }

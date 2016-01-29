@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.HotelImageMapper" >
+
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.HotelImage" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
@@ -13,6 +15,7 @@
     <result column="tag" property="tag" jdbcType="VARCHAR" />
     <result column="src" property="src" jdbcType="VARCHAR" />
     <result column="ugc" property="ugc" jdbcType="VARCHAR" />
+
     <result column="osrc" property="osrc" jdbcType="VARCHAR" />
     <result column="cre_date" property="creDate" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -21,6 +24,7 @@
     <result column="height" property="height" jdbcType="BIGINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
   </resultMap>
 
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" >
@@ -52,5 +56,6 @@
       #{updateTime,jdbcType=TIMESTAMP}
     )
   </insert>
+
 
 </mapper>

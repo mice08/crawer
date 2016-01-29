@@ -2,6 +2,7 @@ package com.mk.crawer.biz.model.crawer;
 
 import java.util.Date;
 
+
 /**
  * Created by 振涛 on 2016/1/21.
  */
@@ -36,6 +37,7 @@ public class HotelImage {
     private String title;
 
     private String author;
+
 
     private Long width;
 
@@ -165,6 +167,7 @@ public class HotelImage {
         this.author = author;
     }
 
+
     public Long getWidth() {
         return width;
     }
@@ -178,6 +181,7 @@ public class HotelImage {
     }
 
     public void setHeight(Long height) {
+
         this.height = height;
     }
 
@@ -196,4 +200,6 @@ public class HotelImage {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
 }
+

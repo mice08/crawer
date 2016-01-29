@@ -20,6 +20,7 @@ import com.mk.crawer.biz.mapper.crawer.CommentMapper;
 import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
 import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
+import com.mk.crawer.biz.mapper.crawer.QunarHotelMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
@@ -29,8 +30,10 @@ import com.mk.crawer.biz.model.crawer.CommentSum;
 import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
 import com.mk.crawer.biz.model.crawer.HotelFacilities;
 import com.mk.crawer.biz.model.crawer.HotelSurround;
+import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.RoomType;
 import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
+import com.mk.crawer.biz.model.crawer.RoomTypeImg;
 import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
@@ -68,6 +71,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	@Autowired
 	private CommentImgMapper commentImgMapper;
+
+	@Autowired
+	private QunarHotelMapper qunarHotelMapper;
 
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -144,6 +150,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		try {
+			persistHotelInfo(hotelComb.getHotelInfo());
+		} catch (Exception ex) {
+			String errorMsg = String.format("failed to persistHotelInfo in hotelid %s", hotelid);
+			logger.error(errorMsg, ex);
+		}
+
+		try {
 			persistHotelSurround(hotelComb.getHotelSurrounds());
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to persistHotelSurround in hotelid %s", hotelid);
@@ -195,6 +208,18 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
+						CommentCombination commentComb = parseDataNodeForCommentSum(hotelid,
+								(Map<String, Object>) jsonNode);
+
+						if (commentComb != null) {
+							hotelComb.setCommentComb(commentComb);
+							hotelid = commentComb.getCommentSum().getHotelSourceId();
+						}
+					} catch (Exception ex) {
+						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
+					}
+
+					try {
 						List<HotelFacilities> hotelFacilities = parseDataNodeForHotelFacilities(hotelid,
 								(Map<String, Object>) jsonNode);
 
@@ -206,22 +231,21 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 
 					try {
-						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
-								(Map<String, Object>) jsonNode);
+						QunarHotel hotelInfo = parseDataNodeForHotelInfo(hotelid, (Map<String, Object>) jsonNode);
 
-						if (hotelSurrounds != null) {
-							hotelComb.setHotelSurrounds(hotelSurrounds);
+						if (hotelInfo != null) {
+							hotelComb.setHotelInfo(hotelInfo);
 						}
 					} catch (Exception ex) {
 						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
 					}
 
 					try {
-						CommentCombination commentComb = parseDataNodeForCommentSum(hotelid,
+						List<HotelSurround> hotelSurrounds = parseDataNodeForHotelSurrounds(hotelid,
 								(Map<String, Object>) jsonNode);
 
-						if (commentComb != null) {
-							hotelComb.setCommentComb(commentComb);
+						if (hotelSurrounds != null) {
+							hotelComb.setHotelSurrounds(hotelSurrounds);
 						}
 					} catch (Exception ex) {
 						logger.error(String.format("failed to parse hotelSurrounds for hotelid:%s", hotelid), ex);
@@ -252,6 +276,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			} catch (Exception ex) {
 				logger.error("failed to hotelFacilitiesMapper.insert", ex);
 			}
+		}
+	}
+
+	private void persistHotelInfo(QunarHotel hotel) throws Exception {
+		try {
+			if (StringUtils.isNotBlank(hotel.getSourceId())) {
+				qunarHotelMapper.updateByHotelSourceId(hotel);
+			}
+		} catch (Exception ex) {
+			logger.error("failed to qunarHotelMapper.updateByPrimaryKeySelective", ex);
 		}
 	}
 
@@ -314,6 +348,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			RoomType roomtype = roomtypeComb.getRoomtype();
 			List<RoomTypeDesc> roomtypeDescs = roomtypeComb.getRoomtypeDescs();
 			List<RoomTypePrice> roomtypePrices = roomtypeComb.getRoomtypePrices();
+			List<RoomTypeImg> roomtypeImgs = roomtypeComb.getRoomtypeImgs();
+
 			boolean isRoomtypeUpdateRequired = false;
 
 			try {
@@ -361,6 +397,21 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				}
 			}
 
+			if (roomtypeImgs != null) {
+				for (RoomTypeImg roomtypeImg : roomtypeImgs) {
+					Map<String, Object> roomtypeImgMap = new HashMap<String, Object>();
+					roomtypeImgMap.put("title", roomtypeImg.getTitle());
+					roomtypeImgMap.put("author", roomtypeImg.getAuthor());
+					roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
+
+					try {
+						roomtypeMapper.insertImg(roomtypeImgMap);
+					} catch (Exception ex) {
+						logger.error("failed to roomtypeMapper.insertImg", ex);
+					}
+				}
+			}
+			
 			if (roomtypePrices != null) {
 				for (RoomTypePrice roomtypePrice : roomtypePrices) {
 					try {
@@ -373,6 +424,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					}
 				}
 			}
+
 		}
 
 		return isUpdateRequired;
@@ -433,6 +485,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 							CommentImg commentImg = new CommentImg();
 							commentImgs.add(commentImg);
 
+							commentImg.setCommentId(typesafeGetBigDecimal(imgDetail.get("commentId")).longValue());
 							commentImg.setHotelSourceId(hotelSourceId);
 							commentImg.setUrl(typesafeGetString(imgDetail.get("url")));
 							commentImg.setTag(typesafeGetString(imgDetail.get("tag")));
@@ -522,6 +575,83 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return hotelFacilities;
 	}
 
+	private QunarHotel parseDataNodeForHotelInfo(String hotelid, Map<String, Object> dataNode)
+			throws HotelDetailParseException {
+		QunarHotel hotelInfo = new QunarHotel();
+
+		if (dataNode.get("dinfo") != null && Map.class.isAssignableFrom(dataNode.get("dinfo").getClass())) {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> dinfo = (Map<String, Object>) dataNode.get("dinfo");
+
+			String name = (String) dinfo.get("name");
+			String phone = (String) dinfo.get("phone");
+			String desc = (String) dinfo.get("desc");
+			String city = (String) dinfo.get("city");
+			String score = (String) dinfo.get("score");
+			String area = (String) dinfo.get("area");
+			String gpoint = (String) dinfo.get("gpoint");
+			Integer dangci = Integer.valueOf((String) dinfo.get("dangci"));
+			String whenFitment = (String) dinfo.get("whenFitment");
+			String addr = (String) dinfo.get("add");
+			String btime = (String) dinfo.get("btime");
+			String hotelSeq = (String) dinfo.get("hotelSeq");
+			if (StringUtils.isNotBlank(name)) {
+				hotelInfo.setHotelName(name);
+			}
+
+			if (StringUtils.isNotBlank(hotelSeq)) {
+				hotelInfo.setSourceId(hotelSeq);
+			}
+
+			if (StringUtils.isNotBlank(addr)) {
+				hotelInfo.setHotelAddress(addr);
+			}
+
+			if (StringUtils.isNotBlank(btime)) {
+				hotelInfo.setWhenBuilt(btime);
+			}
+
+			if (StringUtils.isNotBlank(city)) {
+				hotelInfo.setCityName(city);
+			}
+
+			if (dangci != null) {
+				hotelInfo.setDangci(dangci);
+
+			}
+
+			if (StringUtils.isNotBlank(gpoint)) {
+				hotelInfo.setGpoint(gpoint);
+			}
+
+			if (StringUtils.isNotBlank(phone)) {
+				hotelInfo.setPhoneNumber(phone);
+			}
+
+			if (StringUtils.isNotBlank(desc)) {
+				hotelInfo.setDesc(desc);
+			}
+
+			if (StringUtils.isNotBlank(score)) {
+				hotelInfo.setCommentScore(new BigDecimal(score));
+			}
+			if (StringUtils.isNotBlank(whenFitment)) {
+				hotelInfo.setWhenFitment(whenFitment);
+			}
+
+			if (StringUtils.isNotBlank(area)) {
+				hotelInfo.setHotelArea(area);
+			}
+
+			if (StringUtils.isNotBlank(rnum)){
+				hotelInfo.setRnum(rnum);
+			}
+
+		}
+
+		return hotelInfo;
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<HotelSurround> parseDataNodeForHotelSurrounds(String hotelid, Map<String, Object> dataNode)
 			throws HotelDetailParseException {
@@ -532,11 +662,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> traffic : traffics) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("traffic");
 				hotelSurround.setDistance(typesafeGetString(traffic.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(traffic.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(traffic.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -545,11 +677,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> park : parks) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("park");
 				hotelSurround.setDistance(typesafeGetString(park.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(park.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(park.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -558,11 +692,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> restaurant : restaurants) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("restaurant");
 				hotelSurround.setDistance(typesafeGetString(restaurant.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(restaurant.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(restaurant.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -571,11 +707,13 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 			for (Map<String, Object> ent : ents) {
 				HotelSurround hotelSurround = new HotelSurround();
-				hotelSurrounds.add(hotelSurround);
 
+				hotelSurround.setType("ent");
 				hotelSurround.setDistance(typesafeGetString(ent.get("distance")));
 				hotelSurround.setGpoint(typesafeGetString(ent.get("gpoint")));
 				hotelSurround.setSurroundName(typesafeGetString(ent.get("name")));
+				hotelSurround.setHotelSourceId(hotelid);
+				hotelSurrounds.add(hotelSurround);
 			}
 		}
 
@@ -784,6 +922,22 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 		}
 
+		if (roomComb.containsKey("images") && roomComb.get("images") != null
+				&& List.class.isAssignableFrom(roomComb.get("images").getClass())) {
+			List<Map<String, Object>> images = (List<Map<String, Object>>) roomComb.get("images");
+			List<RoomTypeImg> roomtypeImgs = new ArrayList<RoomTypeImg>();
+			roomtypeComb.setRoomtypeImgs(roomtypeImgs);
+
+			for (Map<String, Object> image : images) {
+				RoomTypeImg roomtypeImg = new RoomTypeImg();
+				roomtypeImgs.add(roomtypeImg);
+
+				roomtypeImg.setTitle(typesafeGetString(image.get("title")));
+				roomtypeImg.setAuthor(typesafeGetString(image.get("author")));
+				roomtypeImg.setBaseUrl(typesafeGetString(image.get("baseUrl")));
+			}
+		}
+
 		return roomtypeComb;
 	}
 
@@ -811,6 +965,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 	private class HotelCombination {
 		private List<RoomTypeCombination> roomtypeCombs;
+
+		private QunarHotel hotelInfo;
 
 		private List<HotelSurround> hotelSurrounds;
 
@@ -849,14 +1005,32 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		public void setHotelfacilities(List<HotelFacilities> hotelfacilities) {
 			this.hotelfacilities = hotelfacilities;
 		}
+
+		public QunarHotel getHotelInfo() {
+			return hotelInfo;
+		}
+
+		public void setHotelInfo(QunarHotel hotelInfo) {
+			this.hotelInfo = hotelInfo;
+		}
 	}
 
 	private class RoomTypeCombination {
 		private RoomType roomtype;
 
+		private List<RoomTypeImg> roomtypeImgs;
+
 		private List<RoomTypeDesc> roomtypeDescs;
 
 		private List<RoomTypePrice> roomtypePrices;
+
+		public List<RoomTypeImg> getRoomtypeImgs() {
+			return roomtypeImgs;
+		}
+
+		public void setRoomtypeImgs(List<RoomTypeImg> roomtypeImgs) {
+			this.roomtypeImgs = roomtypeImgs;
+		}
 
 		public List<RoomTypePrice> getRoomtypePrices() {
 			return roomtypePrices;

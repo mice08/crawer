@@ -343,6 +343,12 @@
 				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
 				<weChat.web.scope>snsapi_login</weChat.web.scope>
 				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+				<qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
+				<qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
+				<qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
+				<qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+				<qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+				<qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
 			</properties>
 		</profile>
 
@@ -393,6 +399,12 @@
 				<weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
 				<weChat.web.scope>snsapi_login</weChat.web.scope>
 				<weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+				<qunar.citylist>http://touch.qunar.com/h5/hotel/hotelcitylist</qunar.citylist>
+				<qunar.touch.hostlist>http://bdapi.qunar.com/api/map.jsp</qunar.touch.hostlist>
+				<qunar.map.hostlist>http://pad.qunar.com/api/hotel/hotellist</qunar.map.hostlist>
+				<qunar.hotldetail>http://pad.qunar.com/api/hotel/hoteldetail</qunar.hotldetail>
+				<qunar.codeapi>http://captcha1.pbs.qunar.com/api/image?k=\{s7mpp\(e</qunar.codeapi>
+				<qunar.challageapi><![CDATA[http://pad.qunar.com/api/challenge?action=verify&module=hotel/hoteldetail&code=]]></qunar.challageapi>
 			</properties>
 		</profile>
 
