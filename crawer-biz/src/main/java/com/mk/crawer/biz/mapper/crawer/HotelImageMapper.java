@@ -6,4 +6,6 @@ public interface HotelImageMapper {
 
     int insert(HotelImage record);
 
+    HotelImage selectByRecord(HotelImage record);
+
 }

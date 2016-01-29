@@ -33,7 +33,6 @@ import com.mk.crawer.biz.model.crawer.HotelSurround;
 import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.RoomType;
 import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
-import com.mk.crawer.biz.model.crawer.RoomTypeImg;
 import com.mk.crawer.biz.model.crawer.RoomTypePrice;
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
 import com.mk.crawer.biz.utils.DateUtils;
@@ -75,6 +74,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private QunarHotelMapper qunarHotelMapper;
 
+	@Autowired
+	private HotelImageService hotelImageService;
+
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
 		if (!StringUtils.isBlank(hotelId)) {
@@ -88,7 +90,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		} catch (Exception ex) {
 			throw new Exception("failed to readfile from...", ex);
 		}
-
+		hotelImageService.crawl(hotelId);
 		processResult(hotelId, jsonData);
 	}
 

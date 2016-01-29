@@ -5,6 +5,7 @@ import com.mk.crawer.biz.model.crawer.HotelImage;
 import com.mk.crawer.biz.servcie.IHotelImageService;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.http.HttpUtil;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +112,16 @@ public class HotelImageService implements IHotelImageService {
     }
 
     private int insert(HotelImage record) {
-        return hotelImageMapper.insert(record);
+
+        HotelImage hotelImage = hotelImageMapper.selectByRecord(record);
+
+        if (StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
+            return hotelImageMapper.insert(record);
+        }else {
+            return 0;
+        }
+
+
     }
 
 }

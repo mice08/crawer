@@ -411,9 +411,7 @@
 
 		<profile>
 			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+
 			<properties>
 				<label>simulation</label>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -445,6 +443,9 @@
 
 		<profile>
 			<id>dev2</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<label>simulation</label>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>

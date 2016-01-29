@@ -15,7 +15,6 @@
     <result column="tag" property="tag" jdbcType="VARCHAR" />
     <result column="src" property="src" jdbcType="VARCHAR" />
     <result column="ugc" property="ugc" jdbcType="VARCHAR" />
-
     <result column="osrc" property="osrc" jdbcType="VARCHAR" />
     <result column="cre_date" property="creDate" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -56,6 +55,26 @@
       #{updateTime,jdbcType=TIMESTAMP}
     )
   </insert>
+
+  <select id="selectByRecord" parameterType="com.mk.crawer.biz.model.crawer.HotelImage" resultMap="BaseResultMap">
+    SELECT * FROM t_ex_hotel_hotel_image
+    WHERE
+    1=1
+    <if test="hotelSourceId != null">
+      AND  hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR}
+    </if>
+    <if test="big != null">
+      AND  big = #{big,jdbcType=VARCHAR}
+    </if>
+    <if test="url != null">
+      AND  url = #{url,jdbcType=VARCHAR}
+    </if>
+    <if test="osrc != null">
+      AND  osrc = #{osrc,jdbcType=VARCHAR}
+    </if>
+    limit 1
+
+  </select>
 
 
 </mapper>
