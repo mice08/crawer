@@ -1,42 +1,20 @@
 package com.mk.crawer.biz.servcie.impl;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mk.crawer.biz.mapper.crawer.*;
+import com.mk.crawer.biz.model.crawer.*;
+import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
+import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mk.crawer.biz.mapper.crawer.CommentImgMapper;
-import com.mk.crawer.biz.mapper.crawer.CommentMapper;
-import com.mk.crawer.biz.mapper.crawer.CommentSumMapper;
-import com.mk.crawer.biz.mapper.crawer.HotelFacilitiesMapper;
-import com.mk.crawer.biz.mapper.crawer.HotelSurroundMapper;
-import com.mk.crawer.biz.mapper.crawer.QunarHotelMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypeDescMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypeMapper;
-import com.mk.crawer.biz.mapper.crawer.RoomTypePriceMapper;
-import com.mk.crawer.biz.model.crawer.Comment;
-import com.mk.crawer.biz.model.crawer.CommentImg;
-import com.mk.crawer.biz.model.crawer.CommentSum;
-import com.mk.crawer.biz.model.crawer.HotelDetailParseException;
-import com.mk.crawer.biz.model.crawer.HotelFacilities;
-import com.mk.crawer.biz.model.crawer.HotelSurround;
-import com.mk.crawer.biz.model.crawer.QunarHotel;
-import com.mk.crawer.biz.model.crawer.RoomType;
-import com.mk.crawer.biz.model.crawer.RoomTypeDesc;
-import com.mk.crawer.biz.model.crawer.RoomTypePrice;
-import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.framework.proxy.http.HttpUtil;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
