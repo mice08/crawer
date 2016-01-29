@@ -46,6 +46,8 @@ public class HotelDetailRefreshThread implements Runnable {
 
             LOGGER.info("成功刷新酒店：{}的价格", hotelDetail.getHotelId());
         } catch (Exception e) {
+            Thread.currentThread().interrupt();
+
             if ( hotelDetail != null ) {
                 HotelDetailManager.rollback(hotelDetail);
             }

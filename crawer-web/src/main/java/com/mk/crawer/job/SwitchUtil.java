@@ -19,7 +19,8 @@ public class SwitchUtil {
             String flag = jedis.get(RedisCacheName.CRAWLER_SWITCH_HOTEL_DETAIL_REFRESH_KEY);
 
             if (StringUtils.isEmpty(flag)) {
-                jedis.set(RedisCacheName.CRAWLER_SWITCH_HOTEL_DETAIL_REFRESH_KEY, F);
+                flag = F;
+                jedis.set(RedisCacheName.CRAWLER_SWITCH_HOTEL_DETAIL_REFRESH_KEY, flag);
             }
 
             RedisUtil.close(jedis);

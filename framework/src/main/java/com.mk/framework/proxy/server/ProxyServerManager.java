@@ -5,6 +5,9 @@ import com.mk.framework.proxy.Config;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
@@ -17,13 +20,28 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-public class ProxyServerManager {
+@Component
+public class ProxyServerManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
 
     private static final BlockingQueue<ProxyServer> CHECKED = new DelayQueue<>();
 
     private static final Set<ProxyServer> USING_PROXY_SERVER_SET = new ConcurrentSkipListSet<>();
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        final Thread checkedProxyIPLoad = new Thread(new CheckedProxyIPLoad(), "Provide-checked-proxy-ip-thread");
+        checkedProxyIPLoad.setDaemon(true);
+        checkedProxyIPLoad.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                checkedProxyIPLoad.interrupt();
+            }
+        });
+    }
 
     static class CheckedProxyIPLoad implements Runnable {
         @Override
@@ -45,6 +63,7 @@ public class ProxyServerManager {
                             LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
                         }
                     } catch (InterruptedException e) {
+                        break;
                     }
                 }
             } finally {
@@ -52,21 +71,6 @@ public class ProxyServerManager {
                 LOGGER.info("载入有效代理的进程结束");
             }
         }
-    }
-
-    static {
-        final Thread checkedProxyIPLoad = new Thread(new CheckedProxyIPLoad(), "Provide-checked-proxy-ip-thread");
-        checkedProxyIPLoad.setDaemon(true);
-        checkedProxyIPLoad.start();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(){
-            @Override
-            public void run() {
-                checkedProxyIPLoad.interrupt();
-            }
-        });
-
-        ProxyServerFetch.start();
     }
 
     public static ProxyServer take() throws InterruptedException {
