@@ -30,11 +30,11 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         final Thread reloadRefreshingQueue = new Thread(new ReloadRefreshingQueue(), "ReloadRefreshingQueue");
-        reloadRefreshingQueue.setDaemon(false);
+        reloadRefreshingQueue.setDaemon(true);
         reloadRefreshingQueue.start();
 
         final Thread redisRefreshPriceListener = new Thread(new RedisRefreshPriceListener(), "RedisRefreshPriceListener");
-        redisRefreshPriceListener.setDaemon(false);
+        redisRefreshPriceListener.setDaemon(true);
         redisRefreshPriceListener.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -81,6 +81,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                     if (jsonSet.size() > 0) {
                         for (String s : jsonSet) {
                             HotelDetail hotelDetail = JSONUtil.fromJson(s, HotelDetail.class);
+
 
                             put(hotelDetail);
 
