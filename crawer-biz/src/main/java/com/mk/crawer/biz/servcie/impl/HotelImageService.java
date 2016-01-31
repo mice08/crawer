@@ -117,7 +117,7 @@ public class HotelImageService implements IHotelImageService {
 
         HotelImage hotelImage = hotelImageMapper.selectByRecord(record);
 
-        if (StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
+        if (hotelImage ==null || StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
             return hotelImageMapper.insert(record);
         }else {
             return 0;

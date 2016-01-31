@@ -119,7 +119,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     }
 
 
-    public Map<String,Object> doImageSync(CityList city){
+    public void doImageSync(CityList city){
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city.getCityName());
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
