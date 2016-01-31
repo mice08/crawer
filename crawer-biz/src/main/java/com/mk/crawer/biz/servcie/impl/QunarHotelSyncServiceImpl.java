@@ -36,6 +36,8 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     private IHotelService hotelService ;
     @Autowired
     private BrandsService brandsService ;
+    @Autowired
+    private HotelImageService hotelImageService;
 
     @Autowired
     private QunarHotelService qunarHotelService;
@@ -89,7 +91,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         return resultMap;
     }
 
-    /*public Map<String,Object> qunarHotelImageSync(){
+    public Map<String,Object> qunarHotelImageSync(){
         Cat.logEvent("qunarHotelSync", "去哪儿酒店图片信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
         );
@@ -114,15 +116,20 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
         return resultMap;
-    }*/
+    }
 
 
-    /*public Map<String,Object> doImageSync(CityList city){
+    public Map<String,Object> doImageSync(CityList city){
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city.getCityName());
         for (QunarHotel qunarHotel : qunarHotels) {
-
+            try {
+                Thread.currentThread().sleep(1000l);
+                hotelImageService.crawl(qunarHotel.getSourceId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }*/
+    }
 
     public Map<String,Object> doSync(CityList city){
 

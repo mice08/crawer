@@ -1,7 +1,6 @@
 package com.mk.crawer.job.hotel.price;
 
 import com.mk.crawer.biz.servcie.HotelDetailCrawlService;
-import com.mk.crawer.biz.servcie.impl.HotelImageService;
 import com.mk.framework.AppUtils;
 import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.server.ProxyServer;
@@ -38,8 +37,6 @@ public class HotelDetailRefreshThread implements Runnable {
 
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 
-            HotelImageService hotelImageService = AppUtils.getBean(HotelImageService.class);
-            hotelImageService.crawl(hotelDetail.getHotelId());
             hotelDetailCrawlService.crawl(hotelDetail.getHotelId());
 
             HotelDetailManager.complete(hotelDetail);

@@ -67,7 +67,7 @@ public class HotelImageService implements IHotelImageService {
 
         String url = String.format(URL, hotelId);
 
-        String result = HttpUtil.doGet(  url);
+        String result = HttpUtil.doGetNoProxy(  url);
 
         HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
 
