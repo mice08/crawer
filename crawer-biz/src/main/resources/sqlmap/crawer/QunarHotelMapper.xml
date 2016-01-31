@@ -1409,4 +1409,11 @@
   <select id="seletAllHotelCity" resultType="map">
     SELECT DISTINCT city_name from t_qunar_hotel
   </select>
+
+  <select id="selectHotelByCity" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_qunar_hotel
+    WHERE  city_name = #{city}
+  </select>
 </mapper>

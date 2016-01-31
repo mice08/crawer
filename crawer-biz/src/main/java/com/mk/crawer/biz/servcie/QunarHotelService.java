@@ -22,4 +22,5 @@ public interface QunarHotelService {
 
     int updateByPrimaryKey(QunarHotel record);
     List<String>  seletAllHotelCity();
+    public List<QunarHotel>  seletHotelByCity(String city);
 }

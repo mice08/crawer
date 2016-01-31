@@ -7,6 +7,7 @@ import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.BrandsService;
 import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.IHotelService;
+import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
@@ -35,6 +36,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     private IHotelService hotelService ;
     @Autowired
     private BrandsService brandsService ;
+
+    @Autowired
+    private QunarHotelService qunarHotelService;
     public Map<String,Object> hotelSyncByCity(String cityName){
         Cat.logEvent("hotelSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
@@ -84,6 +88,42 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
+    /*public Map<String,Object> qunarHotelImageSync(){
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店图片信息同步", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync beginTime={}====================",DateUtils.getDatetime());
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        CityListExample cityListExample=new CityListExample();
+        cityListExample.createCriteria().andCityTypeEqualTo("-1");
+        List<CityList> cityLists=cityListService.selectByExample(cityListExample);
+        if (CollectionUtils.isEmpty(cityLists)){
+            resultMap.put("message","cityList is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        for (CityList city:cityLists) {
+            doImageSync(city);
+        }
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                "endTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync method endTime={}===================="
+                , DateUtils.getDatetime());
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }*/
+
+
+    /*public Map<String,Object> doImageSync(CityList city){
+        List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city.getCityName());
+        for (QunarHotel qunarHotel : qunarHotels) {
+
+        }
+    }*/
+
     public Map<String,Object> doSync(CityList city){
 
         Map<String,Object> resultMap=new HashMap<String,Object>();

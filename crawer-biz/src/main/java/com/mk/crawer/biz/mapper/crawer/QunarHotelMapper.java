@@ -26,4 +26,5 @@ public interface QunarHotelMapper {
     int updateByHotelSourceId(QunarHotel record);
 
     List<Map<String,String>> seletAllHotelCity();
+    List<QunarHotel> selectHotelByCity(String city);
 }

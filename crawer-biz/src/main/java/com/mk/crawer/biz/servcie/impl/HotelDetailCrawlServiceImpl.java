@@ -52,8 +52,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private QunarHotelMapper qunarHotelMapper;
 
-	@Autowired
-	private HotelImageService hotelImageService;
+
 
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
 		List<String> hotelIds = new ArrayList<String>();
@@ -68,7 +67,6 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		} catch (Exception ex) {
 			throw new Exception("failed to readfile from...", ex);
 		}
-		hotelImageService.crawl(hotelId);
 		processResult(hotelId, jsonData);
 	}
 

@@ -1,6 +1,5 @@
 package com.mk.crawer.api;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -8,5 +7,6 @@ import java.util.Map;
  */
 public interface QunarHotelSyncService {
     public Map<String,Object> qunarHotelSync();
+    //public Map<String,Object> qunarHotelImageSync();
     public Map<String,Object> hotelSyncByCity(String cityName);
 }

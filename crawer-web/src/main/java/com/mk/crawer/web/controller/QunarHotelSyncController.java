@@ -2,6 +2,7 @@ package com.mk.crawer.web.controller;
 
 
 import com.mk.crawer.api.QunarHotelSyncService;
+import com.mk.crawer.biz.servcie.IHotelImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class QunarHotelSyncController {
-
+    @Autowired
+    private IHotelImageService hotelImageService;
     @Autowired
     private QunarHotelSyncService qunarHotelSyncService;
 
@@ -32,6 +33,14 @@ public class QunarHotelSyncController {
     @RequestMapping(value = "/hotelsync", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelSyncByCity(String city) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result=qunarHotelSyncService.hotelSyncByCity(city);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/hotelimagesync", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> hotelImageSyncByCity(String city) {
         Map<String, Object> result = new HashMap<String, Object>();
         result=qunarHotelSyncService.hotelSyncByCity(city);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
