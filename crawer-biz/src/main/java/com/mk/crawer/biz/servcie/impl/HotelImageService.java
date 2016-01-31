@@ -75,15 +75,12 @@ public class HotelImageService implements IHotelImageService {
             return;
         }
 
-        ProxyServer proxyServer = ProxyServerManager.take();
-        ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
-
         System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
 
         try{
             String url = String.format(URL, hotelId);
 
-            String result = HttpUtil.doGet(url);
+            String result = HttpUtil.doGetNoProxy(url);
 
             HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
 
@@ -128,9 +125,8 @@ public class HotelImageService implements IHotelImageService {
             }
 
         }catch (Exception e){
-            if ( proxyServer != null ) {
-                ProxyServerManager.remove(proxyServer);
-            }
+
+            e.printStackTrace();
         }
 
     }
