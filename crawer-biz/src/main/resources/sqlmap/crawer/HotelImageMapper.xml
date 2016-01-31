@@ -63,6 +63,9 @@
     <if test="hotelSourceId != null">
       AND  hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR}
     </if>
+    <if test="cityName != null">
+      AND  city_name = #{cityName,jdbcType=VARCHAR}
+    </if>
     <if test="big != null">
       AND  big = #{big,jdbcType=VARCHAR}
     </if>

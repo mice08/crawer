@@ -3,6 +3,7 @@ package com.mk.crawer.biz.servcie.impl;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
+import com.mk.crawer.biz.mapper.crawer.HotelImageMapper;
 import com.mk.crawer.biz.model.crawer.*;
 import com.mk.crawer.biz.servcie.BrandsService;
 import com.mk.crawer.biz.servcie.ICityListService;
@@ -12,6 +13,7 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     private BrandsService brandsService ;
     @Autowired
     private HotelImageService hotelImageService;
+
+    @Autowired
+    private HotelImageMapper hotelImageMapper;
 
     @Autowired
     private QunarHotelService qunarHotelService;
@@ -106,6 +111,14 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             return resultMap;
         }
         for (CityList city:cityLists) {
+            HotelImage tmp = new HotelImage();
+            tmp.setCityName(city.getCityName());
+            HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
+
+            if (tmpHotelImage != null && StringUtils.isNotBlank(tmpHotelImage.getHotelSourceId())){
+                continue;
+            }
+
             doImageSync(city);
         }
         Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
