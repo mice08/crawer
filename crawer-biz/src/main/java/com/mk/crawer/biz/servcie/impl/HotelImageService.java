@@ -68,9 +68,9 @@ public class HotelImageService implements IHotelImageService {
     public void crawl(String hotelId) throws Exception {
         HotelImage tmp = new HotelImage();
         tmp.setHotelSourceId(hotelId);
-        HotelImage hotelImage = hotelImageMapper.selectByRecord(tmp);
+        HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
 
-        if (hotelImage != null && StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
+        if (tmpHotelImage != null && StringUtils.isNotBlank(tmpHotelImage.getHotelSourceId())){
             System.out.println("======skip crawl hotel " + hotelId +" image");
             return;
         }
@@ -79,6 +79,7 @@ public class HotelImageService implements IHotelImageService {
         ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
         System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
+
         try{
             String url = String.format(URL, hotelId);
 
