@@ -63,6 +63,8 @@ public class HotelImageService implements IHotelImageService {
 
     @Override
     public void crawl(String hotelId) throws Exception {
+        System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
+
         String url = String.format(URL, hotelId);
 
         String result = HttpUtil.doGet(  url);
