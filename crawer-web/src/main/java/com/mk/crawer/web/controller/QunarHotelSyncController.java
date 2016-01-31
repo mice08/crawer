@@ -42,6 +42,7 @@ public class QunarHotelSyncController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelImageSync() {
         Map<String, Object> result = new HashMap<String, Object>();
+
         result=qunarHotelSyncService.qunarHotelImageSync();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }

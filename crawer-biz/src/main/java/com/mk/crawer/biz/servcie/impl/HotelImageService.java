@@ -76,11 +76,11 @@ public class HotelImageService implements IHotelImageService {
         }
 
         System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
-
+        String result="";
         try{
             String url = String.format(URL, hotelId);
 
-            String result = HttpUtil.doGetNoProxy(url);
+            result = HttpUtil.doGetNoProxy(url);
 
             HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
 
@@ -125,7 +125,7 @@ public class HotelImageService implements IHotelImageService {
             }
 
         }catch (Exception e){
-
+            System.out.println(result);
             e.printStackTrace();
         }
 

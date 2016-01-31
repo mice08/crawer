@@ -13,6 +13,7 @@ public class JSONUtil {
     }
 
     public static <T> T fromJson(String json, Class<T> classOfT) {
+
         Gson gson = new Gson();
         return gson.fromJson(json, classOfT);
     }
