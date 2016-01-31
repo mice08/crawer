@@ -4,7 +4,10 @@ import com.mk.crawer.biz.mapper.crawer.HotelImageMapper;
 import com.mk.crawer.biz.model.crawer.HotelImage;
 import com.mk.crawer.biz.servcie.IHotelImageService;
 import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.http.HttpUtil;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,64 +66,85 @@ public class HotelImageService implements IHotelImageService {
 
     @Override
     public void crawl(String hotelId) throws Exception {
-        System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
+        HotelImage tmp = new HotelImage();
+        tmp.setHotelSourceId(hotelId);
+        HotelImage hotelImage = hotelImageMapper.selectByRecord(tmp);
 
-        String url = String.format(URL, hotelId);
-
-        String result = HttpUtil.doGetNoProxy(  url);
-
-        HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
-
-        if ( hotelImageAll.status != 0 ) {
-            throw new IllegalArgumentException("response code is "+hotelImageAll.status);
-        } else if ( hotelImageAll.data == null ) {
-            throw new IllegalArgumentException("response data is null");
-        } else if ( hotelImageAll.data.resultStr == null ) {
-            throw new IllegalArgumentException("response resultStr is null");
-        } else if ( hotelImageAll.data.resultStr.imgs == null ) {
-            throw new IllegalArgumentException("response imgs is null");
+        if (hotelImage != null && StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
+            System.out.println("======skip crawl hotel " + hotelId +" image");
+            return;
         }
 
-        for (Image image : hotelImageAll.data.resultStr.imgs) {
-            HotelImage hotelImage = new HotelImage();
-            hotelImage.setCityName(hotelImageAll.data.resultStr.cityName);
-            hotelImage.setCityUrl(hotelImageAll.data.resultStr.cityurl);
-            hotelImage.setHotelSourceId(hotelId);
-            hotelImage.setHotelName(hotelImageAll.data.resultStr.hotelName);
-            hotelImage.setHotelAddress(hotelImageAll.data.resultStr.hotelAddress);
+        ProxyServer proxyServer = ProxyServerManager.take();
+        ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
-            hotelImage.setBig(image.big);
-            hotelImage.setUrl(image.url);
-            hotelImage.setTag(image.tag);
-            hotelImage.setSrc(image.src);
-            if (image.ugc) {
-                hotelImage.setUgc(T);
-            } else {
-                hotelImage.setUgc(F);
+        System.out.println("%%%%%%%%%%%%%%%%%%begin crawl hotel " + hotelId +"image");
+        try{
+            String url = String.format(URL, hotelId);
+
+            String result = HttpUtil.doGet(url);
+
+            HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
+
+            if ( hotelImageAll.status != 0 ) {
+                throw new IllegalArgumentException("response code is "+hotelImageAll.status);
+            } else if ( hotelImageAll.data == null ) {
+                throw new IllegalArgumentException("response data is null");
+            } else if ( hotelImageAll.data.resultStr == null ) {
+                throw new IllegalArgumentException("response resultStr is null");
+            } else if ( hotelImageAll.data.resultStr.imgs == null ) {
+                throw new IllegalArgumentException("response imgs is null");
             }
-            hotelImage.setOsrc(image.osrc);
-            hotelImage.setCreDate(image.cre_date);
-            hotelImage.setTitle(image.title);
-            hotelImage.setAuthor(image.author);
-            hotelImage.setWidth((long) image.width);
-            hotelImage.setHeight((long) image.height);
 
-            hotelImage.setCreateTime(new Date());
-            hotelImage.setUpdateTime(new Date());
+            for (Image image : hotelImageAll.data.resultStr.imgs) {
+                HotelImage hotelImage = new HotelImage();
+                hotelImage.setCityName(hotelImageAll.data.resultStr.cityName);
+                hotelImage.setCityUrl(hotelImageAll.data.resultStr.cityurl);
+                hotelImage.setHotelSourceId(hotelId);
+                hotelImage.setHotelName(hotelImageAll.data.resultStr.hotelName);
+                hotelImage.setHotelAddress(hotelImageAll.data.resultStr.hotelAddress);
 
-            insert(hotelImage);
+                hotelImage.setBig(image.big);
+                hotelImage.setUrl(image.url);
+                hotelImage.setTag(image.tag);
+                hotelImage.setSrc(image.src);
+                if (image.ugc) {
+                    hotelImage.setUgc(T);
+                } else {
+                    hotelImage.setUgc(F);
+                }
+                hotelImage.setOsrc(image.osrc);
+                hotelImage.setCreDate(image.cre_date);
+                hotelImage.setTitle(image.title);
+                hotelImage.setAuthor(image.author);
+                hotelImage.setWidth((long) image.width);
+                hotelImage.setHeight((long) image.height);
+
+                hotelImage.setCreateTime(new Date());
+                hotelImage.setUpdateTime(new Date());
+
+                insert(hotelImage);
+            }
+
+        }catch (Exception e){
+            if ( proxyServer != null ) {
+                ProxyServerManager.remove(proxyServer);
+            }
         }
 
     }
 
-    private int insert(HotelImage record) {
+    private int insert(HotelImage record)throws Exception {
+        try{
+            HotelImage hotelImage = hotelImageMapper.selectByRecord(record);
 
-        HotelImage hotelImage = hotelImageMapper.selectByRecord(record);
-
-        if (hotelImage ==null || StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
-            return hotelImageMapper.insert(record);
-        }else {
-            return 0;
+            if (hotelImage ==null || StringUtils.isNotBlank(hotelImage.getHotelSourceId())){
+                return hotelImageMapper.insert(record);
+            }else {
+                return 0;
+            }
+        }catch (Exception e){
+            throw e;
         }
 
 

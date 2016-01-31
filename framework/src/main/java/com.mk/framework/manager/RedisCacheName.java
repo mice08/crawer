@@ -16,6 +16,12 @@ public class RedisCacheName {
     public static final String CRAWLER_CITY_NAME_SET = "CRAWLER:CITY:NAME:SET";
 
     /**
+     * 待刷新酒店图片所在城市的SET
+     */
+    public static final String CRAWLER_IMAGE_CITY_NAME_SET = "CRAWLER:IMAGECITY:NAME:SET";
+
+
+    /**
      * 待刷新酒店价格的酒店ID列表
      */
     public static final String CRAWLER_HOTEL_INFO_REFRESH_SET = "CRAWLER:HOTEL:INFO:REFRESH:SET";

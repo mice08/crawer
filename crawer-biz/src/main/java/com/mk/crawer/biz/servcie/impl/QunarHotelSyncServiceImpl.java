@@ -123,7 +123,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city.getCityName());
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
-                Thread.currentThread().sleep(1000l);
+                Thread.currentThread().sleep(40000l);
                 hotelImageService.crawl(qunarHotel.getSourceId());
             } catch (Exception e) {
                 e.printStackTrace();
