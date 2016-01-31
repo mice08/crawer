@@ -114,12 +114,11 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             HotelImage tmp = new HotelImage();
             tmp.setCityName(city.getCityName());
             HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
-
             if (tmpHotelImage != null && StringUtils.isNotBlank(tmpHotelImage.getHotelSourceId())){
                 continue;
             }
 
-            doImageSync(city);
+            doImageSync(city.getCityName());
         }
         Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
@@ -132,8 +131,8 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     }
 
 
-    public void doImageSync(CityList city){
-        List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city.getCityName());
+    public void doImageSync(String  city){
+        List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
                 hotelImageService.crawl(qunarHotel.getSourceId());
