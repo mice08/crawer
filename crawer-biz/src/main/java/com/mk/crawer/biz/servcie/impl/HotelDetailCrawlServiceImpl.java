@@ -575,6 +575,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			String addr = (String) dinfo.get("add");
 			String btime = (String) dinfo.get("btime");
 			String hotelSeq = (String) dinfo.get("hotelSeq");
+			String rnum = (String) dinfo.get("rnum");
 			if (StringUtils.isNotBlank(name)) {
 				hotelInfo.setHotelName(name);
 			}
