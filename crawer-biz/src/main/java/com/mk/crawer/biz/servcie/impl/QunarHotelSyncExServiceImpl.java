@@ -3,10 +3,12 @@ package com.mk.crawer.biz.servcie.impl;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.biz.model.crawer.*;
-import com.mk.crawer.biz.servcie.*;
+import com.mk.crawer.biz.servcie.BrandsService;
+import com.mk.crawer.biz.servcie.ICityListService;
+import com.mk.crawer.biz.servcie.QunarHotelService;
+import com.mk.crawer.biz.servcie.QunarHotelSyncExService;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -176,45 +178,51 @@ public class QunarHotelSyncExServiceImpl implements QunarHotelSyncExService {
     public void saveHotel(String hotelStr, String cityName){
         List<Object> hotelList=JsonUtils.jsonToList(hotelStr);
         for(int i=0;i<hotelList.size();i++){
-            Map<String,String> hotelMap=JsonUtils.jsonToMap(hotelList.get(i).toString());
-            if(hotelMap==null){
-                logger.info("====================hotelMap is null====================");
-                continue;
-            }
-            QunarHotel hotel=new QunarHotel();
-            hotel.setCityName(cityName);
-            hotel.setSourceId(hotelMap.get("id"));
-
-            if (hotelMap.get("distance")!=null)
-                hotel.setDistance(hotelMap.get("distance"));
-            if (hotelMap.get("attrs")!=null){
-                Map<String,String> attrsMap=JsonUtils.jsonToMap(hotelMap.get("attrs"));
-                if (attrsMap==null){
-                    logger.info("====================attrsMap is null====================");
+            try {
+                Map<String,String> hotelMap=JsonUtils.jsonToMap(hotelList.get(i).toString());
+                if(hotelMap==null){
+                    logger.info("====================hotelMap is null====================");
                     continue;
                 }
+                QunarHotel hotel=new QunarHotel();
+                hotel.setCityName(cityName);
+                hotel.setSourceId(hotelMap.get("id"));
 
-                hotel.setBpoint(attrsMap.get("bpoint"));
-                hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
-                //hotel.setHotelBrand(attrsMap.get("hotelBrand"));
-                //hotel.setShortName(attrsMap.get("shortName"));
-                //hotel.setOneSentence(attrsMap.get("oneSentence"));
+                if (hotelMap.get("distance")!=null)
+                    hotel.setDistance(hotelMap.get("distance"));
+                if (hotelMap.get("attrs")!=null){
+                    Map<String,String> attrsMap=JsonUtils.jsonToMap(hotelMap.get("attrs"));
+                    if (attrsMap==null){
+                        logger.info("====================attrsMap is null====================");
+                        continue;
+                    }
 
-            }
-            QunarHotelExample hotelExample = new QunarHotelExample();
-            hotelExample.createCriteria().andSourceIdEqualTo(hotel.getSourceId());
-            List<QunarHotel> checkHotelExist=qunarHotelService.selectByExample(hotelExample);
-            if(!CollectionUtils.isEmpty(checkHotelExist)){
-                QunarHotel existHotel=checkHotelExist.get(0);
-                hotel.setId(existHotel.getId());
-                hotel.setUpdateTime(new Date());
-                if (StringUtils.isEmpty(existHotel.getPhoneNumber())) {
-                    qunarHotelService.updateByPrimaryKeySelective(hotel);
-                }else {
-                    logger.info("====================phone is exist continue====================",hotel.getSourceId());
+                    hotel.setBpoint(attrsMap.get("bpoint"));
+                    hotel.setPhoneNumber(attrsMap.get("phoneNumber"));
+                    //hotel.setHotelBrand(attrsMap.get("hotelBrand"));
+                    //hotel.setShortName(attrsMap.get("shortName"));
+                    //hotel.setOneSentence(attrsMap.get("oneSentence"));
+
                 }
-                logger.info("====================update t_qunar_hotel values(source_id={})===================="
-                        ,hotel.getSourceId());
+                QunarHotelExample hotelExample = new QunarHotelExample();
+                hotelExample.createCriteria().andSourceIdEqualTo(hotel.getSourceId());
+                List<QunarHotel> checkHotelExist=qunarHotelService.selectByExample(hotelExample);
+                if(!CollectionUtils.isEmpty(checkHotelExist)){
+                    QunarHotel existHotel=checkHotelExist.get(0);
+                    hotel.setId(existHotel.getId());
+                    hotel.setUpdateTime(new Date());
+                    System.out.println("====================================update hotel "+ existHotel.getId() +"phone:" + existHotel.getPhoneNumber());
+                    if (StringUtils.isEmpty(existHotel.getPhoneNumber())) {
+                        qunarHotelService.updateByPrimaryKeySelective(hotel);
+                    }else {
+                        logger.info("====================phone is exist continue====================",hotel.getSourceId());
+                    }
+                    logger.info("====================update t_qunar_hotel values(source_id={})===================="
+                            ,hotel.getSourceId());
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
         }
