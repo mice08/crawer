@@ -3,6 +3,7 @@ package com.mk.crawer.web.controller;
 
 import com.mk.crawer.api.QunarHotelSyncService;
 import com.mk.crawer.biz.servcie.IHotelImageService;
+import com.mk.crawer.job.hotel.price.HotelImageRefreshThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,12 @@ public class QunarHotelSyncController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelImageSync() {
         Map<String, Object> result = new HashMap<String, Object>();
-
-        result=qunarHotelSyncService.qunarHotelImageSync();
+        HotelImageRefreshThread hotelImageRefreshThread = new HotelImageRefreshThread();
+        Thread t = new Thread(hotelImageRefreshThread);
+        t.setDaemon(true);
+        t.setName("crawer-hotel-image");
+        t.start();
+        result.put("success", true);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

@@ -118,7 +118,13 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 continue;
             }
 
-            doImageSync(city.getCityName());
+            try {
+                doImageSync(city.getCityName());
+                Thread.currentThread().sleep(10000);
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
         Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
