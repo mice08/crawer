@@ -7,6 +7,9 @@ public class RoomTypeImg {
 	
 	private String author;
 
+	private String hotelSourceId;
+	private String roomtypeKey;
+
 	public String getTitle() {
 		return title;
 	}
@@ -30,6 +33,20 @@ public class RoomTypeImg {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
-	
+
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
+
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
+
+	public String getRoomtypeKey() {
+		return roomtypeKey;
+	}
+
+	public void setRoomtypeKey(String roomtypeKey) {
+		this.roomtypeKey = roomtypeKey;
+	}
 }

@@ -906,16 +906,19 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				&& List.class.isAssignableFrom(roomComb.get("images").getClass())) {
 			List<Map<String, Object>> images = (List<Map<String, Object>>) roomComb.get("images");
 			List<RoomTypeImg> roomtypeImgs = new ArrayList<RoomTypeImg>();
-			roomtypeComb.setRoomtypeImgs(roomtypeImgs);
+
 
 			for (Map<String, Object> image : images) {
 				RoomTypeImg roomtypeImg = new RoomTypeImg();
-				roomtypeImgs.add(roomtypeImg);
 
+				roomtypeImg.setRoomtypeKey(roomtypeKey);
+				roomtypeImg.setHotelSourceId(hotelid);
 				roomtypeImg.setTitle(typesafeGetString(image.get("title")));
 				roomtypeImg.setAuthor(typesafeGetString(image.get("author")));
 				roomtypeImg.setBaseUrl(typesafeGetString(image.get("baseUrl")));
+				roomtypeImgs.add(roomtypeImg);
 			}
+			roomtypeComb.setRoomtypeImgs(roomtypeImgs);
 		}
 
 		return roomtypeComb;
