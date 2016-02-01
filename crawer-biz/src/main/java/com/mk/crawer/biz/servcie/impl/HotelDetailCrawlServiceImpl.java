@@ -52,6 +52,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 	@Autowired
 	private QunarHotelMapper qunarHotelMapper;
 
+	@Autowired
+	private HotelImageService hotelImageService;
+
 
 
 	public void crawl(String hotelId, File hotelDetailFile) throws Exception {
@@ -106,6 +109,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 		processResult(hotelid, jsonString);
+
+		hotelImageService.crawl(hotelid);
 	}
 
 	private void processResult(String hotelid, String jsonString) throws Exception {
