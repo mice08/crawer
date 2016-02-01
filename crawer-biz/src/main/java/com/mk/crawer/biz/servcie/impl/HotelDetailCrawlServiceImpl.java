@@ -387,6 +387,8 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 					roomtypeImgMap.put("title", roomtypeImg.getTitle());
 					roomtypeImgMap.put("author", roomtypeImg.getAuthor());
 					roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
+					roomtypeImgMap.put("hotelSourceId", roomtypeImg.getHotelSourceId());
+					roomtypeImgMap.put("roomtypeKey", roomtypeImg.getRoomtypeKey());
 
 					try {
 						roomtypeMapper.insertImg(roomtypeImgMap);
