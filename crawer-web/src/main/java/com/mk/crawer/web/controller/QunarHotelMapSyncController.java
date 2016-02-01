@@ -2,10 +2,10 @@ package com.mk.crawer.web.controller;
 
 
 import com.mk.crawer.biz.model.crawer.CityList;
-import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.servcie.QunarHotelMapSyncService;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.biz.servcie.QunarHotelSyncExService;
+import com.mk.crawer.job.hotel.price.HotelExInfoRefreshThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +49,12 @@ public class QunarHotelMapSyncController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> qunarHotelSyncEx() {
         Map<String, Object> result = new HashMap<String, Object>();
-
-        result=qunarHotelSyncExService.qunarHotelSyncEx();
+         HotelExInfoRefreshThread hotelExInfoRefreshThread = new HotelExInfoRefreshThread();
+        Thread t = new Thread(hotelExInfoRefreshThread);
+        t.setDaemon(true);
+        t.setName("crawer-hotel-exinfo");
+        t.start();
+        result.put("success", true);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
