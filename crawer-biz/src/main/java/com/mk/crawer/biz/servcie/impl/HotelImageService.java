@@ -126,7 +126,9 @@ public class HotelImageService implements IHotelImageService {
 
         }catch (Exception e){
             System.out.println(result);
+
             e.printStackTrace();
+            throw  e;
         }
 
     }
