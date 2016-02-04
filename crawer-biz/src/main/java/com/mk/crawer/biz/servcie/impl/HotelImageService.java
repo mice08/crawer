@@ -80,7 +80,7 @@ public class HotelImageService implements IHotelImageService {
         try{
             String url = String.format(URL, hotelId);
 
-            result = HttpUtil.doGetNoProxy(url);
+            result = HttpUtil.doGet(url);
 
             HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
 
