@@ -91,7 +91,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
-
+		hotelImageService.crawl(hotelid);
 		logger.info("++++++++++++++++++++++++bengin crawl hotel" + hotelid + " ++++++++++++++++++");
 		String invokeUrl = String.format(hotelDetailUrl, strCurDay, strNextDay, hotelid);
 
@@ -110,7 +110,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		processResult(hotelid, jsonString);
 
-		hotelImageService.crawl(hotelid);
+
 	}
 
 	private void processResult(String hotelid, String jsonString) throws Exception {
