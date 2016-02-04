@@ -20,12 +20,12 @@ public class Config {
      * svip.kuaidaili.com
      */
     //public static final String BILL_PROXY_IP_API_KDL = "http://svip.kuaidaili.com/api/getproxy/?orderid=985277419450057&num=9999&protocol=1&method=1&an_an=1&an_ha=1&format=json&sep=1";
-    public static final String BILL_PROXY_IP_API_KDL = "http://svip.kuaidaili.com/api/getproxy/?orderid=985455385833985&num=9999&protocol=1&method=1&an_an=1&an_ha=1&format=json&sep=1";
+    public static final String BILL_PROXY_IP_API_KDL = "http://svip.kuaidaili.com/api/getproxy/?orderid=985455385833985&num=9999&area=%E4%B8%AD%E5%9B%BD&b_pcchrome=1&b_pcie=1&b_pcff=1&protocol=1&method=1&an_tr=1&an_an=1&an_ha=1&sp1=1&sp2=1&sp3=1&format=json&sep=1";
     /**
      * 付费IP代理提取地址
      * svip.kuaidaili.com
      */
-    public static final String BILL_PROXY_IP_API_DL666 = "http://xvre.daili666api.com/ip/?tid=556875355340186&num=10000";
+    public static final String BILL_PROXY_IP_API_DL666 = "http://xvre.daili666api.com/ip/?tid=556875355340186&num=10000&delay=2&category=2";
     //public static final String BILL_PROXY_IP_API_DL666 = "http://qsdrk.daili666api.com/ip/?tid=558315304902960&num=1000"; //liyanwei 提供
     /**
      * 每次通过API获取代理IP的时间间隔，单位：毫秒
