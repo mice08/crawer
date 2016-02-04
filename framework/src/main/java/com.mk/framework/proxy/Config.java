@@ -25,8 +25,8 @@ public class Config {
      * 付费IP代理提取地址
      * svip.kuaidaili.com
      */
-    //public static final String BILL_PROXY_IP_API_DL666 = "http://xvre.daili666api.com/ip/?tid=556875355340186&num=10000";
-    public static final String BILL_PROXY_IP_API_DL666 = "http://qsdrk.daili666api.com/ip/?tid=558315304902960&num=1000";
+    public static final String BILL_PROXY_IP_API_DL666 = "http://xvre.daili666api.com/ip/?tid=556875355340186&num=10000";
+    //public static final String BILL_PROXY_IP_API_DL666 = "http://qsdrk.daili666api.com/ip/?tid=558315304902960&num=1000"; //liyanwei 提供
     /**
      * 每次通过API获取代理IP的时间间隔，单位：毫秒
      */
