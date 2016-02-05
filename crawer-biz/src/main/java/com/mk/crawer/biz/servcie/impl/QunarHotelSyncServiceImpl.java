@@ -155,14 +155,17 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
                 example.createCriteria().andValidEqualTo("T");
                 Integer  hotelCount= hotelMappingService.countByExample(example);
-                Integer slp = 0;
                 if (hotelCount!=null && hotelCount > 0){
-                    slp = 1;
-                    hotelImageService.crawl(qunarHotel.getSourceId(), false);
+                    try {
+                        hotelImageService.crawl(qunarHotel.getSourceId(), false);
+                        Thread.currentThread().sleep(1000);
+                    }catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
-                TimeUnit.SECONDS.sleep(slp);
             } catch (Exception e) {
                 e.printStackTrace();
             }
