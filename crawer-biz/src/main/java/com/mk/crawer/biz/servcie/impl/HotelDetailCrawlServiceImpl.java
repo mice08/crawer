@@ -91,7 +91,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		String strNextDay = DateUtils.getStringFromDate(DateUtils.addDays(day, 1), DateUtils.FORMATSHORTDATETIME);
 
 		String hotelid = hotelIds.get(0);
-		//hotelImageService.crawl(hotelid, true);
+
 		logger.info("++++++++++++++++++++++++bengin crawl hotel" + hotelid + " ++++++++++++++++++");
 		String invokeUrl = String.format(hotelDetailUrl, strCurDay, strNextDay, hotelid);
 
@@ -101,6 +101,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 
 		String jsonString = "";
 		try {
+			hotelImageService.crawl(hotelid, true);
 			jsonString = HttpUtil.doGet(invokeUrl);
 		} catch (Exception ex) {
 			String errorMsg = String.format("failed to post with url %s", invokeUrl);
