@@ -171,12 +171,12 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 try {
                 if (hotelCount!=null && hotelCount > 0){
 
-                    hotelImageService.crawl(qunarHotel.getSourceId(), true);
+                    hotelImageService.crawl(qunarHotel.getSourceId(), false);
                     slp = 1000;
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
-                    Thread.currentThread().sleep(slp);
+                    Thread.sleep(slp);
                 }catch (InterruptedException e) {
                     e.printStackTrace();
                 }
