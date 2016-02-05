@@ -184,6 +184,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 e.printStackTrace();
                 if ( proxyServer != null ) {
                     ProxyServerManager.remove(proxyServer);
+                    proxyServer = null;
                 }
 
             }
