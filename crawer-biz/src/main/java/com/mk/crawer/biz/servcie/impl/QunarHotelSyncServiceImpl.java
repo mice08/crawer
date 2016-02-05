@@ -19,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kangxiaolong on 2016-01-06.
@@ -154,12 +155,13 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
                 example.createCriteria().andValidEqualTo("T");
                 Integer  hotelCount= hotelMappingService.countByExample(example);
+
                 if (hotelCount!=null && hotelCount > 0){
                     hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                    Thread.currentThread().sleep(1000);
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
             e.printStackTrace();
         }catch (Exception e) {
