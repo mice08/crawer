@@ -158,7 +158,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 if (hotelCount!=null && hotelCount > 0){
                     try {
                         hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                        Thread.currentThread().sleep(1000);
+                        Thread.currentThread().sleep(10000);
                     }catch (InterruptedException e) {
                         e.printStackTrace();
                     }
