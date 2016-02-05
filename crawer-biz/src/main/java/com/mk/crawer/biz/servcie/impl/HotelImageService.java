@@ -65,7 +65,7 @@ public class HotelImageService implements IHotelImageService {
     }
 
     @Override
-    public void crawl(String hotelId) throws Exception {
+    public void crawl(String hotelId, Boolean useProxy) throws Exception {
         HotelImage tmp = new HotelImage();
         tmp.setHotelSourceId(hotelId);
         HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
@@ -79,8 +79,11 @@ public class HotelImageService implements IHotelImageService {
         String result="";
         try{
             String url = String.format(URL, hotelId);
-
-            result = HttpUtil.doGet(url);
+            if (useProxy){
+                result = HttpUtil.doGet(url);
+            }else {
+                result = HttpUtil.doGetNoProxy(url);
+            }
 
             HotelImageAll hotelImageAll = JSONUtil.fromJson(result, HotelImageAll.class);
 

@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by kangxiaolong on 2016-01-06.
@@ -83,6 +80,8 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+
+        Collections.reverse(cityLists);
         for (CityList city:cityLists) {
             doSync(city);
         }
@@ -120,7 +119,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
             try {
                 doImageSync(city.getCityName());
-                Thread.currentThread().sleep(10000);
+                Thread.currentThread().sleep(3000);
             }catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -141,7 +140,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
-                hotelImageService.crawl(qunarHotel.getSourceId());
+                hotelImageService.crawl(qunarHotel.getSourceId(), false);
             } catch (Exception e) {
                 e.printStackTrace();
             }

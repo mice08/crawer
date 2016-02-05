@@ -5,6 +5,6 @@ package com.mk.crawer.biz.servcie;
  */
 public interface IHotelImageService {
 
-    void crawl(String hotelId) throws Exception;
+    void crawl(String hotelId, Boolean useProxy) throws Exception;
 
 }

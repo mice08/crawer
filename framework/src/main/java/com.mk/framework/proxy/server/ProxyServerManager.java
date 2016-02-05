@@ -62,6 +62,8 @@ public class ProxyServerManager implements ApplicationListener<ContextRefreshedE
                             CHECKED.put(proxyServer);
                             LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
                         }
+
+                        TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
                         break;
                     }

@@ -1,9 +1,6 @@
 package com.mk.crawer.web.controller;
 
-import com.mk.crawer.biz.mapper.crawer.HotelImageMapper;
-import com.mk.crawer.biz.model.crawer.HotelImage;
 import com.mk.crawer.biz.servcie.IHotelImageService;
-import com.mk.crawer.biz.servcie.impl.HotelImageService;
 import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
@@ -35,7 +32,7 @@ public class HotelImageController {
             ProxyServer proxyServer = ProxyServerManager.take();
             ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
-            hotelImageService.crawl("beijing_city_23008");
+            hotelImageService.crawl("beijing_city_23008",true);
         } catch (Exception e) {
             e.printStackTrace();
         }
