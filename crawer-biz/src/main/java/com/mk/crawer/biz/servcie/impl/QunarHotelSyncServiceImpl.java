@@ -137,6 +137,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
 
     public void doImageSync(String  city){
+        System.out.println("~~~~~~~~~~start sync hotel image "+ city);
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
@@ -145,6 +146,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 e.printStackTrace();
             }
         }
+        System.out.println("~~~~~~~~~~end sync hotel image "+ city);
     }
 
     public Map<String,Object> doSync(CityList city){
