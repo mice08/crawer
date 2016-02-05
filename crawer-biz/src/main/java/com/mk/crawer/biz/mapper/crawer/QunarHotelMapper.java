@@ -27,4 +27,5 @@ public interface QunarHotelMapper {
 
     List<Map<String,String>> seletAllHotelCity();
     List<QunarHotel> selectHotelByCity(String city);
+    List<Map<String, String>>selectQHotel(String hotelId);
 }

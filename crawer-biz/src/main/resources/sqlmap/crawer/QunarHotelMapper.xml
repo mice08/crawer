@@ -1410,6 +1410,11 @@
     SELECT DISTINCT city_name from t_qunar_hotel
   </select>
 
+  <select id="selectQHotel" resultType="map">
+    SELECT  source_id from q_hotel
+    WHERE source_id = #{hotelId} limit 1
+  </select>
+
   <select id="selectHotelByCity" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />

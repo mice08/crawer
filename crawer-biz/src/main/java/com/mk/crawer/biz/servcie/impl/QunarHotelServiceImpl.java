@@ -8,6 +8,7 @@ import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.servcie.ICityListService;
 import com.mk.crawer.biz.servcie.QunarHotelService;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +70,19 @@ public class QunarHotelServiceImpl implements QunarHotelService {
             cityList.add(stringMap.get("city_name"));
         }
         return cityList;
+    }
+
+    @Override
+    public Boolean  isOnlineHotel(String hotelId){
+        Boolean online = false;
+        List<Map<String, String>> result = qunarHotelMapper.selectQHotel(hotelId);
+        for (Map<String, String> stringMap : result) {
+            if (StringUtils.isNotBlank(stringMap.get("source_id"))){
+                online = true;
+                break;
+            }
+        }
+        return online;
     }
 
     public List<QunarHotel>  seletHotelByCity(String city){

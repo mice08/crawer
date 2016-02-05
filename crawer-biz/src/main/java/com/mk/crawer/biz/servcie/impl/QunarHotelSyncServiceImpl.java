@@ -154,22 +154,11 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
                 ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
-                HotelMapping hotelMapping = new HotelMapping();
-                hotelMapping.setExHotelId(qunarHotel.getSourceId());
-                hotelMapping.setExHotelName(qunarHotel.getHotelName());
-                HotelMappingExample example = new HotelMappingExample();
-                if (!org.springframework.util.StringUtils.isEmpty(hotelMapping.getExHotelId())){
-                    example.createCriteria().andExHotelIdEqualTo(hotelMapping.getExHotelId());
-                }
-                if (!org.springframework.util.StringUtils.isEmpty(hotelMapping.getOtsHotelId())){
-                    example.createCriteria().andOtsHotelIdEqualTo(hotelMapping.getOtsHotelId());
-                }
 
-                example.createCriteria().andValidEqualTo("T");
-                Integer  hotelCount= hotelMappingService.countByExample(example);
+                Boolean  isOnlineHotel= qunarHotelService.isOnlineHotel(qunarHotel.getSourceId());
                 Integer slp = 1;
                 try {
-                if (hotelCount!=null && hotelCount > 0){
+                if (isOnlineHotel){
 
                     hotelImageService.crawl(qunarHotel.getSourceId(), true);
                     slp = 500;
