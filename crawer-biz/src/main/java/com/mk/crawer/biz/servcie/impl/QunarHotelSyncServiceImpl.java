@@ -5,10 +5,7 @@ import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
 import com.mk.crawer.biz.mapper.crawer.HotelImageMapper;
 import com.mk.crawer.biz.model.crawer.*;
-import com.mk.crawer.biz.servcie.BrandsService;
-import com.mk.crawer.biz.servcie.ICityListService;
-import com.mk.crawer.biz.servcie.IHotelService;
-import com.mk.crawer.biz.servcie.QunarHotelService;
+import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
@@ -43,6 +40,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
     @Autowired
     private QunarHotelService qunarHotelService;
+
+    @Autowired
+    private HotelMappingService hotelMappingService;
     public Map<String,Object> hotelSyncByCity(String cityName){
         Cat.logEvent("hotelSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
@@ -141,9 +141,23 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
         for (QunarHotel qunarHotel : qunarHotels) {
             try {
+                HotelMapping hotelMapping = new HotelMapping();
+                hotelMapping.setExHotelId(qunarHotel.getSourceId());
+                hotelMapping.setExHotelName(qunarHotel.getHotelName());
+                HotelMappingExample example = new HotelMappingExample();
+                if (!org.springframework.util.StringUtils.isEmpty(hotelMapping.getExHotelId())){
+                    example.createCriteria().andExHotelIdEqualTo(hotelMapping.getExHotelId());
+                }
+                if (!org.springframework.util.StringUtils.isEmpty(hotelMapping.getOtsHotelId())){
+                    example.createCriteria().andOtsHotelIdEqualTo(hotelMapping.getOtsHotelId());
+                }
 
-                hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                Thread.currentThread().sleep(1000);
+                example.createCriteria().andValidEqualTo("T");
+                Integer  hotelCount= hotelMappingService.countByExample(example);
+                if (hotelCount==null || hotelCount == 0){
+                    hotelImageService.crawl(qunarHotel.getSourceId(), false);
+                    Thread.currentThread().sleep(1000);
+                }
             } catch (InterruptedException e) {
             e.printStackTrace();
         }catch (Exception e) {

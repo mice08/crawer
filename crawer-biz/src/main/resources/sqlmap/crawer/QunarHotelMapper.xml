@@ -1416,4 +1416,6 @@
     from t_qunar_hotel
     WHERE  city_name = #{city}
   </select>
+
+
 </mapper>
