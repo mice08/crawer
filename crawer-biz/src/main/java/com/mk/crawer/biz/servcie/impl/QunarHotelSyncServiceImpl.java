@@ -143,7 +143,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             try {
 
                 hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                Thread.currentThread().sleep(3000);
+                Thread.currentThread().sleep(1000);
             } catch (InterruptedException e) {
             e.printStackTrace();
         }catch (Exception e) {
