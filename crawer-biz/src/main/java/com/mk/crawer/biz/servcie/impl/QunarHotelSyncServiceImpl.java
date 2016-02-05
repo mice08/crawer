@@ -149,10 +149,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             try {
 
                 if (proxyServer == null){
-                   // proxyServer = ProxyServerManager.take();
+                    proxyServer = ProxyServerManager.take();
                 }
 
-                //ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+                ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
                 HotelMapping hotelMapping = new HotelMapping();
                 hotelMapping.setExHotelId(qunarHotel.getSourceId());
@@ -171,8 +171,8 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 try {
                 if (hotelCount!=null && hotelCount > 0){
 
-                    hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                    slp = 1000;
+                    hotelImageService.crawl(qunarHotel.getSourceId(), true);
+                    slp = 5000;
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
