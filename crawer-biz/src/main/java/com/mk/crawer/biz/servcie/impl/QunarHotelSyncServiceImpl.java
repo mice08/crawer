@@ -149,10 +149,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             try {
 
                 if (proxyServer == null){
-                    proxyServer = ProxyServerManager.take();
+                   // proxyServer = ProxyServerManager.take();
                 }
 
-                ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+                //ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
                 HotelMapping hotelMapping = new HotelMapping();
                 hotelMapping.setExHotelId(qunarHotel.getSourceId());
