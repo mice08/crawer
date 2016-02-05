@@ -9,7 +9,10 @@ import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.http.HttpUtil;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,8 +143,17 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     public void doImageSync(String  city){
         System.out.println("~~~~~~~~~~start sync hotel image "+ city);
         List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
+        ProxyServer proxyServer = null;
         for (QunarHotel qunarHotel : qunarHotels) {
+
             try {
+
+                if (proxyServer == null){
+                    proxyServer = ProxyServerManager.take();
+                }
+
+                ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+
                 HotelMapping hotelMapping = new HotelMapping();
                 hotelMapping.setExHotelId(qunarHotel.getSourceId());
                 hotelMapping.setExHotelName(qunarHotel.getHotelName());
@@ -158,8 +170,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 Integer slp = 1;
                 try {
                 if (hotelCount!=null && hotelCount > 0){
-                    hotelImageService.crawl(qunarHotel.getSourceId(), false);
-                    slp = 10000;
+
+                    hotelImageService.crawl(qunarHotel.getSourceId(), true);
+                    slp = 1000;
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
@@ -169,6 +182,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if ( proxyServer != null ) {
+                    ProxyServerManager.remove(proxyServer);
+                }
+
             }
         }
         System.out.println("~~~~~~~~~~end sync hotel image "+ city);
