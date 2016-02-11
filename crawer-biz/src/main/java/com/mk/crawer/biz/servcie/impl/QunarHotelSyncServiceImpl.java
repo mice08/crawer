@@ -155,7 +155,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
 
 
-                Boolean  isOnlineHotel= qunarHotelService.isOnlineHotel(qunarHotel.getSourceId());
+                Boolean  isOnlineHotel= true;//qunarHotelService.isOnlineHotel(qunarHotel.getSourceId());
                 Integer slp = 1;
                 try {
                 if (isOnlineHotel){
