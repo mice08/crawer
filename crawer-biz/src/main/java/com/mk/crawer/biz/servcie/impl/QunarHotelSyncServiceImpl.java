@@ -124,7 +124,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
             try {
                 doImageSync(city.getCityName(), useProxy);
-                Thread.currentThread().sleep(3000);
+                Thread.currentThread().sleep(800);
             }catch (InterruptedException e) {
                 e.printStackTrace();
             }catch (Exception e){
