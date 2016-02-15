@@ -99,7 +99,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         return resultMap;
     }
 
-    public Map<String,Object> qunarHotelImageSync(){
+    public Map<String,Object> qunarHotelImageSync(Boolean useProxy){
         Cat.logEvent("qunarHotelSync", "去哪儿酒店图片信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
         );
@@ -113,18 +113,21 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+        Collections.reverse(cityLists);
         for (CityList city:cityLists) {
-            HotelImage tmp = new HotelImage();
+           /* HotelImage tmp = new HotelImage();
             tmp.setCityName(city.getCityName());
             HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
             if (tmpHotelImage != null && StringUtils.isNotBlank(tmpHotelImage.getHotelSourceId())){
                 continue;
-            }
+            }*/
 
             try {
-                doImageSync(city.getCityName());
+                doImageSync(city.getCityName(), useProxy);
                 Thread.currentThread().sleep(3000);
             }catch (InterruptedException e) {
+                e.printStackTrace();
+            }catch (Exception e){
                 e.printStackTrace();
             }
 
@@ -140,9 +143,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     }
 
 
-    public void doImageSync(String  city){
+    public void doImageSync(String  city, Boolean useProxy){
         System.out.println("~~~~~~~~~~start sync hotel image "+ city);
-        List<QunarHotel> qunarHotels = qunarHotelService.seletHotelByCity(city);
+        List<QunarHotel> qunarHotels = qunarHotelService.selectNoImageHotel(city);
         ProxyServer proxyServer = null;
         for (QunarHotel qunarHotel : qunarHotels) {
 
@@ -160,7 +163,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 try {
                 if (isOnlineHotel){
 
-                    hotelImageService.crawl(qunarHotel.getSourceId(), true);
+                    hotelImageService.crawl(qunarHotel.getSourceId(), useProxy);
                     slp = 500;
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");

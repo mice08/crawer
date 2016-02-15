@@ -1422,5 +1422,12 @@
     WHERE  city_name = #{city}
   </select>
 
+  <select id="selectNoImageHotel" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_qunar_hotel
+    WHERE  source_id   NOT IN (select DISTINCT hotel_source_id from t_ex_hotel_hotel_image) and city_name = #{city}
+  </select>
+
 
 </mapper>

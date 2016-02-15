@@ -8,9 +8,11 @@ public class HotelImageRefreshThread implements Runnable {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HotelImageRefreshThread.class);
 
+    private Boolean useProxy;
 
 
-    public HotelImageRefreshThread() {
+    public HotelImageRefreshThread(Boolean useProxy) {
+        this.useProxy = useProxy;
     }
 
     @Override
@@ -24,12 +26,12 @@ public class HotelImageRefreshThread implements Runnable {
 
             QunarHotelSyncService qunarHotelSyncService = AppUtils.getBean(QunarHotelSyncService.class);
 
-            qunarHotelSyncService.qunarHotelImageSync();
+            qunarHotelSyncService.qunarHotelImageSync(useProxy);
 
             LOGGER.info("成功刷新城市{}的酒店图片");
         } catch (Exception e) {
-
-            LOGGER.info("刷新刷新城市{}的酒店图片");
+            e.printStackTrace();
+            LOGGER.info("刷新城市的酒店图片{}",e.getMessage());
         }
     }
 

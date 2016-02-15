@@ -90,4 +90,9 @@ public class QunarHotelServiceImpl implements QunarHotelService {
         return qunarHotelMapper.selectHotelByCity(city);
     }
 
+    public List<QunarHotel>  selectNoImageHotel(String city){
+
+        return qunarHotelMapper.selectNoImageHotel(city);
+    }
+
 }

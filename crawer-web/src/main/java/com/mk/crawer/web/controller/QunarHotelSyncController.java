@@ -41,9 +41,16 @@ public class QunarHotelSyncController {
 
     @RequestMapping(value = "/hotelimagesync", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> hotelImageSync() {
+    public ResponseEntity<Map<String, Object>> hotelImageSync(Boolean useProxy) {
         Map<String, Object> result = new HashMap<String, Object>();
-        HotelImageRefreshThread hotelImageRefreshThread = new HotelImageRefreshThread();
+
+        if (useProxy!= null && useProxy){
+            useProxy = true;
+        }else {
+            useProxy = false;
+        }
+
+        HotelImageRefreshThread hotelImageRefreshThread = new HotelImageRefreshThread(useProxy);
         Thread t = new Thread(hotelImageRefreshThread);
         t.setDaemon(true);
         t.setName("crawer-hotel-image");
@@ -56,7 +63,7 @@ public class QunarHotelSyncController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelSyncImageByCity(String city) {
         Map<String, Object> result = new HashMap<String, Object>();
-        qunarHotelSyncService.doImageSync(city);
+        qunarHotelSyncService.doImageSync(city,false);
         result.put("success", true);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
