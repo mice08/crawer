@@ -161,7 +161,7 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 if (isOnlineHotel){
 
                     hotelImageService.crawl(qunarHotel.getSourceId(), useProxy);
-                    slp = 500;
+                    slp = 1500;
                 }else {
                     System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
                 }
