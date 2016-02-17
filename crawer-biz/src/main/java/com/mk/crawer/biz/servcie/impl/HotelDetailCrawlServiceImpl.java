@@ -789,6 +789,26 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		return new BigDecimal(0);
 	}
 
+	private String getValueFromUrlByName(Object url, String name) {
+		Map<String, String> params = new HashMap<>();
+
+		if (url != null && String.class.isAssignableFrom(url.getClass())) {
+			String urlStr = (String) url;
+
+			String[] temp1 = urlStr.split("\\?");
+			if (temp1.length == 2) {
+				for (String kv : temp1[1].split("&")) {
+					String[] temp2 = kv.split("=");
+					if (temp2.length == 2) {
+						params.put(temp2[0], temp2[1]);
+					}
+				}
+			}
+		}
+
+		return params.get(name);
+	}
+
 	@SuppressWarnings("unchecked")
 	private RoomTypeCombination parseRoomtypeComb(String hotelid, Map<String, Object> roomComb)
 			throws HotelDetailParseException {
@@ -877,11 +897,11 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				RoomTypePrice roomtypePrice = new RoomTypePrice();
 				roomtypePrices.add(roomtypePrice);
 
-				roomtypePrice.setPrice(typesafeGetBigDecimal(vendor.get("price")));
-				roomtypePrice.setOprice(typesafeGetBigDecimal(vendor.get("oprice")));
+				roomtypePrice.setPrice(typesafeGetBigDecimal(getValueFromUrlByName(vendor.get("orderInfoBook"), "retailPrice")));
+				roomtypePrice.setOprice(typesafeGetBigDecimal(getValueFromUrlByName(vendor.get("orderInfoBook"), "priceCut")));
 				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
-				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(vendor.get("originPrice")));
-				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPriceInt")));
+				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(roomtypePrice.getPrice().add(roomtypePrice.getOprice())));
+				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPrice")));
 				roomtypePrice.setOtaShowPrice(typesafeGetBigDecimal(vendor.get("otaShowPrice")));
 				roomtypePrice.setWrapperName(typesafeGetString(vendor.get("wrapperName")));
 				roomtypePrice.setWrapperId(typesafeGetString(vendor.get("wrapperid")));
@@ -1048,4 +1068,5 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 	}
+	
 }
