@@ -900,7 +900,7 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 				roomtypePrice.setPrice(typesafeGetBigDecimal(getValueFromUrlByName(vendor.get("orderInfoBook"), "retailPrice")));
 				roomtypePrice.setOprice(typesafeGetBigDecimal(getValueFromUrlByName(vendor.get("orderInfoBook"), "priceCut")));
 				roomtypePrice.setRealPrice(typesafeGetBigDecimal(vendor.get("realPrice")));
-				roomtypePrice.setOriginPrice(typesafeGetBigDecimal(roomtypePrice.getPrice().add(roomtypePrice.getOprice())));
+				roomtypePrice.setOriginPrice(roomtypePrice.getPrice().add(roomtypePrice.getOprice()));
 				roomtypePrice.setShowPrice(typesafeGetBigDecimal(vendor.get("showPrice")));
 				roomtypePrice.setOtaShowPrice(typesafeGetBigDecimal(vendor.get("otaShowPrice")));
 				roomtypePrice.setWrapperName(typesafeGetString(vendor.get("wrapperName")));
@@ -1068,5 +1068,5 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 		}
 
 	}
-	
+
 }
