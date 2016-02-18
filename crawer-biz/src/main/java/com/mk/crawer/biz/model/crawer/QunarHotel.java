@@ -183,6 +183,8 @@ public class QunarHotel {
     private String desc;
 
 
+
+
     public String getRnum() {
         return rnum;
     }
