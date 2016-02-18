@@ -336,9 +336,9 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			List<RoomTypeImg> roomtypeImgs = roomtypeComb.getRoomtypeImgs();
 
 			boolean isRoomtypeUpdateRequired = false;
-
+			Map<String, Object> parameters = new HashMap<>();
 			try {
-				Map<String, Object> parameters = new HashMap<>();
+
 				parameters.put("roomtypeKey", roomtype.getRoomtypeKey());
 				parameters.put("hotelSourceId", roomtype.getHotelSourceId());
 				logger.info("_________________start crawl roomtype" + roomtype.getHotelSourceId()
@@ -383,8 +383,16 @@ public class HotelDetailCrawlServiceImpl implements HotelDetailCrawlService {
 			}
 
 			if (roomtypeImgs != null) {
+
 				for (RoomTypeImg roomtypeImg : roomtypeImgs) {
 					Map<String, Object> roomtypeImgMap = new HashMap<String, Object>();
+					parameters.put("baseUrl", roomtypeImg.getBaseUrl());
+
+					List<Map<String, String>> tmproomtypeImg= roomtypeMapper.selectImgByKeys(parameters);
+					if (tmproomtypeImg != null && tmproomtypeImg.size() > 0){
+						continue;
+					}
+
 					roomtypeImgMap.put("title", roomtypeImg.getTitle());
 					roomtypeImgMap.put("author", roomtypeImg.getAuthor());
 					roomtypeImgMap.put("baseUrl", roomtypeImg.getBaseUrl());
