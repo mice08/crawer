@@ -31,17 +31,6 @@
         )
     </insert>
 
-    <!--<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.MtCity">-->
-        <!--insert into t_mt_city (cityId, rank, acronym, onlineTime, divisionStr, name, locationId, lng, lat, pinyin, isOpen-->
-        <!--)-->
-        <!--values (#{id,jdbcType=INTEGER}, #{rank,jdbcType=VARCHAR}, #{acronym,jdbcType=VARCHAR},-->
-        <!--#{onlineTime,jdbcType=BIGINT}, #{divisionStr,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},-->
-        <!--#{locationId,jdbcType=VARCHAR},#{lng,jdbcType=DOUBLE},#{lat,jdbcType=DOUBLE},#{pinyin,jdbcType=VARCHAR},#{isOpen,jdbcType=BIT}-->
-        <!--)-->
-    <!--)-->
-    <!--</insert>-->
-
-
     <select id="getCityList" resultMap="BaseResultMap">
         select * from t_mt_city
     </select>

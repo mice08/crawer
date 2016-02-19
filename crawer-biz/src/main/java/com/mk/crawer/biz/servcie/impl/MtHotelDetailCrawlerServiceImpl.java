@@ -30,9 +30,16 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
     public int crawHotelList(MtCity city) {
         int offset = 0, limit = 50;
         int totalCount = 0;
+        boolean isProxyError = true;
         while(true){
-            String url = DETAIL_URL + String.format(DETAIL_URL_PARAM, city.id, city.name, limit, offset);
+            String url = DETAIL_URL + String.format(DETAIL_URL_PARAM, city.cityId, city.name, limit, offset);
             try {
+                if(isProxyError) {
+                    ProxyServer proxyServer = ProxyServerManager.take();
+                    ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+                }
+                isProxyError = false;
+
                 String result = HttpUtil.doGet(url);
                 MtHotel.MtHotelList hotelList = JSONUtil.fromJson(result, MtHotel.MtHotelList.class);
                 totalCount += hotelList.data.size();
@@ -41,8 +48,11 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
                 }
                 offset += limit;
             } catch (Exception e) {
+                if(e instanceof java.net.SocketTimeoutException){
+                    isProxyError = true;
+                }
+
                 e.printStackTrace();
-                break;
             }
         }
         return totalCount;
@@ -54,7 +64,7 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
         boolean isProxyError = true;
         while(true) {
             try {
-                if(isProxyError) {
+                if (isProxyError) {
                     ProxyServer proxyServer = ProxyServerManager.take();
                     ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
                 }
@@ -63,9 +73,6 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
                 ///currently use no proxy, use proxy in case it's steady.
                 String result = HttpUtil.doGetNoProxy("http://api.meituan.com/group/v1/city/list?__vhost=api.mobile.meituan.com&ci=10&cityId=10&client=iphone&env=prod&movieBundleVersion=100&msid=FCAD174C-4895-4BCE-8B0B-7D989F36080A2016-02-04-16-20941&show=all&utm_campaign=AgroupBgroupGhomepage_category3_20__a1&utm_content=98F15AC5E7F61A1E0B79BE06ADB58F096187A6F9CC97E142BA146E10F4B637F5&utm_medium=iphone&utm_source=AppStore&utm_term=6.4&uuid=98F15AC5E7F61A1E0B79BE06ADB58F096187A6F9CC97E142BA146E10F4B637F5&version_name=6.4");
                 cityList = JSONUtil.fromJson(result, MtCity.MtCityList.class);
-                for (MtCity city : cityList.data) {
-                    mapper.insert(city);
-                }
                 break;
             } catch (Exception e) {
                 if(e instanceof java.net.SocketTimeoutException){
@@ -74,6 +81,14 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
                 e.printStackTrace();
             }
         }
+        for (MtCity city : cityList.data) {
+            try {
+                mapper.insert(city);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
         return cityList;
     }
 }

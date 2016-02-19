@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class MtCity {
     public int id;
+    public int cityId;
     public String rank;
     public String acronym;
     public long onlineTime;

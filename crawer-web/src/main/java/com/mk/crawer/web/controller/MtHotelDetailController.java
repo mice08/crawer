@@ -1,5 +1,7 @@
 package com.mk.crawer.web.controller;
 
+import com.mk.crawer.biz.mapper.crawer.MtCityMapper;
+import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.model.crawer.MtCity;
 import com.mk.crawer.biz.servcie.MtHotelDetailCrawlerService;
 import com.mk.framework.proxy.ThreadContext;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,25 +27,21 @@ import java.util.Map;
 public class MtHotelDetailController {
     @Autowired
     private MtHotelDetailCrawlerService crawlerService;
+    @Autowired
+    private MtCityMapper cityMapper;
     @RequestMapping(value = "/mthoteldetail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hoteldetail() {
         HashMap<String, Object> result = new HashMap<>();
 
-//        ProxyServer proxyServer = null;
-//        try {
-//            proxyServer = ProxyServerManager.take();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+//        MtCity.MtCityList cityList = crawlerService.crawCityList();
 
-        MtCity.MtCityList cityList = crawlerService.crawCityList();
+        List<MtCity> cityList = cityMapper.getCityList();
 
-//        for(MtCity city : cityList.data){
-//            int count = crawlerService.crawHotelList(city);
-//            result.put(city.name, count);
-//        }
+        for(MtCity city : cityList){
+            int count = crawlerService.crawHotelList(city);
+            result.put(city.name, count);
+        }
 
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
