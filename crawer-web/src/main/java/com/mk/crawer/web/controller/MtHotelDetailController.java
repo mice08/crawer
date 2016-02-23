@@ -4,6 +4,7 @@ import com.mk.crawer.biz.mapper.crawer.MtCityMapper;
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.model.crawer.MtCity;
 import com.mk.crawer.biz.servcie.MtHotelDetailCrawlerService;
+import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
@@ -34,7 +35,7 @@ public class MtHotelDetailController {
     public ResponseEntity<Map<String, Object>> hoteldetail() {
         HashMap<String, Object> result = new HashMap<>();
 
-//        MtCity.MtCityList cityList = crawlerService.crawCityList();
+//        MtCity.MtCityList cityList2 = crawlerService.crawCityList();
 
         List<MtCity> cityList = cityMapper.getCityList();
 

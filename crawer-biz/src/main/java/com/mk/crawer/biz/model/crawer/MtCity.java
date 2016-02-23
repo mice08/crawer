@@ -6,8 +6,8 @@ import java.util.List;
  * Created by BurizaDo on 2/18/16.
  */
 public class MtCity {
+    public int dbId;
     public int id;
-    public int cityId;
     public String rank;
     public String acronym;
     public long onlineTime;

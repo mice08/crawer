@@ -1,18 +1,27 @@
 package com.mk.crawer.biz.servcie.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mk.crawer.biz.mapper.crawer.MtCityMapper;
+import com.mk.crawer.biz.mapper.crawer.MtHotelImageMapper;
+import com.mk.crawer.biz.mapper.crawer.MtHotelMapper;
+import com.mk.crawer.biz.mapper.crawer.MtHotelServiceMapper;
 import com.mk.crawer.biz.model.crawer.MtCity;
 import com.mk.crawer.biz.model.crawer.MtHotel;
+import com.mk.crawer.biz.model.crawer.MtHotelService;
+import com.mk.crawer.biz.model.crawer.MtImage;
 import com.mk.crawer.biz.servcie.MtHotelDetailCrawlerService;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.http.HttpUtil;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by BurizaDo on 2/18/16.
@@ -26,13 +35,26 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
 
     @Autowired
     private MtCityMapper mapper;
+    @Autowired
+    private MtHotelMapper hotelMapper;
+    @Autowired
+    private MtHotelServiceMapper serviceMapper;
+    @Autowired
+    private MtHotelImageMapper imageMapper;
     @Override
     public int crawHotelList(MtCity city) {
         int offset = 0, limit = 50;
         int totalCount = 0;
         boolean isProxyError = true;
         while(true){
-            String url = DETAIL_URL + String.format(DETAIL_URL_PARAM, city.cityId, city.name, limit, offset);
+            String cityName = "";
+            try {
+                cityName = URLEncoder.encode(city.name, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            String url = DETAIL_URL + String.format(DETAIL_URL_PARAM, city.id, cityName, limit, offset);
+            MtHotel.MtHotelList hotelList;
             try {
                 if(isProxyError) {
                     ProxyServer proxyServer = ProxyServerManager.take();
@@ -40,20 +62,87 @@ public class MtHotelDetailCrawlerServiceImpl implements MtHotelDetailCrawlerServ
                 }
                 isProxyError = false;
 
-                String result = HttpUtil.doGet(url);
-                MtHotel.MtHotelList hotelList = JSONUtil.fromJson(result, MtHotel.MtHotelList.class);
-                totalCount += hotelList.data.size();
-                if(hotelList.data.size() < limit){
-                    break;
+                String result = HttpUtil.doGetNoProxy(url);
+                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+                hotelList = gson.fromJson(result, MtHotel.MtHotelList.class);
+                if(hotelList == null){
+                    continue;
                 }
-                offset += limit;
             } catch (Exception e) {
                 if(e instanceof java.net.SocketTimeoutException){
                     isProxyError = true;
+                    continue;
                 }
 
                 e.printStackTrace();
+                ++ offset;
+                continue;
             }
+
+            if(hotelList != null) {
+                for (MtHotel hotel : hotelList.data) {
+                    try {
+                        hotel.abstractsString = hotel.abstracts.toString();
+                        hotel.campaignTagListString = hotel.campaignTagList.toString();
+                        hotel.extraString = hotel.extra.toString();
+                        hotel.fodderInfoString = hotel.fodderInfo.toString();
+                        hotel.innImagesString = hotel.innImages.toString();
+                        hotel.ktvString = hotel.ktv.toString();
+                        hotel.payInfoString = hotel.payInfo.toString();
+                        hotel.preTagsString = hotel.preTags.toString();
+                        hotel.superVoucherString = hotel.superVoucher.toString();
+                        hotel.tourString = hotel.tour.toString();
+                        hotelMapper.insert(hotel);
+
+                        if(!TextUtils.isEmpty(hotel.parkingInfo)) {
+                            MtHotelService service = new MtHotelService();
+                            service.attrDesc = "parkingInfo";
+                            service.attrDetail = hotel.parkingInfo;
+                            service.poiId = Integer.valueOf(hotel.poiid);
+                            service.md5 = service.generateMD5();
+                            serviceMapper.insert(service);
+                        }
+
+                        if(hotel.wifi) {
+                            MtHotelService wifi = new MtHotelService();
+                            wifi.attrDesc = "wifi";
+                            wifi.attrDetail = String.valueOf(hotel.wifi);
+                            wifi.poiId = Integer.valueOf(hotel.poiid);
+                            wifi.md5 = wifi.generateMD5();
+                            serviceMapper.insert(wifi);
+                        }
+
+                        if(!TextUtils.isEmpty(hotel.frontImg)){
+                            MtImage image = new MtImage();
+                            image.imgDesc = "frontImage";
+                            image.poiid = Integer.valueOf(hotel.poiid);
+                            image.url = hotel.frontImg;
+                            image.md5 = image.generateMD5();
+                            imageMapper.insert(image);
+                        }
+
+                        if(hotel.innImages != null && hotel.innImages.size() > 0){
+                            MtImage image = new MtImage();
+                            image.imgDesc = "innImages";
+                            image.poiid = Integer.valueOf(hotel.poiid);
+                            image.url = hotel.innImagesString;
+                            image.md5 = image.generateMD5();
+                            imageMapper.insert(image);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                totalCount += hotelList.data.size();
+                if (hotelList.data.size() < limit) {
+                    break;
+                }
+                offset += limit;
+            }
+
         }
         return totalCount;
     }
