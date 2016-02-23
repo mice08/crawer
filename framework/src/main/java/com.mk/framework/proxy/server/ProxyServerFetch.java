@@ -77,9 +77,9 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     try {
-                        fetchByBillGBJ();
+                        //fetchByBillGBJ();
                         fetchByBillKDL();
-                        fetchByBillDL666();
+                        //fetchByBillDL666();
                     } finally {
                         TimeUnit.MILLISECONDS.sleep(Config.FETCH_PROXY_TIME_INTERVAL);
                     }
