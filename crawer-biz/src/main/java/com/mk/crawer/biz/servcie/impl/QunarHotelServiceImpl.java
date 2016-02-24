@@ -72,6 +72,15 @@ public class QunarHotelServiceImpl implements QunarHotelService {
         return cityList;
     }
 
+    public List<String>  seletQHotelCity(String city){
+        List<String> hotelIds = new ArrayList<>();
+        List<Map<String, String>> result = qunarHotelMapper.selectQHotelByCity(city);
+        for (Map<String, String> stringMap : result) {
+            hotelIds.add(stringMap.get("source_id"));
+        }
+        return hotelIds;
+    }
+
     @Override
     public Boolean  isOnlineHotel(String hotelId){
         Boolean online = false;

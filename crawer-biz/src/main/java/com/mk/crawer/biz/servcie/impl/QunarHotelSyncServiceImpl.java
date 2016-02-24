@@ -142,9 +142,9 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
 
     public void doImageSync(String  city, Boolean useProxy){
         System.out.println("~~~~~~~~~~start sync hotel image "+ city);
-        List<QunarHotel> qunarHotels = qunarHotelService.selectNoImageHotel(city);
+        List<String> qunarHotelIds = qunarHotelService.seletQHotelCity(city);
         ProxyServer proxyServer = null;
-        for (QunarHotel qunarHotel : qunarHotels) {
+        for (String hotelId : qunarHotelIds) {
 
             try {
 
@@ -160,10 +160,10 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
                 try {
                 if (isOnlineHotel){
 
-                    hotelImageService.crawl(qunarHotel.getSourceId(), useProxy);
+                    hotelImageService.crawl(hotelId, useProxy);
                     slp = 1500;
                 }else {
-                    System.out.println("酒店 id" + qunarHotel.getSourceId() +" 不在上线范围内");
+                    System.out.println("酒店 id" + hotelId +" 不在上线范围内");
                 }
                     Thread.sleep(slp);
                 }catch (InterruptedException e) {

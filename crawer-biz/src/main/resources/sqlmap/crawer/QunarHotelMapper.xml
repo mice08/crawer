@@ -1422,6 +1422,13 @@
     WHERE  city_name = #{city}
   </select>
 
+
+  <select id="selectQHotelByCity" resultType="map">
+    SELECT *
+    from q_hotel
+    WHERE  city_name = #{city} and price_valid = 'T'
+  </select>
+
   <select id="selectNoImageHotel" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
