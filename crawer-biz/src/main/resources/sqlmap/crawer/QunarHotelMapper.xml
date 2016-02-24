@@ -1426,14 +1426,14 @@
   <select id="selectQHotelByCity" resultType="map">
     SELECT *
     from q_hotel
-    WHERE  city_name = #{city} and price_valid = 'T'
+    WHERE  city_code = #{city} and price_valid = 'T'
   </select>
 
   <select id="selectNoImageHotel" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     from t_qunar_hotel
-    WHERE  source_id   NOT IN (select DISTINCT hotel_source_id from t_ex_hotel_hotel_image) and city_code = #{city}
+    WHERE  source_id   NOT IN (select DISTINCT hotel_source_id from t_ex_hotel_hotel_image) and city_name = #{city}
   </select>
 
 
