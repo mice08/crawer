@@ -3,6 +3,7 @@ package com.mk.framework.proxy.http;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -52,12 +53,21 @@ public class Device {
     public static class AppleIPad implements IRequestHead {
         @Override
         public Header[] getHeaders() {
-            return HeaderConfig
+            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+            try {
+                 cookie = HttpUtil.getCookies();
+            } catch (IOException e) {
+                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+                e.printStackTrace();
+            }
+
+           return HeaderConfig
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53")
-                    .add("Referer", "http://pad.qunar.com/")
+                    .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
+                    .add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -65,12 +75,20 @@ public class Device {
     public static class AppleIPadMin implements IRequestHead {
         @Override
         public Header[] getHeaders() {
+            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+            try {
+                cookie = HttpUtil.getCookies();
+            } catch (IOException e) {
+                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+                e.printStackTrace();
+            }
             return HeaderConfig
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53")
-                    .add("Referer", "http://pad.qunar.com/")
+                    .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
+                    .add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -82,8 +100,10 @@ public class Device {
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; U; en-us; KFAPWI Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Silk/3.13 Safari/535.19 Silk-Accelerated=true")
-                    .add("Referer", "http://pad.qunar.com/")
+                    .add("Host", "http://pad.qunar.com")
+                    .add("Connection", "keep-alive")
                     .add("X-Requested-With", "XMLHttpRequest")
+                    .add("Cookie", "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a")
                     .toArray();
         }
     }
@@ -95,8 +115,10 @@ public class Device {
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JSS15Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Safari/537.36")
-                    .add("Referer", "http://pad.qunar.com/")
+                    .add("Host", "http://pad.qunar.com")
+                    .add("Connection", "keep-alive")
                     .add("X-Requested-With", "XMLHttpRequest")
+                    .add("Cookie", "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a")
                     .toArray();
         }
     }
@@ -108,8 +130,10 @@ public class Device {
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (Linux; Android 4.3; Nexus 7 Build/JSS15Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Safari/537.36")
-                    .add("Referer", "http://pad.qunar.com/")
+                    .add("Host", "http://pad.qunar.com")
+                    .add("Connection", "keep-alive")
                     .add("X-Requested-With", "XMLHttpRequest")
+                    .add("Cookie", "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a")
                     .toArray();
         }
     }
@@ -122,9 +146,9 @@ public class Device {
     static {
         deviceList.add(new AppleIPad());
         deviceList.add(new AppleIPadMin());
-        deviceList.add(new AmazonKindleFireHD());
-        deviceList.add(new GoogleNexus10());
-        deviceList.add(new GoogleNexus7());
+      //  deviceList.add(new AmazonKindleFireHD());
+       // deviceList.add(new GoogleNexus10());
+        //deviceList.add(new GoogleNexus7());
     }
 
     public static IRequestHead random() {

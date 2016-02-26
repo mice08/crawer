@@ -3,8 +3,8 @@ package com.mk.framework.proxy.http;
 import com.mk.framework.proxy.Config;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.ThreadContext;
-import com.mk.framework.proxy.ThreadUtil;
 import com.mk.framework.proxy.server.ProxyServer;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -78,6 +78,7 @@ public class HttpUtil {
         return resp;
     }
 
+
     public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
         LOGGER.info("发送请求：{}", urlStr);
 
@@ -135,6 +136,48 @@ public class HttpUtil {
         }
     }
 
+
+
+    public static String getCookies() throws IOException {
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+
+        try {
+            HttpGet httpGet = new HttpGet("http://pad.qunar.com");
+
+            RequestConfig.Builder builder  = RequestConfig.custom();
+
+
+            builder.setSocketTimeout(Config.READ_TIMEOUT)
+                    .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                    .setConnectTimeout(Config.READ_TIMEOUT);
+
+            httpGet.setConfig(builder.build());
+
+            CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet, getContext());
+
+            Header[] headers  = closeableHttpResponse.getAllHeaders();
+            String cookies =null;
+            for (Header header : headers) {
+               if (header.getName().equals("Set-Cookie"))
+                   if (header.getValue().contains("QN48")){
+                       String [] tmp = header.getValue().split(";");
+
+                       cookies= tmp[0];
+                       break;
+                   }
+
+            }
+            return cookies ;
+        } finally {
+            if ( closeableHttpClient != null ) {
+                closeableHttpClient.close();
+            }
+        }
+    }
+
     public static String urlEncoder(String url) {
         try {
             return URLEncoder.encode(url, "UTF-8");
@@ -145,15 +188,5 @@ public class HttpUtil {
         return null;
     }
 
-    public static void main(String[] args) throws IOException {
-        while ( true ) {
-            LOGGER.info(doGetNoProxy("http://pad.qunar.com/"));
-//            LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hoteldetail?checkInDate=20160112&checkOutDate=20160113&keywords=&location=&seq=chongqing_city_10958&clickNum=0&isLM=0&type=0"));
-            ThreadUtil.sleep(1000);
-        }
-//        LOGGER.info(doGetNoProxy("http://1212.ip138.com/ic.asp"));
-//        LOGGER.info(doGetNoProxy("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
-//        LOGGER.info(doGetNoProxy("http://www.xueshandai.com/"));
-    }
 
 }

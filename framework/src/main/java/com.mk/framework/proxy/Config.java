@@ -9,7 +9,7 @@ public class Config {
      * 通过API提取其他网站价格数据超时时间--单位：毫秒
      */
     public static final Integer FETCH_TIMEOUT = 2500;
-    public static final Integer READ_TIMEOUT = 10000;
+    public static final Integer READ_TIMEOUT = 20000;
     /**
      * 付费IP代理提取地址
      * api.goubanjia.com

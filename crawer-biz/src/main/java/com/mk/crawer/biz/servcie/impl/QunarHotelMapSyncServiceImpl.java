@@ -13,6 +13,7 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +176,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
             for (int i=1;i<=count/len;i++){
+
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
                 if (hotelResult==null){
                     continue;
@@ -184,6 +186,12 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                     continue;
                 }
                 saveQunarHotel(hotelsJson,city.getCityName());
+
+                try {
+                    Thread.currentThread().sleep(5000l);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -389,5 +397,12 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             return null;
         }
         return resultMap;
+    }
+
+    public static void main(String[] args) {
+        String url = "http://pad.qunar.com/api/hotel/hotellist?city=%E4%B9%8C%E9%B2%81%E6%9C%A8%E9%BD%90&start=0&len=10";
+        //String url = "http://pad.qunar.com/";
+        String rs = HttpUtil.doGetNoProxy(url);
+        System.out.println(rs);
     }
 }
