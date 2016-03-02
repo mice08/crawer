@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 
@@ -34,7 +35,7 @@ public class HotelPriceJobController {
 
     private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(HotelPriceJobController.class);
 
-    @RequestMapping(value = "/add-city-hotel")
+    @RequestMapping(value = "/add-city-hotel" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> addCityHotel(String city) {
         HashMap hm = new HashMap();
