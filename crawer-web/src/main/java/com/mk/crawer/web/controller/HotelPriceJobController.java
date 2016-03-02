@@ -50,12 +50,10 @@ public class HotelPriceJobController {
             try {
                 jedis = RedisUtil.getJedis();
 
-                QunarHotelExample hotelExample = new QunarHotelExample();
-                hotelExample.createCriteria().andCityNameEqualTo(city);
 
                 QunarHotelService qunarHotelService = AppUtils.getBean(QunarHotelService.class);
 
-                List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
+                List<QunarHotel> hotelList = qunarHotelService.selectHotelByCity(city);
                 if (hotelList != null){
                     for (QunarHotel hotel : hotelList) {
                         HotelDetail hotelDetail = new HotelDetail();

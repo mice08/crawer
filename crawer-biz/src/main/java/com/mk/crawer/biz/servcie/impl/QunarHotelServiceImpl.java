@@ -94,7 +94,7 @@ public class QunarHotelServiceImpl implements QunarHotelService {
         return online;
     }
 
-    public List<QunarHotel>  seletHotelByCity(String city){
+    public List<QunarHotel>  selectHotelByCity(String city){
 
         return qunarHotelMapper.selectHotelByCity(city);
     }
