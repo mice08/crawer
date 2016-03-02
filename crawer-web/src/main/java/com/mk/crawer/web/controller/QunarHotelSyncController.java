@@ -59,7 +59,7 @@ public class QunarHotelSyncController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/hotelimagesynccity", method = RequestMethod.GET)
+    @RequestMapping(value = "/hotelimagesynccity", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelSyncImageByCity(String city) {
         Map<String, Object> result = new HashMap<String, Object>();
