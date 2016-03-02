@@ -113,8 +113,8 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
     public Map<String,Object> doSync(CityList city){
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
-        int start=0;
-        int len=100;
+        int start=1300;
+        int len=500;
         String hotelResult=getRemoteDate(city.getCityName(),start,len);
         if(hotelResult==null){
             logger.info("====================hotelResult city={}  continue because url reslut is null====================",city.getCityName());
@@ -175,7 +175,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         saveQunarHotel(hotels,city.getCityName());
         int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
-            for (int i=1;i<=count/len;i++){
+            for (int i=2;i<=count/len;i++){
 
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
                 if (hotelResult==null){

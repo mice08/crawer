@@ -36,32 +36,10 @@ public class HotelPriceJobController {
 
     @RequestMapping(value = "/add-city-hotel")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> addCityHotel(Integer cityCode) {
+    public ResponseEntity<Map<String,Object>> addCityHotel(String city) {
         HashMap hm = new HashMap();
 
 
-        String city = null;
-
-        switch (cityCode) {
-            case 1:
-                city = "上海";
-                break;
-            case 2:
-                city = "安庆";
-                break;
-            case 3:
-                city = "洛阳";
-                break;
-            case 4:
-                city = "长沙";
-                break;
-            case 5:
-                city = "重庆";
-                break;
-            case 6:
-                city = "成都";
-                break;
-        }
 
         if (StringUtils.isEmpty(city)) {
             hm.put("result", "没有指定城市");
