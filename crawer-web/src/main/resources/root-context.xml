@@ -5,6 +5,6 @@
 
 	<import resource="db-context.xml" />
 	<import resource="schedule-context.xml" />
-
+	<import resource="classpath*:/spring/*.xml" />
 
 </beans>
