@@ -267,6 +267,16 @@
 			<artifactId>easyocr</artifactId>
 			<version>3.0.4-RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.2.3.RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>
