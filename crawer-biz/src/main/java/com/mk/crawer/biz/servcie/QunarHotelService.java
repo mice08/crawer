@@ -22,7 +22,7 @@ public interface QunarHotelService {
 
     int updateByPrimaryKey(QunarHotel record);
     List<String>  seletAllHotelCity();
-    public List<QunarHotel>  seletHotelByCity(String city);
+    public List<QunarHotel>  selectHotelByCity(String city);
     List<String>  seletQHotelCity(String city);
     public List<QunarHotel>  selectNoImageHotel(String city);
     public Boolean isOnlineHotel(String hotelId);

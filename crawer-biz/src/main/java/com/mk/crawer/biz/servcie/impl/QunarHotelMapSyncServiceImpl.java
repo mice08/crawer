@@ -175,7 +175,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         saveQunarHotel(hotels,city.getCityName());
         int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
-            for (int i=1;i<=count/len;i++){
+            for (int i=2;i<=count/len;i++){
 
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
                 if (hotelResult==null){

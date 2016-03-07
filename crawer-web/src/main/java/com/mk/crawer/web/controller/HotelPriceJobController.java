@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 
@@ -34,34 +35,12 @@ public class HotelPriceJobController {
 
     private static final Logger LOGGER =  org.slf4j.LoggerFactory.getLogger(HotelPriceJobController.class);
 
-    @RequestMapping(value = "/add-city-hotel")
+    @RequestMapping(value = "/add-city-hotel" , method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> addCityHotel(Integer cityCode) {
+    public ResponseEntity<Map<String,Object>> addCityHotel(String city) {
         HashMap hm = new HashMap();
 
 
-        String city = null;
-
-        switch (cityCode) {
-            case 1:
-                city = "上海";
-                break;
-            case 2:
-                city = "安庆";
-                break;
-            case 3:
-                city = "洛阳";
-                break;
-            case 4:
-                city = "长沙";
-                break;
-            case 5:
-                city = "重庆";
-                break;
-            case 6:
-                city = "成都";
-                break;
-        }
 
         if (StringUtils.isEmpty(city)) {
             hm.put("result", "没有指定城市");
@@ -72,12 +51,10 @@ public class HotelPriceJobController {
             try {
                 jedis = RedisUtil.getJedis();
 
-                QunarHotelExample hotelExample = new QunarHotelExample();
-                hotelExample.createCriteria().andCityNameEqualTo(city);
 
                 QunarHotelService qunarHotelService = AppUtils.getBean(QunarHotelService.class);
 
-                List<QunarHotel> hotelList = qunarHotelService.selectByExample(hotelExample);
+                List<QunarHotel> hotelList = qunarHotelService.selectHotelByCity(city);
                 if (hotelList != null){
                     for (QunarHotel hotel : hotelList) {
                         HotelDetail hotelDetail = new HotelDetail();
