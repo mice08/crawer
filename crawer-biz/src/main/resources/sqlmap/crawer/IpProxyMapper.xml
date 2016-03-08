@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.IpProxyMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.IpProxy" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="proxy_address" property="proxyAddress" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime"/>
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime"/>
+    <result column="ip_level" property="ipLevel"  />
+    <result column="is_vaild" property="isVaild" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
+    insert into ip_proxy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ipAddress != null" >
+        ip_address,
+      </if>
+      <if test="port != null" >
+        port,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="proxyAddress != null" >
+        proxy_address,
+      </if>
+      <if test="creataTime != null" >
+        create_time,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="check_time != null" >
+        checkTime,
+      </if>
+      <if test="ipLevel != null" >
+        ip_level,
+      </if>
+      <if test="isVaild != null" >
+        is_vaild,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ipAddress != null" >
+        #{ip_address,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type},
+      </if>
+      <if test="proxyAddress != null" >
+        #{proxyAddress},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{check_status,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime},
+      </if>
+      <if test="ipLevel != null" >
+        #{ipLevel},
+      </if>
+      <if test="isVaild != null" >
+        #{isVaild},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
+    update ip_proxy
+    <set >
+      <if test="ipAddress != null" >
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type},
+      </if>
+      <if test="proxyAddress != null" >
+        proxy_address = #{proxyAddress,jdbcType=DECIMAL},
+      </if>
+      <if test="createtime != null" >
+        create_time = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime},
+      </if>
+      <if test="ipLevel != null" >
+        ip_level = #{ipLevel},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <insert id="insertIpProxyBatch" parameterType="com.mk.crawer.biz.model.crawer.IpProxy">
+    insert into ip_proxy
+    (ip_address,port,type,proxy_address,create_time,note,check_status,ip_level,is_vaild)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.ipAddress}, #{item.port}, #{item.type}, #{item.proxyAddress},
+      #{item.createtime}, #{item.note}, #{item.checkStatus} #{item.ipLevel} #{item.isVaild})
+    </foreach>
+  </insert>
+</mapper>
