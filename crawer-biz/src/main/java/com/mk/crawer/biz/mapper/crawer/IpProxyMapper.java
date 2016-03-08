@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface IpProxyMapper {
 
-    int   insertIpProxyBatch(List<IpProxy> list);
+    int   addIpProxyBatch(List<IpProxy> list);
 
-    int   insertSelective(IpProxy  ipProxy);
+    int   addSelective(IpProxy  ipProxy);
 
     int   updateByPrimaryKeySelective(IpProxy  ipProxy);
 

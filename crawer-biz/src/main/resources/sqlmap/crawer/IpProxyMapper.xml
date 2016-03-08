@@ -14,7 +14,7 @@
     <result column="ip_level" property="ipLevel"  />
     <result column="is_vaild" property="isVaild" />
   </resultMap>
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
+  <insert id="addSelective" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
     insert into ip_proxy
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="ipAddress != null" >
@@ -29,7 +29,7 @@
       <if test="proxyAddress != null" >
         proxy_address,
       </if>
-      <if test="creataTime != null" >
+      <if test="createTime != null" >
         create_time,
       </if>
       <if test="note != null" >
@@ -38,8 +38,8 @@
       <if test="checkStatus != null" >
         check_status,
       </if>
-      <if test="check_time != null" >
-        checkTime,
+      <if test="checkTime != null" >
+        check_time,
       </if>
       <if test="ipLevel != null" >
         ip_level,
@@ -50,7 +50,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="ipAddress != null" >
-        #{ip_address,jdbcType=VARCHAR},
+        #{ipAddress,jdbcType=VARCHAR},
       </if>
       <if test="port != null" >
         #{port,jdbcType=VARCHAR},
@@ -68,7 +68,7 @@
         #{note,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        #{check_status,jdbcType=VARCHAR},
+        #{checkStatus,jdbcType=VARCHAR},
       </if>
       <if test="checkTime != null" >
         #{checkTime},
@@ -119,13 +119,13 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <insert id="insertIpProxyBatch" parameterType="com.mk.crawer.biz.model.crawer.IpProxy">
+  <insert id="addIpProxyBatch" parameterType="com.mk.crawer.biz.model.crawer.IpProxy">
     insert into ip_proxy
     (ip_address,port,type,proxy_address,create_time,note,check_status,ip_level,is_vaild)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.ipAddress}, #{item.port}, #{item.type}, #{item.proxyAddress},
-      #{item.createtime}, #{item.note}, #{item.checkStatus} #{item.ipLevel} #{item.isVaild})
+      #{item.createTime}, #{item.note}, #{item.checkStatus}, #{item.ipLevel}, #{item.isVaild})
     </foreach>
   </insert>
 </mapper>

@@ -18,12 +18,12 @@ public class IpServiceImpl implements IIpService{
     @Autowired
     private IpProxyMapper ipProxyMapper;
 
-   public int   insertIpProxyBatch(List<IpProxy> list){
-        return  ipProxyMapper.insertIpProxyBatch(list);
+   public int   addIpProxyBatch(List<IpProxy> list){
+        return  ipProxyMapper.addIpProxyBatch(list);
     }
 
-    public  int   insertSelective(IpProxy  ipProxy){
-        return  ipProxyMapper.insertSelective(ipProxy);
+    public  int   addSelective(IpProxy  ipProxy){
+        return  ipProxyMapper.addSelective(ipProxy);
     }
 
     public  int   updateByPrimaryKeySelective(IpProxy  ipProxy){

@@ -1,8 +1,10 @@
-package com.mk.crawer.biz.utils;
+package com.mk.crawer.biz.utils.CrawlerChildren;
 
+import com.alibaba.fastjson.JSONArray;
 import com.mk.crawer.biz.model.crawer.IpProxy;
 import com.mk.crawer.biz.servcie.impl.IpServiceImpl;
 import com.mk.framework.AppUtils;
+import com.mk.framework.MkJedisConnectionFactory;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -11,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,11 +22,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Created by jeashi on 16/3/7.
+ * Created by jeashi on 16/3/8.
  */
-public class MyCrawler extends WebCrawler {
-
-
+public class MyCrawlerIp84 extends WebCrawler {
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
             + "|png|mp3|mp3|zip|gz))$");
 
@@ -48,23 +49,35 @@ public class MyCrawler extends WebCrawler {
 
             Document doc = Jsoup.parse(html);
 
-            Elements  tableElement = doc.getElementsByClass("list");
+            Elements tableElement = doc.getElementsByClass("list");
             Elements  trElement = tableElement.get(0).getElementsByTag("tr");
 
-            List<IpProxy> ipProxyList =  new ArrayList<IpProxy>();
+            List<IpProxy> ipProxyList = new ArrayList<IpProxy>();
             for(int i=1;i<trElement.size();i++){
                 Elements  tdElement = trElement.get(i).getElementsByTag("td");
                 IpProxy ip = getIpProxy(tdElement);
                 if(null==ip){
                     continue;
                 }else{
+                    try{
+                        IpServiceImpl ipServiceImpl = AppUtils.getBean(IpServiceImpl.class);
+                        int  res =  ipServiceImpl.addSelective(ip);
+                        System.out.println("执行结束,影响行数:"+res);
+                    }catch (Exception exc){
+                        exc.printStackTrace();
+                    }
                     ipProxyList.add(ip);
                 }
             }
-        if(!CollectionUtils.isEmpty(ipProxyList)){
-            IpServiceImpl  is = AppUtils.getBean(IpServiceImpl.class);
-            is.insertIpProxyBatch(ipProxyList);
-        }
+            if(!CollectionUtils.isEmpty(ipProxyList)){
+//                try{
+//                    IpServiceImpl ipServiceImpl = AppUtils.getBean(IpServiceImpl.class);
+//                    int  res =  ipServiceImpl.addIpProxyBatch(ipProxyList);
+//                    System.out.println("执行结束,影响行数:"+res);
+//                }catch (Exception exc){
+//                    exc.printStackTrace();
+//                }
+            }
 
         }
     }
@@ -85,9 +98,27 @@ public class MyCrawler extends WebCrawler {
         ipProxy.setNote(note);
         ipProxy.setType(type);
         ipProxy.setCreateTime(new Date());
+        ipProxy.setCheckStatus("1"); //设置校检状态为初始化
         return  ipProxy;
     }
 
+    public  void  addRedisGroup(List<IpProxy>   ipProxyList){
+        if(null==ipProxyList){
+            return ;
+        }
+        MkJedisConnectionFactory jedisFactory = AppUtils.getBean(MkJedisConnectionFactory.class);
+        Jedis jedis = null;
+        try{
+            jedis =  jedisFactory.getJedis();
+            jedis.lpush("IPPROXYLIST", JSONArray.toJSONString(ipProxyList));
+        }catch (Exception e) {
+            System.out.println("写入redis失败");
+            e.printStackTrace();
+        }finally {
+            if(null!=jedis){
+                jedis.close();
+            }
+        }
+    }
 
-    //AppUtils
 }

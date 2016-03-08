@@ -441,11 +441,11 @@
 				<label>simulation</label>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 				<ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
-				<ots.jdbc.user>root</ots.jdbc.user>
-				<ots.jdbc.password>LZBV5D5ak</ots.jdbc.password>
+				<ots.jdbc.user>smlt-writer</ots.jdbc.user>
+				<ots.jdbc.password>j9bcyZ5U5LQp7xxEomsu</ots.jdbc.password>
 				<crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
-				<crawer.jdbc.user>root</crawer.jdbc.user>
-				<crawer.jdbc.password>LZBV5D5ak</crawer.jdbc.password>
+				<crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
+				<crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
 				<spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
 				<spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
 				<!--<spring.redis.sentinel.master>mymaster</spring.redis.sentinel.master>-->
