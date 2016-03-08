@@ -24,12 +24,23 @@ public class RedisCacheName {
     /**
      * 待刷新酒店价格的酒店ID列表
      */
+    //开关,0 使用master  其他使用 slave
+    public static final String CRAWLER_HOTEL_INFO_REFRESH_SET_SWITCH = "CRAWLER:HOTEL:INFO:REFRESH:SET:SWITCH";
+
+    //master队列
     public static final String CRAWLER_HOTEL_INFO_REFRESH_SET = "CRAWLER:HOTEL:INFO:REFRESH:SET";
 
-    /**
-     * 正在刷新酒店价格的酒店ID列表
-     */
-    public static final String CRAWLER_HOTEL_INFO_REFRESHING_SET = "CRAWLER:HOTEL:INFO:REFRESHING:SET";
+    //slave队列
+    public static final String CRAWLER_HOTEL_INFO_REFRESH_SET_SLAVE = "CRAWLER:HOTEL:INFO:REFRESH:SET:SLAVE";
+
+    //错误队列 score 1 错误1次, score 错误2次 , score错误3次
+    public static final String CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR = "CRAWLER:HOTEL:INFO:REFRESH:SET:ERROR";
+
+
+//    /**
+//     * 正在刷新酒店价格的酒店ID列表
+//     */
+//    public static final String CRAWLER_HOTEL_INFO_REFRESHING_SET = "CRAWLER:HOTEL:INFO:REFRESHING:SET";
 
     /**
      * 所有获取到的代理IP集合
