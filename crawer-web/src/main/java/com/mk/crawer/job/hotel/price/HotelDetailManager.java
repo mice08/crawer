@@ -366,6 +366,12 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
             }
 
+            //
+            Double score = jedis.zscore(returnCityKey,cityName);
+            if (score < 0) {
+                Long cityCount = jedis.zcard(returnCityKey);
+                jedis.zadd(returnCityKey, cityCount + 1, cityName);
+            }
 
             //返还酒店队列
             String[] hotelKey = HotelDetailManager.hotelSetSwitch(returnCityKey);
