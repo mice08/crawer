@@ -18,7 +18,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping(value = "/manager")
+@RequestMapping(value = "/citylist")
 public class ReFreshCityListController {
 
     @RequestMapping(value = "/removecitylist")

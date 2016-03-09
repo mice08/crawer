@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.util.Set;
 
@@ -141,11 +140,9 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
         try {
             jedis = RedisUtil.getJedis();
-            //
-            transaction = jedis.multi();
 
             //当前城市队列 key
-            String[] cityKey = HotelDetailManager.citySwitch(transaction);
+            String[] cityKey = HotelDetailManager.citySwitch(jedis);
             String curCityKey = cityKey[0];
             String returnCityKey = cityKey[1];
 
@@ -156,7 +153,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             }
 
             //获取城市队列第一个
-            String city = HotelDetailManager.getFirstFromZSet(transaction, curCityKey);
+            String city = HotelDetailManager.getFirstFromZSet(jedis, curCityKey);
             if (null == city) {
                 return null;
             }
@@ -168,15 +165,16 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             String returnHotelKey = hotelKey[1] + "_" + String.valueOf(cityScore);
 
             //获取酒店队列第一个
-            String hotel = HotelDetailManager.getFirstFromZSet(transaction, curHotelKey);
+            String hotel = HotelDetailManager.getFirstFromZSet(jedis, curHotelKey);
             if (null == hotel) {
                 return null;
             }
 
             //默认加入错误队列 1分
-            Response<Double> scoreResponse = transaction.zscore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, hotel);
-            Double errScore = scoreResponse.get();
+            Double errScore = jedis.zscore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, hotel);
 
+            //
+            transaction = jedis.multi();
             if (errScore < 0) {
                 //不存在加入
                 transaction.zadd(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, errScore + 1, hotel);
@@ -203,11 +201,9 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         }
     }
 
-    private static String getFirstFromZSet(Transaction transaction, String key) {
+    private static String getFirstFromZSet(Jedis jedis, String key) {
         //获取城市队列第一个
-        Response<Set<String>> citySetResponse = transaction.zrange(key, 0, 0);
-        Set<String> zset = citySetResponse.get();
-
+        Set<String> zset = jedis.zrange(key, 0, 0);
         for (String value : zset) {
             return value;
         }
@@ -220,21 +216,19 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      *
      * @return String[]{当前队列,返还队列}
      */
-    private static String[] citySwitch(Transaction transaction) {
-        //
-        if (null == transaction) {
+    private static String[] citySwitch(Jedis jedis) {
+
+        if (null == jedis) {
             return new String[]{
                     RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER,
                     RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE};
         }
 
         //master 数量
-        Response<Long> masterCountResponse = transaction.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER);
-        Long masterCount = masterCountResponse.get();
+        Long masterCount = jedis.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER);
 
         //slave数量
-        Response<Long> slaveCountResponse = transaction.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE);
-        Long slaveCount = slaveCountResponse.get();
+        Long slaveCount = jedis.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE);
 
         //错误状态,返回master
         if (null == masterCount || null == slaveCount) {
@@ -247,7 +241,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         //当发现队列空,切换到另一个队列
         if (masterCount == 0) {
             //切换到slave
-            transaction.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "0");
+            jedis.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "0");
 
             return new String[]{
                     RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE,
@@ -255,7 +249,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
         } else if (slaveCount == 0) {
             //切换到master
-            transaction.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "1");
+            jedis.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "1");
 
             return new String[]{
                     RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER,
@@ -263,9 +257,8 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
         } else {
             //城市开关,0 使用slave队列  其他使用 master队列
-            Response<String> crawlerSwitchResponse =
-                    transaction.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
-            String crawlerSwitch = crawlerSwitchResponse.get();
+            String crawlerSwitch =
+                    jedis.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
             if ("0".equals(crawlerSwitch)) {
                 return new String[]{
                         RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE,
@@ -361,14 +354,11 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
         try {
             jedis = RedisUtil.getJedis();
-
-            transaction = jedis.multi();
+            //城市队列开关,0 使用slave队列  其他使用 master队列,返还时反之
+            String crawlerSwitch = jedis.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
 
             //当前返回city
             String returnCityKey;
-            Response<String> crawlerSwitchResponse =
-                    transaction.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
-            String crawlerSwitch = crawlerSwitchResponse.get();
             //城市队列开关,0 使用slave队列  其他使用 master队列,返还时反之
             if ("0".equals(crawlerSwitch)) {
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER;
@@ -376,18 +366,20 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
             }
 
-            if (isDeleteFromError) {
-                //从错误队列中删除
-                transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, jsonHotel);
-            }
 
             //返还酒店队列
             String[] hotelKey = HotelDetailManager.hotelSetSwitch(returnCityKey);
             String returnHotelKey = hotelKey[1] + "_" + String.valueOf(cityScore);
 
             //队列长度
-            Response<Long> countResponse = transaction.zcard(returnHotelKey);
-            Long count = countResponse.get();
+            Long count = jedis.zcard(returnHotelKey);
+            //
+            transaction = jedis.multi();
+
+            if (isDeleteFromError) {
+                //从错误队列中删除
+                transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, jsonHotel);
+            }
 
             //放置最后
             Response<Long> addResponse = transaction.zadd(

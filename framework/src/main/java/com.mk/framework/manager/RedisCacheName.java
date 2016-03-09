@@ -26,8 +26,6 @@ public class RedisCacheName {
      */
     //城市队列开关,0 使用slave队列  其他使用 master队列
     public static final String CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH = "CRAWLER:HOTEL:CITY:REFRESH:SET:SWITCH";
-    //酒店队列开关,0 使用slave队列  其他使用 master队列
-    public static final String CRAWLER_HOTEL_INFO_REFRESH_SET_SWITCH = "CRAWLER:HOTEL:INFO:REFRESH:SET:SWITCH";
 
     //酒店城市master队列
     public static final String CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER = "CRAWLER:HOTEL:CITY:REFRESH:SET:MASTER";
@@ -44,12 +42,10 @@ public class RedisCacheName {
     //错误队列 score 1 错误1次, score 错误2次 , score错误3次 ...
     public static final String CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR = "CRAWLER:HOTEL:INFO:REFRESH:SET:ERROR";
 
-    /**
-     * 正在刷新酒店价格的酒店ID列表
-     */
-    public static final String CRAWLER_HOTEL_INFO_REFRESHING_SET = "CRAWLER:HOTEL:INFO:REFRESHING:SET";
-
-
+//    /**
+//     * 正在刷新酒店价格的酒店ID列表
+//     */
+//    public static final String CRAWLER_HOTEL_INFO_REFRESHING_SET = "CRAWLER:HOTEL:INFO:REFRESHING:SET";
 
     /**
      * 所有获取到的代理IP集合
