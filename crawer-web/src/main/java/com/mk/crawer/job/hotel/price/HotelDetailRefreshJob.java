@@ -65,6 +65,10 @@ public class HotelDetailRefreshJob implements ApplicationListener<ContextRefresh
                 try {
                     ProxyServer proxyServer = ProxyServerManager.take();
                     HotelDetail hotelDetail = HotelDetailManager.take();
+                    if (null == hotelDetail) {
+                        LOGGER.info("无酒店,刷新酒店信息的任务暂时暂停");
+                        TimeUnit.SECONDS.sleep(1);
+                    }
                     HotelDetailRefreshThread refreshThread =
                             new HotelDetailRefreshThread(proxyServer, hotelDetail);
                     try {
