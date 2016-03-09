@@ -17,7 +17,7 @@ import java.util.Set;
 public class TaskServiceManager {
     private static MkJedisConnectionFactory connectionFactory = null;
 
-    static Long add(CityList cityList) {
+    public static Long add(CityList cityList) {
         Jedis jedis = getJedis();
 
         return jedis.zadd(
@@ -26,14 +26,14 @@ public class TaskServiceManager {
                 JSONUtil.toJson(cityList));
     }
 
-    static void remove(CityList cityList) {
+    public static void remove(CityList cityList) {
         Jedis jedis = getJedis();
         jedis.zrem(
                 RedisCacheName.CRAWLER_CITY_NAME_SET,
                 JSONUtil.toJson(cityList));
     }
 
-    static List<CityList> listAllCity() {
+    public static List<CityList> listAllCity() {
         Jedis jedis = getJedis();
         Set<String> jsonStrList = jedis.zrange(RedisCacheName.CRAWLER_CITY_NAME_SET,0 , -1);
 
@@ -47,9 +47,16 @@ public class TaskServiceManager {
         return cityLists;
     }
 
+    public static Double getScore(String city) {
+        if (null == city) {
+            return 0d;
+        }
+        Jedis jedis = getJedis();
 
+        return jedis.zscore(RedisCacheName.CRAWLER_CITY_NAME_SET ,city);
+    }
 
-    static Long count() {
+    public static Long count() {
         Jedis jedis = getJedis();
 
         return jedis.zcard(RedisCacheName.CRAWLER_CITY_NAME_SET);

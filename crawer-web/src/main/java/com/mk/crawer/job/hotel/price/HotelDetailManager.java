@@ -1,5 +1,6 @@
 package com.mk.crawer.job.hotel.price;
 
+import com.mk.crawer.job.impl.TaskServiceManager;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
 import com.mk.framework.proxy.RedisUtil;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.util.Set;
 
@@ -131,9 +133,8 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      * 从本地阻塞队列获取
      * 该方法会阻塞
      * @return
-     * @throws InterruptedException
      */
-    public static HotelDetail take() throws InterruptedException {
+    public static HotelDetail take() {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -143,7 +144,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             transaction = jedis.multi();
 
             //当前城市队列 key
-            String []cityKey = HotelDetailManager.citySwitch(transaction);
+            String[] cityKey = HotelDetailManager.citySwitch(transaction);
             String curCityKey = cityKey[0];
             String returnCityKey = cityKey[1];
 
@@ -160,38 +161,45 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             }
 
             //当前酒店队列 key
+            Double cityScore = TaskServiceManager.getScore(city);
             String[] hotelKey = HotelDetailManager.hotelSetSwitch(curCityKey);
-            String curHotelKey = hotelKey[0];
-            String returnHotelKey = hotelKey[1];
+            String curHotelKey = hotelKey[0] + "_" + String.valueOf(cityScore);
+            String returnHotelKey = hotelKey[1] + "_" + String.valueOf(cityScore);
 
-            //
-            String hotel = HotelDetailManager.getFirstFromZSet(transaction, "");
-
-
-//            //优先处理 错误 分数为3
-//            transaction.zrangeByScore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR,3,3,0,1);
-
-            //
-            transaction.zincrby(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR,4,"");
-
-            //
-//            return
-
-            //获取队列第一个
-            transaction.zrange(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,0,0);
-
-            //移除
-            transaction.zrem(curSet,"");
+            //获取酒店队列第一个
+            String hotel = HotelDetailManager.getFirstFromZSet(transaction, curHotelKey);
+            if (null == hotel) {
+                return null;
+            }
 
             //默认加入错误队列 1分
-            transaction.zadd(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR,1,"");
+            Response<Double> scoreResponse = transaction.zscore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, hotel);
+            Double errScore = scoreResponse.get();
 
-        } catch (InterruptedException e) {
-            LOGGER.error("初始化待刷新信息的酒店时线程被中断：", e);
+            if (errScore < 0) {
+                //不存在加入
+                transaction.zadd(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, errScore + 1, hotel);
+            } else {
+                //已存在,调整
+                transaction.zincrby(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, errScore + 1, hotel);
+            }
+
+            //从酒店队列 移除
+            transaction.zrem(curHotelKey, hotel);
+
+            //执行
+            transaction.exec();
+
+            return JSONUtil.fromJson(hotel, HotelDetail.class);
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.discard();
+            }
+            throw e;
         } finally {
             RedisUtil.close(jedis);
         }
-        return null;
     }
 
     private static String getFirstFromZSet(Transaction transaction ,String key) {
@@ -338,18 +346,44 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         Jedis jedis = null;
         Transaction transaction = null;
 
+        //
+        String cityName = hotelDetail.getCityName();
+        //
+        String jsonHotel = JSONUtil.toJson(hotelDetail);
+
         try {
             jedis = RedisUtil.getJedis();
 
-            String jsonStr = JSONUtil.toJson(hotelDetail);
-
             transaction = jedis.multi();
 
-            transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, jsonStr);
+            //城市id
+            Double cityScore = TaskServiceManager.getScore(cityName);
+
+            //当前返回city
+            String returnCityKey;
+            Response<String> crawlerSwitchResponse =
+                    transaction.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
+            String crawlerSwitch = crawlerSwitchResponse.get();
+            //城市队列开关,0 使用slave队列  其他使用 master队列,返还时反之
+            if ("0".equals(crawlerSwitch)) {
+                returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER;
+            } else {
+                returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
+            }
+
+            //返还酒店队列
+            String[] hotelKey = HotelDetailManager.hotelSetSwitch(returnCityKey);
+            String returnHotelKey = hotelKey[1] + "_" + String.valueOf(cityScore);
+
+            //队列长度
+            Response<Long> countResponse =  transaction.zcard(returnHotelKey);
+            Long count = countResponse.get();
+
+            //放置最后
             transaction.zadd(
-                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,
-                    ScoreUtil.getScore(hotelDetail.getCityName()),
-                    jsonStr);
+                    returnHotelKey,
+                    count + 1,
+                    jsonHotel);
 
             transaction.exec();
         } catch (Exception e) {
