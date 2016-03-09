@@ -85,10 +85,6 @@ public class IpController {
         config.setCrawlStorageFolder(crawlStorageFolder);
 //        config.setMaxDepthOfCrawling(maxDepthOfCrawling);
 
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-
         String resourcePath = this.getClass().getResource("/").getPath()+"resource.xml";
         Document doc = DocumentUtils.load(resourcePath);
         NodeList nodeList = doc.getElementsByTagName("page");
@@ -98,6 +94,10 @@ public class IpController {
         int checklen = checkerNodeList.getLength();
         System.out.println("checklen"+checklen);
         for( int i=0;i<checklen;i++  ){
+            PageFetcher pageFetcher = new PageFetcher(config);
+            RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+            RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+
             Element checkerEl  = (Element)checkerNodeList.item(i);
             String  classPath = checkerEl.getAttribute("path");
             String  url = checkerEl.getAttribute("url");
