@@ -132,6 +132,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      * 获取待刷新的酒店
      * 从本地阻塞队列获取
      * 该方法会阻塞
+     *
      * @return
      */
     public static HotelDetail take() {
@@ -202,7 +203,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         }
     }
 
-    private static String getFirstFromZSet(Transaction transaction ,String key) {
+    private static String getFirstFromZSet(Transaction transaction, String key) {
         //获取城市队列第一个
         Response<Set<String>> citySetResponse = transaction.zrange(key, 0, 0);
         Set<String> zset = citySetResponse.get();
@@ -216,6 +217,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
     /**
      * 判断当前城市队列
+     *
      * @return String[]{当前队列,返还队列}
      */
     private static String[] citySwitch(Transaction transaction) {
@@ -231,7 +233,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         Long masterCount = masterCountResponse.get();
 
         //slave数量
-        Response<Long>  slaveCountResponse = transaction.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE);
+        Response<Long> slaveCountResponse = transaction.zcard(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE);
         Long slaveCount = slaveCountResponse.get();
 
         //错误状态,返回master
@@ -278,7 +280,6 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
     }
 
     /**
-     *
      * @param citySwitch
      * @return
      */
@@ -339,14 +340,15 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
     /**
      * 将要刷新的酒店添加到Redis,并从正在刷新队列中移除
+     *
      * @param hotelDetail
      * @return
      */
     public static void rollback(HotelDetail hotelDetail) {
-        rollback(hotelDetail,false);
+        addToSlave(hotelDetail, false);
     }
 
-    private static void rollback(HotelDetail hotelDetail, boolean success) {
+    private static boolean addToSlave(HotelDetail hotelDetail, boolean isDeleteFromError) {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -354,14 +356,13 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         String cityName = hotelDetail.getCityName();
         //
         String jsonHotel = JSONUtil.toJson(hotelDetail);
+        //城市id
+        Double cityScore = TaskServiceManager.getScore(cityName);
 
         try {
             jedis = RedisUtil.getJedis();
 
             transaction = jedis.multi();
-
-            //城市id
-            Double cityScore = TaskServiceManager.getScore(cityName);
 
             //当前返回city
             String returnCityKey;
@@ -375,9 +376,9 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
             }
 
-            if (success) {
+            if (isDeleteFromError) {
                 //从错误队列中删除
-                transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR,jsonHotel);
+                transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, jsonHotel);
             }
 
             //返还酒店队列
@@ -385,18 +386,20 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             String returnHotelKey = hotelKey[1] + "_" + String.valueOf(cityScore);
 
             //队列长度
-            Response<Long> countResponse =  transaction.zcard(returnHotelKey);
+            Response<Long> countResponse = transaction.zcard(returnHotelKey);
             Long count = countResponse.get();
 
             //放置最后
-            transaction.zadd(
+            Response<Long> addResponse = transaction.zadd(
                     returnHotelKey,
                     count + 1,
                     jsonHotel);
 
             transaction.exec();
+            return addResponse.get() > 0;
+
         } catch (Exception e) {
-            if ( transaction != null ) {
+            if (transaction != null) {
                 transaction.discard();
             }
             throw e;
@@ -407,28 +410,15 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
     /**
      * 从Redis移除正在刷新的酒店，代表该酒店的价格完成刷新
+     *
      * @param hotelDetail
      * @return 如果存在该元素返回true，如果不存在该元素返回false
      */
     public static boolean complete(HotelDetail hotelDetail) {
-        rollback(hotelDetail,true);
+        return addToSlave(hotelDetail, true);
     }
 
     public static boolean add(HotelDetail hotelDetail) {
-        Jedis jedis = null;
-        try {
-            jedis = RedisUtil.getJedis();
-
-            String jsonStr = JSONUtil.toJson(hotelDetail);
-
-            Long reply = jedis.zadd(
-                    RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET,
-                    ScoreUtil.getScore(hotelDetail.getCityName()),
-                    jsonStr);
-
-            return reply > 0;
-        } finally {
-            RedisUtil.close(jedis);
-        }
+        return addToSlave(hotelDetail,false);
     }
 }
