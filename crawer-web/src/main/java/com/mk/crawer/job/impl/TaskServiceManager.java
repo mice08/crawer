@@ -6,6 +6,7 @@ import com.mk.framework.MkJedisConnectionFactory;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.JSONUtil;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Tuple;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +67,16 @@ public class TaskServiceManager {
         Jedis jedis = getJedis();
 
         try {
+            Set<Tuple> tuples = jedis.zrangeWithScores(RedisCacheName.CRAWLER_CITY_NAME_SET,0 , -1);
+
+            for (Tuple tuple : tuples) {
+                String element = tuple.getElement();
+                CityList cityList = JSONUtil.fromJson(element, CityList.class);
+
+                if (city.equals(cityList.getCityName())) {
+                    return tuple.getScore();
+                }
+            }
             return jedis.zscore(RedisCacheName.CRAWLER_CITY_NAME_SET, city);
         } finally {
             jedis.close();
