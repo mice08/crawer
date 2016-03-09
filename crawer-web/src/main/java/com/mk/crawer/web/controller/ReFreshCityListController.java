@@ -3,6 +3,7 @@ package com.mk.crawer.web.controller;
 import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.job.impl.HotelInfoRefreshThreadAddJob;
 import com.mk.crawer.job.impl.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,12 @@ import java.util.Map;
 @RequestMapping(value = "/citylist")
 public class ReFreshCityListController {
 
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private HotelInfoRefreshThreadAddJob hotelInfoRefreshThreadAddJob;
+
     @RequestMapping(value = "/removecitylist")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> remove() {
@@ -38,7 +45,7 @@ public class ReFreshCityListController {
     @RequestMapping(value = "/refreshcitylist")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> fetchAndAdd() {
-        new TaskService().reFreshCityList();
+        taskService.reFreshCityList();
 
         HashMap hm = new HashMap();
         String result = "请求成功";
@@ -51,7 +58,7 @@ public class ReFreshCityListController {
     @RequestMapping(value = "/listcity")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> all() {
-        List<CityList> cityLists =  new TaskService().allCityList();
+        List<CityList> cityLists =  taskService.allCityList();
 
         HashMap hm = new HashMap();
         String result = "请求成功";
@@ -66,7 +73,7 @@ public class ReFreshCityListController {
     @ResponseBody
     public ResponseEntity<Map<String,Object>> refreshHotel() {
 
-       new HotelInfoRefreshThreadAddJob().doJob();
+        hotelInfoRefreshThreadAddJob.doJob();
         HashMap hm = new HashMap();
         String result = "请求成功";
         boolean  success = true;

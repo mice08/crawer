@@ -20,31 +20,43 @@ public class TaskServiceManager {
     public static Long add(CityList cityList) {
         Jedis jedis = getJedis();
 
-        return jedis.zadd(
-                RedisCacheName.CRAWLER_CITY_NAME_SET,
-                cityList.getId(),
-                JSONUtil.toJson(cityList));
+        try {
+            return jedis.zadd(
+                    RedisCacheName.CRAWLER_CITY_NAME_SET,
+                    cityList.getId(),
+                    JSONUtil.toJson(cityList));
+        } finally {
+            jedis.close();
+        }
     }
 
     public static void remove(CityList cityList) {
         Jedis jedis = getJedis();
-        jedis.zrem(
-                RedisCacheName.CRAWLER_CITY_NAME_SET,
-                JSONUtil.toJson(cityList));
+        try {
+            jedis.zrem(
+                    RedisCacheName.CRAWLER_CITY_NAME_SET,
+                    JSONUtil.toJson(cityList));
+        } finally {
+            jedis.close();
+        }
     }
 
     public static List<CityList> listAllCity() {
         Jedis jedis = getJedis();
-        Set<String> jsonStrList = jedis.zrange(RedisCacheName.CRAWLER_CITY_NAME_SET,0 , -1);
+        try {
+            Set<String> jsonStrList = jedis.zrange(RedisCacheName.CRAWLER_CITY_NAME_SET, 0, -1);
 
-        List<CityList> cityLists = new LinkedList<>();
+            List<CityList> cityLists = new LinkedList<>();
 
-        for (String s : jsonStrList) {
-            CityList cityList = JSONUtil.fromJson(s, CityList.class);
-            cityLists.add(cityList);
+            for (String s : jsonStrList) {
+                CityList cityList = JSONUtil.fromJson(s, CityList.class);
+                cityLists.add(cityList);
+            }
+
+            return cityLists;
+        } finally {
+            jedis.close();
         }
-
-        return cityLists;
     }
 
     public static Double getScore(String city) {
@@ -53,13 +65,21 @@ public class TaskServiceManager {
         }
         Jedis jedis = getJedis();
 
-        return jedis.zscore(RedisCacheName.CRAWLER_CITY_NAME_SET ,city);
+        try {
+            return jedis.zscore(RedisCacheName.CRAWLER_CITY_NAME_SET, city);
+        } finally {
+            jedis.close();
+        }
     }
 
     public static Long count() {
         Jedis jedis = getJedis();
 
-        return jedis.zcard(RedisCacheName.CRAWLER_CITY_NAME_SET);
+        try {
+            return jedis.zcard(RedisCacheName.CRAWLER_CITY_NAME_SET);
+        } finally {
+            jedis.close();
+        }
     }
 
     private static Jedis getJedis() {
