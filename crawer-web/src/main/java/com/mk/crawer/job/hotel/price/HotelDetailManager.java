@@ -343,6 +343,10 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      * @return
      */
     public static void rollback(HotelDetail hotelDetail) {
+        rollback(hotelDetail,false);
+    }
+
+    private static void rollback(HotelDetail hotelDetail, boolean success) {
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -369,6 +373,11 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER;
             } else {
                 returnCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
+            }
+
+            if (success) {
+                //从错误队列中删除
+                transaction.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR,jsonHotel);
             }
 
             //返还酒店队列
@@ -402,19 +411,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      * @return 如果存在该元素返回true，如果不存在该元素返回false
      */
     public static boolean complete(HotelDetail hotelDetail) {
-        Jedis jedis = null;
-
-        try {
-            jedis = RedisUtil.getJedis();
-
-            String jsonStr = JSONUtil.toJson(hotelDetail);
-
-            Long reply = jedis.zrem(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET, jsonStr);
-
-            return reply > 0;
-        } finally {
-            RedisUtil.close(jedis);
-        }
+        rollback(hotelDetail,true);
     }
 
     public static boolean add(HotelDetail hotelDetail) {
@@ -434,6 +431,4 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             RedisUtil.close(jedis);
         }
     }
-
-
 }
