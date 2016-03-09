@@ -20,21 +20,22 @@ public class TaskServiceManager {
     static Long add(CityList cityList) {
         Jedis jedis = getJedis();
 
-        return jedis.sadd(
+        return jedis.zadd(
                 RedisCacheName.CRAWLER_CITY_NAME_SET,
+                cityList.getId(),
                 JSONUtil.toJson(cityList));
     }
 
     static void remove(CityList cityList) {
         Jedis jedis = getJedis();
-        jedis.srem(
+        jedis.zrem(
                 RedisCacheName.CRAWLER_CITY_NAME_SET,
                 JSONUtil.toJson(cityList));
     }
 
     static List<CityList> listAllCity() {
         Jedis jedis = getJedis();
-        Set<String> jsonStrList = jedis.smembers(RedisCacheName.CRAWLER_CITY_NAME_SET);
+        Set<String> jsonStrList = jedis.zrange(RedisCacheName.CRAWLER_CITY_NAME_SET,0 , -1);
 
         List<CityList> cityLists = new LinkedList<>();
 
@@ -51,7 +52,7 @@ public class TaskServiceManager {
     static Long count() {
         Jedis jedis = getJedis();
 
-        return jedis.scard(RedisCacheName.CRAWLER_CITY_NAME_SET);
+        return jedis.zcard(RedisCacheName.CRAWLER_CITY_NAME_SET);
     }
 
     private static Jedis getJedis() {

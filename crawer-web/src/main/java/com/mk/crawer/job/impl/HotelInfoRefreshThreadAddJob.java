@@ -45,7 +45,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
 
                 jedis = RedisUtil.getJedis();
 
-                Set<String> jsonStrSet = jedis.smembers(RedisCacheName.CRAWLER_CITY_NAME_SET);
+                Set<String> jsonStrSet = jedis.zrange(RedisCacheName.CRAWLER_CITY_NAME_SET,0 , -1);
 
                 LOGGER.info("共{}个城市的酒店信息等待更新", jsonStrSet.size());
 
