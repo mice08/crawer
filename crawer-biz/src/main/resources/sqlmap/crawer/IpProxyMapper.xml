@@ -83,37 +83,49 @@
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
+  update ip_proxy
+  <set >
+    <if test="ipAddress != null" >
+      ip_address = #{ipAddress,jdbcType=VARCHAR},
+    </if>
+    <if test="port != null" >
+      port = #{port,jdbcType=VARCHAR},
+    </if>
+    <if test="type != null" >
+      type = #{type},
+    </if>
+    <if test="proxyAddress != null" >
+      proxy_address = #{proxyAddress,jdbcType=DECIMAL},
+    </if>
+    <if test="createtime != null" >
+      create_time = #{createtime,jdbcType=VARCHAR},
+    </if>
+    <if test="note != null" >
+      note = #{note},
+    </if>
+    <if test="checkStatus != null" >
+      check_status = #{checkStatus},
+    </if>
+    <if test="checkTime != null" >
+      check_time = #{checkTime},
+    </if>
+    <if test="ipLevel != null" >
+      ip_level = #{ipLevel},
+    </if>
+    <if test="isVaild != null" >
+      is_vaild = #{isVaild,jdbcType=VARCHAR},
+    </if>
+  </set>
+  where id = #{id,jdbcType=BIGINT}
+</update>
+
+  <update id="updateIpProxyCheckStatus" parameterType="com.mk.crawer.biz.model.crawer.IpProxy" >
     update ip_proxy
     <set >
-      <if test="ipAddress != null" >
-        ip_address = #{ipAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="port != null" >
-        port = #{port,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        type = #{type},
-      </if>
-      <if test="proxyAddress != null" >
-        proxy_address = #{proxyAddress,jdbcType=DECIMAL},
-      </if>
-      <if test="createtime != null" >
-        create_time = #{createtime,jdbcType=VARCHAR},
-      </if>
-      <if test="note != null" >
-        note = #{note},
-      </if>
-      <if test="checkStatus != null" >
         check_status = #{checkStatus},
-      </if>
-      <if test="checkTime != null" >
         check_time = #{checkTime},
-      </if>
       <if test="ipLevel != null" >
         ip_level = #{ipLevel},
-      </if>
-      <if test="isVaild != null" >
-        is_vaild = #{isVaild,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -128,4 +140,13 @@
       #{item.createTime}, #{item.note}, #{item.checkStatus}, #{item.ipLevel}, #{item.isVaild})
     </foreach>
   </insert>
+
+  <select id="selectIpProxyList"  parameterType="java.util.HashMap"  resultMap="BaseResultMap">
+    select  *  from `ip_proxy`
+    where check_status =  #{checkStatus}  and  is_vaild ="T"  order  by id
+    limit #{pageIndex},#{pageSize}
+  </select>
+
+
+
 </mapper>

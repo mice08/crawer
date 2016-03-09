@@ -15,7 +15,7 @@ public class IpProxy {
     private   String  note;
     private   String   checkStatus;
     private   Date     checkTime;
-    private   Integer  ipLevel;
+    private   Long  ipLevel;
     private   String   isVaild;
 
 
@@ -91,11 +91,11 @@ public class IpProxy {
         this.checkTime = checkTime;
     }
 
-    public Integer getIpLevel() {
+    public Long getIpLevel() {
         return ipLevel;
     }
 
-    public void setIpLevel(Integer ipLevel) {
+    public void setIpLevel(Long ipLevel) {
         this.ipLevel = ipLevel;
     }
 

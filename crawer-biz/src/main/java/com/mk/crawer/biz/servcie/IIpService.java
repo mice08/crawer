@@ -18,4 +18,8 @@ public interface IIpService {
 
     int   updateByPrimaryKeySelective(IpProxy  ipProxy);
 
+    public  List<IpProxy>  selectIpProxyList(int pageSize,int pageIndex,String  checkStatus);
+
+    public void  updateIpProxyStatus();
+
 }

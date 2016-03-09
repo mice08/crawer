@@ -2,6 +2,7 @@ package com.mk.crawer.biz.mapper.crawer;
 
 import com.mk.crawer.biz.model.crawer.IpProxy;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,5 +15,9 @@ public interface IpProxyMapper {
     int   addSelective(IpProxy  ipProxy);
 
     int   updateByPrimaryKeySelective(IpProxy  ipProxy);
+
+    int updateIpProxyCheckStatus(IpProxy  ipProxy);
+
+    public  List<IpProxy>   selectIpProxyList(HashMap hashMap);
 
 }

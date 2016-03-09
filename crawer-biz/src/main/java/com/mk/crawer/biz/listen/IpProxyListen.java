@@ -39,7 +39,7 @@ public class IpProxyListen {
             ipProxy.setNote(json.getString("note"));
             ipProxy.setCheckStatus(json.getString("checkStatus"));
             ipProxy.setIsVaild("T");
-            ipProxy.setIpLevel(new Integer(1));
+            ipProxy.setIpLevel(new Long(1));
             insertList.add(ipProxy);
 
             if(insertList.size()>=batchInsertMaxSize){
