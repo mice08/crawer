@@ -171,11 +171,9 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
                 //返回空,等待重新获取
 
-                System.out.println("take " + curHotelKey + " null");
                 return null;
             }
 
-            System.out.println("take " + curHotelKey + " : " + hotel);
 
             //默认加入错误队列 1分
             Double errScore = jedis.zscore(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, hotel);
@@ -194,8 +192,6 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             //从酒店队列 移除
             transaction.zrem(curHotelKey, hotel);
             transaction.exec();
-
-            System.out.println("zrem " + curHotelKey + " " + jedis.zcard(curHotelKey));
 
             return JSONUtil.fromJson(hotel, HotelDetail.class);
 
@@ -221,6 +217,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
     /**
      * 切换城市到slave队列
+     *
      * @param jedis
      * @param cityName
      */
@@ -254,7 +251,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             transaction = jedis.multi();
             transaction.zrem(curCityKey, cityName);
             transaction.zadd(returnCityKey, count + 1, cityName);
-
+            System.out.println("change to " + returnCityKey + " at " + (count + 1) + " " + cityName);
             transaction.exec();
         } catch (Exception e) {
             if (transaction != null) {
@@ -263,6 +260,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             throw e;
         }
     }
+
     /**
      * 判断当前城市队列
      *
@@ -413,7 +411,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             }
 
             //
-            Double score = jedis.zscore(returnCityKey,cityName);
+            Double score = jedis.zscore(returnCityKey, cityName);
             if (null == score || score < 0) {
                 Long cityCount = jedis.zcard(returnCityKey);
                 jedis.zadd(returnCityKey, cityCount + 1, cityName);
@@ -437,7 +435,6 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
                     returnHotelKey,
                     count + 1,
                     jsonHotel);
-            System.out.println("add " + returnHotelKey + " : " + count + "  :  " + jsonHotel);
             transaction.exec();
 
             return addResponse.get() > 0;
@@ -463,6 +460,6 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
     }
 
     public static boolean add(HotelDetail hotelDetail) {
-        return addToSlave(hotelDetail,false);
+        return addToSlave(hotelDetail, false);
     }
 }
