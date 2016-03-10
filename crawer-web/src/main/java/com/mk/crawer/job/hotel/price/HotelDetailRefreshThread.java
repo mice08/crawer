@@ -7,6 +7,8 @@ import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
 import org.slf4j.Logger;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by 振涛 on 2016/1/8.
  */
@@ -37,6 +39,8 @@ public class HotelDetailRefreshThread implements Runnable {
             HotelDetailCrawlService hotelDetailCrawlService = AppUtils.getBean(HotelDetailCrawlService.class);
 
 //            hotelDetailCrawlService.crawl(hotelDetail.getHotelId());
+            //for test
+            TimeUnit.SECONDS.sleep(1);
 
             HotelDetailManager.complete(hotelDetail);
 

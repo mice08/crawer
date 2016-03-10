@@ -63,24 +63,30 @@ public class HotelDetailRefreshJob implements ApplicationListener<ContextRefresh
             LOGGER.info("开始添加刷新酒店信息的线程");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    ProxyServer proxyServer = ProxyServerManager.take();
-                    HotelDetail hotelDetail = HotelDetailManager.take();
-                    if (null == hotelDetail) {
-                        LOGGER.info("无酒店,刷新酒店信息的任务暂时暂停");
-                        TimeUnit.SECONDS.sleep(1);
-                    }
-                    HotelDetailRefreshThread refreshThread =
-                            new HotelDetailRefreshThread(proxyServer, hotelDetail);
+
                     try {
                         if (SwitchUtil.HotelDetailRefresh.isOpen()) {
+
+                            ProxyServer proxyServer = ProxyServerManager.take();
+                            HotelDetail hotelDetail = HotelDetailManager.take();
+                            if (null == hotelDetail) {
+                                LOGGER.info("无酒店,刷新酒店信息的任务暂时暂停");
+                                TimeUnit.SECONDS.sleep(1);
+                                continue;
+                            }
+                            HotelDetailRefreshThread refreshThread =
+                                    new HotelDetailRefreshThread(proxyServer, hotelDetail);
+
                             EXECUTOR_100.execute(refreshThread);
                         } else {
                             LOGGER.info("刷新酒店信息的任务暂时暂停");
                             TimeUnit.SECONDS.sleep(1);
                         }
+
                     } catch (RejectedExecutionException e) {
                         TimeUnit.SECONDS.sleep(1);
                     }
+
                 } catch (InterruptedException e) {
                     break;
                 }
