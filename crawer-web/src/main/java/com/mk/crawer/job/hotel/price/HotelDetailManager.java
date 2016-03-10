@@ -175,9 +175,9 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
             //
             transaction = jedis.multi();
-            if (errScore < 0) {
+            if (null == errScore || errScore < 0) {
                 //不存在加入
-                transaction.zadd(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, errScore + 1, hotel);
+                transaction.zadd(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, 1, hotel);
             } else {
                 //已存在,调整
                 transaction.zincrby(RedisCacheName.CRAWLER_HOTEL_INFO_REFRESH_SET_ERROR, errScore + 1, hotel);
@@ -368,7 +368,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
             //
             Double score = jedis.zscore(returnCityKey,cityName);
-            if (score < 0) {
+            if (null == score || score < 0) {
                 Long cityCount = jedis.zcard(returnCityKey);
                 jedis.zadd(returnCityKey, cityCount + 1, cityName);
             }
