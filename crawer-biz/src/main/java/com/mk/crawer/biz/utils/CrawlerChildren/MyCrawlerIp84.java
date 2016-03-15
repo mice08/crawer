@@ -39,6 +39,9 @@ public class MyCrawlerIp84 extends WebCrawler{
 
     @Override
     public void visit(Page page) {
+        MyCrawlerBase  mlb =  new  MyCrawlerBase("class","list",0,1,2,3,4);
+        mlb.handlePage(page);
+        /*
         String url = page.getWebURL().getURL();
         System.out.println("URL: " + url);
 
@@ -74,8 +77,10 @@ public class MyCrawlerIp84 extends WebCrawler{
             }
 
         }
+         */
     }
 
+    /*
     public    IpProxy   getIpProxy(Elements  tdElement ){
         if(null==tdElement){
             return null;
@@ -115,4 +120,5 @@ public class MyCrawlerIp84 extends WebCrawler{
             }
         }
     }
+    */
 }

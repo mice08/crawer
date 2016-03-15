@@ -92,20 +92,29 @@ public class IpController {
         Element el  = (Element)node;
         NodeList checkerNodeList  = el.getElementsByTagName("classprocessor");
         int checklen = checkerNodeList.getLength();
-        System.out.println("checklen"+checklen);
+        System.out.println("##########抓取ip结开始##########,需要抓取网站数:"+checklen);
         for( int i=0;i<checklen;i++  ){
-            PageFetcher pageFetcher = new PageFetcher(config);
-            RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-            RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+            try{
+                PageFetcher pageFetcher = new PageFetcher(config);
+                RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+                RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 
-            Element checkerEl  = (Element)checkerNodeList.item(i);
-            String  classPath = checkerEl.getAttribute("path");
-            String  url = checkerEl.getAttribute("url");
-            CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-            controller.addSeed(url);
-            Class  cl = Class.forName(classPath);
-            controller.start(cl, numberOfCrawlers);
+                Element checkerEl  = (Element)checkerNodeList.item(i);
+                String  classPath = checkerEl.getAttribute("path");
+                String  url = checkerEl.getAttribute("url");
+                CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+                controller.addSeed(url);
+                Class  cl = Class.forName(classPath);
+                controller.start(cl, numberOfCrawlers);
+            }catch(Exception e){
+                System.out.println("##########抓取ip结出现异常##########,需要抓取网站,异常工具类为第:"+(i+1)+"个");
+                e.printStackTrace();
+            }finally{
+                continue;
+            }
+
         }
+        System.out.println("##########抓取ip结束##########");
     }
 
 

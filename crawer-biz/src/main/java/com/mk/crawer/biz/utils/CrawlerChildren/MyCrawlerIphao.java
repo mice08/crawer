@@ -37,6 +37,10 @@ public class MyCrawlerIphao extends WebCrawler {
 
     @Override
     public void visit(Page page) {
+
+        MyCrawlerBase  mlb =  new  MyCrawlerBase("class","proxy_table",0,1,2,4,3);
+        mlb.handlePage(page);
+    /*
         String url = page.getWebURL().getURL();
         System.out.println("URL: " + url);
 
@@ -71,9 +75,9 @@ public class MyCrawlerIphao extends WebCrawler {
                 }
             }
 
-        }
+        }*/
     }
-
+/*
     public    IpProxy   getIpProxy(Elements  tdElement ){
         if(null==tdElement){
             return null;
@@ -94,4 +98,5 @@ public class MyCrawlerIphao extends WebCrawler {
         ipProxy.setIsVaild("T");
         return  ipProxy;
     }
+    */
 }

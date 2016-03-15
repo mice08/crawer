@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * Created by jeashi on 16/3/9.
  */
-public class MyCrawlerIpyun  extends WebCrawler {
+public class MyCrawlerIp66 extends WebCrawler {
 
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
             + "|png|mp3|mp3|zip|gz))$");
@@ -31,16 +31,14 @@ public class MyCrawlerIpyun  extends WebCrawler {
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
         return !FILTERS.matcher(href).matches()
-                && href.startsWith("http://www.yun-daili.com/free.asp");
+                && href.startsWith("http://www.kxdaili.com/");
 
     }
 
 
     @Override
     public void visit(Page page) {
-        MyCrawlerBase  mlb =  new  MyCrawlerBase("tag","tbody",0,1,4,2,3);
-        mlb.handlePage(page);
-/*
+
         String url = page.getWebURL().getURL();
         System.out.println("URL: " + url);
 
@@ -76,9 +74,8 @@ public class MyCrawlerIpyun  extends WebCrawler {
             }
 
         }
- */
     }
-/*
+
     public    IpProxy   getIpProxy(Elements  tdElement ){
         if(null==tdElement){
             return null;
@@ -100,5 +97,5 @@ public class MyCrawlerIpyun  extends WebCrawler {
 
         return  ipProxy;
     }
-*/
+
 }

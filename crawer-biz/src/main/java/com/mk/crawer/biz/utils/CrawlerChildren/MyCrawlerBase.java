@@ -4,7 +4,6 @@ import com.mk.crawer.biz.model.crawer.IpProxy;
 import com.mk.crawer.biz.servcie.impl.IpServiceImpl;
 import com.mk.framework.AppUtils;
 import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import org.codehaus.plexus.util.StringUtils;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Created by jeashi on 16/3/9.
@@ -53,7 +51,7 @@ public class MyCrawlerBase  {
         }
         if("class".equals(tableMathType)){
              tableElement = doc.getElementsByClass(tableMathName);
-        }else  if("tbody".equals(tableMathType)){
+        }else  if("tag".equals(tableMathType)){
             tableElement = doc.getElementsByTag(tableMathName);
         }
         return  tableElement;

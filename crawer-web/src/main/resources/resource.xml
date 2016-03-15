@@ -14,7 +14,9 @@
 	-->
 	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIp84"  url="http://www.ip84.com/dl">
 	</classprocessor>
-	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIpyun"  url="http://www.yun-daili.com/free.asp"></classprocessor>
-	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIphao"  url="http://www.haodailiip.com/guonei/110000/1"></classprocessor>
+	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIpyun"   url="http://www.yun-daili.com/free.asp"></classprocessor>
+	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIphao"   url="http://www.haodailiip.com/guonei/110000/1"></classprocessor>
+	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIpkx"    url="http://www.kxdaili.com/"></classprocessor>
+	<classprocessor path="com.mk.crawer.biz.utils.CrawlerChildren.MyCrawlerIp3366"  url="http://www.ip3366.net/"></classprocessor>
 
 </page>
