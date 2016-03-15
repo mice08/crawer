@@ -3,6 +3,7 @@ package com.mk.crawer.biz.servcie.impl;
 import com.mk.crawer.biz.mapper.crawer.IpProxyMapper;
 import com.mk.crawer.biz.model.crawer.IpProxy;
 import com.mk.crawer.biz.servcie.IIpService;
+import com.site.lookup.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -38,24 +39,30 @@ public class IpServiceImpl implements IIpService {
     }
 
 
-    public  List<IpProxy>  selectIpProxyList(int pageSize,int pageIndex,String  checkStatus){
+    public  List<IpProxy>  selectIpProxyList(int pageSize,int pageIndex,String  checkStatus,String orderBy){
         HashMap  parmeMap = new HashMap();
         parmeMap.put("pageSize",pageSize);
         parmeMap.put("pageIndex",pageIndex);
         parmeMap.put("checkStatus",checkStatus);
+        if("DESC".equals(orderBy)){
+           parmeMap.put("orderBy","DESC");
+        }else{
+            parmeMap.put("orderBy",null);
+
+        }
 
         List<IpProxy>  ipProxyList = ipProxyMapper.selectIpProxyList(parmeMap);
 
         return   ipProxyList;
     }
 
-    public void  updateIpProxyStatus(){
+    public void  updateIpProxyStatus(String  orderBy){
         int  pageIndex = 0;
         int  pageSize = 30;
         String  checkStatus = "1";
         boolean endbl = true;
         while(endbl){
-            List<IpProxy>  ipProxyList = this.selectIpProxyList(pageSize,pageIndex,checkStatus);
+            List<IpProxy>  ipProxyList = this.selectIpProxyList(pageSize,pageIndex,checkStatus,orderBy);
 
             if(CollectionUtils.isEmpty(ipProxyList)){
                 endbl = false;
@@ -67,9 +74,9 @@ public class IpServiceImpl implements IIpService {
                     Long result = checkIpAddressCanUser(ip,port);
                     if(result>0){
                         ipProxyInit.setIpLevel(result);
-                        ipProxyInit.setCheckStatus("2");
+                        ipProxyInit.setCheckStatus("2");  //有效ip
                     }else{
-                        ipProxyInit.setCheckStatus("3");
+                        ipProxyInit.setCheckStatus("3");  //无效Ip
                     }
                     ipProxyInit.setCheckTime(new Date());
                     ipProxyMapper.updateIpProxyCheckStatus(ipProxyInit);

@@ -13,7 +13,7 @@ public class IpProxy {
     private   String  proxyAddress;
     private   Date createTime;
     private   String  note;
-    private   String   checkStatus;
+    private   String   checkStatus;  //1:初始化;2:有效ip;3:无效ip
     private   Date     checkTime;
     private   Long  ipLevel;
     private   String   isVaild;

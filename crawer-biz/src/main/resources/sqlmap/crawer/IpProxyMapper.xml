@@ -143,7 +143,14 @@
 
   <select id="selectIpProxyList"  parameterType="java.util.HashMap"  resultMap="BaseResultMap">
     select  *  from `ip_proxy`
-    where check_status =  #{checkStatus}  and  is_vaild ="T"  order  by id
+    where check_status =  #{checkStatus}  and  is_vaild ="T"
+    <if test="orderBy != null" >
+       order  by id  desc
+    </if>
+    <if test="orderBy == null" >
+      order  by id
+    </if>
+
     limit #{pageIndex},#{pageSize}
   </select>
 

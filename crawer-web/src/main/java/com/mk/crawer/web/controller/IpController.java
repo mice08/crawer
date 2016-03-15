@@ -4,6 +4,7 @@ import com.mk.crawer.biz.model.crawer.HotelMapping;
 import com.mk.crawer.biz.servcie.IIpService;
 import com.mk.crawer.biz.thread.IpProxyThread;
 import com.mk.crawer.biz.utils.DocumentUtils;
+import com.mk.crawer.web.thread.IpCheckCanUseThread;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -70,7 +71,10 @@ public class IpController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> checkIpProxyCanUse() {
         Map<String, Object> result = new HashMap<String, Object>();
-        ipService.updateIpProxyStatus();
+        IpCheckCanUseThread iccu1 =  new IpCheckCanUseThread("ASC");
+        iccu1.start();
+        IpCheckCanUseThread iccu2 =  new IpCheckCanUseThread("DESC");
+        iccu2.start();
         result.put("success","true");
 
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
