@@ -78,7 +78,7 @@ public class IpController {
 
 
     public  void  startCatchBitch()throws Exception {
-        String crawlStorageFolder = "/Users/jeashi/imike/crawl";  //中间数据存储的文件夹
+        String crawlStorageFolder = this.getClass().getResource("/").getPath();  //中间数据存储的文件夹
         int numberOfCrawlers = 1;  //并发线程的数目：
         int maxDepthOfCrawling = 1; //设置抓取的深度  0只抓取种子页面
         CrawlConfig config = new CrawlConfig();
