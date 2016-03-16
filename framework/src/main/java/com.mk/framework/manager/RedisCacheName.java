@@ -24,6 +24,9 @@ public class RedisCacheName {
     /**
      * 待刷新酒店价格的酒店ID列表
      */
+    //优先爬虫酒店队列
+    public static final String CRAWLER_HOTEL_FIRST_SET = "CRAWLER:HOTEL:FIRST:SET";
+
     //城市队列开关,0 使用slave队列  其他使用 master队列
     public static final String CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH = "CRAWLER:HOTEL:CITY:REFRESH:SET:SWITCH";
 

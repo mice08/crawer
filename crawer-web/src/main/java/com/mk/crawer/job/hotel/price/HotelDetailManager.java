@@ -136,6 +136,14 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
      */
     public static HotelDetail take() {
         logger.info("HotelDetailManager.take start");
+
+        HotelDetail first = HotelDetailManager.getFromFirst();
+        if (null != first) {
+            logger.info("HotelDetailManager.take return first end");
+            return first;
+        }
+
+        //
         Jedis jedis = null;
         Transaction transaction = null;
 
@@ -408,6 +416,77 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         logger.info("HotelDetailManager.rollback end :{}", hotelDetail.getHotelId());
     }
 
+    public static  void addCityToFirst(String city) {
+
+    }
+
+    /**
+     * 优先要刷新的酒店
+     * @param hotelDetail
+     */
+    public static void addToFirst (HotelDetail hotelDetail) {
+        logger.info("HotelDetailManager.addToFirst start");
+        Jedis jedis = null;
+
+        //
+        String jsonHotel = JSONUtil.toJson(hotelDetail);
+        logger.info("HotelDetailManager.addToFirst jsonHotel:{}", jsonHotel);
+
+        try {
+            jedis = RedisUtil.getJedis();
+
+            jedis.zadd(RedisCacheName.CRAWLER_HOTEL_FIRST_SET,1,jsonHotel);
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            RedisUtil.close(jedis);
+        }
+        logger.info("HotelDetailManager.addToFirst end");
+    }
+
+    public static HotelDetail getFromFirst() {
+        logger.info("HotelDetailManager.getFromFirst start");
+        Jedis jedis = null;
+
+        Transaction transaction = null;
+
+        try {
+            jedis = RedisUtil.getJedis();
+            Long count = jedis.zcard(RedisCacheName.CRAWLER_HOTEL_FIRST_SET);
+            logger.info("HotelDetailManager.getFromFirst count:{}", count);
+
+            if (count > 0) {
+                transaction = jedis.multi();
+                Response<Set<String>> setResponse = transaction.zrange(RedisCacheName.CRAWLER_HOTEL_FIRST_SET, 0, 0);
+                transaction.zremrangeByRank(RedisCacheName.CRAWLER_HOTEL_FIRST_SET,0,0);
+
+                transaction.exec();
+
+                Set<String> firstSet = setResponse.get();
+                logger.info("HotelDetailManager.getFromFirst firstSet.size:{}", firstSet.size());
+                if (!firstSet.isEmpty()) {
+                    String jsonHotel = firstSet.iterator().next();
+
+                    logger.info("HotelDetailManager.getFromFirst jsonHotel:{}", jsonHotel);
+                    return JSONUtil.fromJson(jsonHotel, HotelDetail.class);
+                }
+
+            }
+
+            logger.info("HotelDetailManager.getFromFirst return null");
+            return null;
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.discard();
+            }
+            throw e;
+        } finally {
+            RedisUtil.close(jedis);
+            logger.info("HotelDetailManager.getFromFirst end");
+        }
+    }
     private static boolean addToSlave(HotelDetail hotelDetail, boolean isDeleteFromError) {
         logger.info("HotelDetailManager.addToSlave start isDeleteFromError:{}", isDeleteFromError);
         Jedis jedis = null;
