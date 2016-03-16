@@ -422,6 +422,10 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
 
         //城市id
         Double cityScore = TaskServiceManager.getScore(city);
+        if (null == cityScore) {
+            logger.info("HotelDetailManager.addCityToFirst city:{} cityScore is null end", city);
+            return;
+        }
         logger.info("HotelDetailManager.addCityToFirst city:{} cityScore:{}", city, cityScore);
 
         try {
@@ -480,7 +484,12 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             } else {
                 changeHotelKey = otherHotelKey;
                 //切换开关
-                jedis.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "1");
+                if ("0".equals(crawlerSwitch)) {
+                    crawlerSwitch = "1";
+                } else {
+                    crawlerSwitch = "0";
+                }
+                jedis.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, crawlerSwitch);
             }
 
             //
