@@ -416,8 +416,84 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
         logger.info("HotelDetailManager.rollback end :{}", hotelDetail.getHotelId());
     }
 
-    public static  void addCityToFirst(String city) {
+    public static void addCityToFirst(String city) {
+        logger.info("HotelDetailManager.addCityToFirst start ");
+        Jedis jedis = null;
 
+        //城市id
+        Double cityScore = TaskServiceManager.getScore(city);
+        logger.info("HotelDetailManager.addCityToFirst city:{} cityScore:{}", city, cityScore);
+
+        try {
+            jedis = RedisUtil.getJedis();
+            //城市队列开关,0 使用slave队列  其他使用 master队列,返还时反之
+            String crawlerSwitch = jedis.get(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH);
+            logger.info("HotelDetailManager.addCityToFirst crawlerSwitch:{}", crawlerSwitch);
+
+            //当前city key
+            String curCityKey;
+            String otherCityKey;
+            //城市队列开关,0 使用slave队列  其他使用 master队列,返还时反之
+            if ("0".equals(crawlerSwitch)) {
+                curCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
+                otherCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER;
+            } else {
+                curCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_MASTER;
+                otherCityKey = RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SLAVE;
+            }
+            logger.info("HotelDetailManager.addCityToFirst curCityKey:{}", curCityKey);
+
+            //判断城市是否在队列中
+            Double cureScore = jedis.zscore(curCityKey, city);
+            Double otherScore = jedis.zscore(otherCityKey, city);
+            if ((null == cureScore || cureScore < 0) && (null == otherScore || otherScore < 0)) {
+                //城市 不存在 不处理
+                return;
+            }
+
+            //若当前已经是该城市,不处理
+            String firstCity = getFirstFromZSet(jedis, curCityKey);
+            if (city.equals(firstCity)) {
+                return;
+            }
+
+            //酒店队列
+            String curHotelKey = HotelDetailManager.hotelSetSwitch(curCityKey);
+            curHotelKey = curHotelKey + "_" + String.valueOf(cityScore);
+            logger.info("HotelDetailManager.addCityToFirst curHotelKey:{}", curHotelKey);
+
+            String otherHotelKey = HotelDetailManager.hotelSetSwitch(otherCityKey);
+            otherHotelKey = otherHotelKey + "_" + String.valueOf(cityScore);
+            logger.info("HotelDetailManager.addCityToFirst otherHotelKey:{}", otherHotelKey);
+
+            //队列长度
+            Long curCount = jedis.zcard(curHotelKey);
+            logger.info("HotelDetailManager.addCityToFirst curCount:{}", curCount);
+            Long otherCount = jedis.zcard(otherHotelKey);
+            logger.info("HotelDetailManager.addCityToFirst otherCount:{}", otherCount);
+
+            //若当前队列为非0, 修改城市到当前队列首位
+            //若当前队列为0,切换 开关,且修改城市到队列首位
+            String changeHotelKey;
+            if (curCount > 0) {
+                changeHotelKey = curCityKey;
+            } else {
+                changeHotelKey = otherHotelKey;
+                //切换开关
+                jedis.set(RedisCacheName.CRAWLER_HOTEL_CITY_REFRESH_SET_SWITCH, "1");
+            }
+
+            //
+            jedis.zadd(changeHotelKey, 1d, city);
+            logger.info("HotelDetailManager.addCityToFirst end}");
+            return;
+
+        } catch (Exception e) {
+
+            throw e;
+        } finally {
+            RedisUtil.close(jedis);
+        }
     }
 
     /**
@@ -517,7 +593,7 @@ public class HotelDetailManager implements ApplicationListener<ContextRefreshedE
             }
 
             logger.info("HotelDetailManager.addToSlave returnCityKey:{}", returnCityKey);
-            //
+            //判断城市是否在队列中
             Double score = jedis.zscore(returnCityKey, cityName);
             if (null == score || score < 0) {
                 Long cityCount = jedis.zcard(returnCityKey);
