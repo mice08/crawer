@@ -4,13 +4,13 @@ import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.job.hotel.price.HotelDetailManager;
 import com.mk.crawer.job.impl.HotelInfoRefreshThreadAddJob;
 import com.mk.crawer.job.impl.TaskService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +89,7 @@ public class ReFreshCityListController {
     public ResponseEntity<Map<String,Object>> addCityToFirst(String cityName) {
 
         HashMap hm = new HashMap();
-        if (StringUtils.isEmpty(cityName)) {
+        if (StringUtil.isEmpty(cityName)) {
             hm.put("message","cityName is null");
             hm.put("success",false);
             return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
