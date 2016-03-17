@@ -212,6 +212,48 @@
 
 
 *** 
+### 3. 立即爬取 指定酒店
+
+> http://ip:port/hotel-price-job/add-hotel-to-first
+
+```
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + `hotelId` (必选项) : 指定酒店的id
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"message": ｛hotelId:,cityName:｝,
+	"success": true
+   }
+``` 
+
+  + 当hotelId 为空
+
+```
+   {
+	"message": "",
+	"success": false
+   }
+``` 
+
+  + 当hotel未查询到
+
+```
+   {
+	"message": "",
+	"success": false
+   }
+``` 
+
+*** 
 ## HotelScoreController接口
 *** 
 ### 1. 
@@ -686,10 +728,83 @@
 *** 
 ### 1. 
 
-> http://ip:port/qunarhotelsync
+> http://ip:port/citylist/removecitylist
 
 ```
- Http Method `GET`
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + 
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"SUCCESS": true,
+   }
+``` 
+
+
+*** 
+### 2. 
+
+> http://ip:port/citylist/refreshcitylist
+
+```
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + 
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"SUCCESS": true,
+   }
+``` 
+
+
+
+*** 
+### 3. 
+
+> http://ip:port/citylist/listcity
+
+```
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + 
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"SUCCESS": true,
+   }
+``` 
+
+
+*** 
+### 4. 
+
+> http://ip:port/citylist/refreshhotel
+
+```
+ Http Method `POST`
 ```
 
 参数说明：

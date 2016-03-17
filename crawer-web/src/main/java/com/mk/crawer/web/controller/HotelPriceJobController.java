@@ -137,8 +137,40 @@ public class HotelPriceJobController {
     }
 
 
+    @RequestMapping(value = "/add-hotel-to-first")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> addHotel(Long hotelId) {
 
+        //
+        HashMap hm = new HashMap();
+        if (null != hotelId) {
 
+            //service
+            QunarHotelService qunarHotelService = AppUtils.getBean(QunarHotelService.class);
+            QunarHotel hotel = qunarHotelService.selectByPrimaryKey(hotelId);
+
+            //get hotel
+            if (null != hotel) {
+                //
+                HotelDetail hotelDetail = new HotelDetail();
+                hotelDetail.setHotelId(hotel.getSourceId());
+                hotelDetail.setCityName(hotel.getCityName());
+                HotelDetailManager.addToFirst(hotelDetail);
+
+                hm.put("message", JSONUtil.toJson(hotelDetail));
+                hm.put("success", true);
+            } else {
+
+                hm.put("message", "hotel not find");
+                hm.put("success", false);
+            }
+        } else {
+            hm.put("message", "hotelId is null");
+            hm.put("success", false);
+        }
+
+        return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+    }
 
 
 }
