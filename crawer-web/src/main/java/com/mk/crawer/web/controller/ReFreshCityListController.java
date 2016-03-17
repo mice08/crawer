@@ -1,8 +1,10 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.job.hotel.price.HotelDetailManager;
 import com.mk.crawer.job.impl.HotelInfoRefreshThreadAddJob;
 import com.mk.crawer.job.impl.TaskService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,5 +83,23 @@ public class ReFreshCityListController {
         hm.put("success",success);
         return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/addCityToFirst")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> addCityToFirst(String cityName) {
+
+        HashMap hm = new HashMap();
+        if (StringUtils.isEmpty(cityName)) {
+            hm.put("message","cityName is null");
+            hm.put("success",false);
+            return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+        }
+
+        // add city to first
+        HotelDetailManager.addCityToFirst(cityName);
+        hm.put("success",true);
+        return new ResponseEntity<Map<String,Object>>(hm, HttpStatus.OK);
+    }
+
 
 }

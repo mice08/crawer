@@ -230,7 +230,7 @@
 
 ```
    {
-	"message": ｛hotelId:,cityName:｝,
+	"message": {hotelId:,cityName:},
 	"success": true
    }
 ``` 
@@ -820,3 +820,64 @@
 	"SUCCESS": true,
    }
 ``` 
+
+
+*** 
+### 5. 
+
+> http://ip:port/citylist/refreshhotel
+
+```
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + 
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"SUCCESS": true,
+   }
+``` 
+
+
+*** 
+### 6. 立即爬取 指定城市
+
+> http://ip:port/citylist/addCityToFirst
+
+```
+ Http Method `POST`
+```
+
+参数说明：
+ 
+  + `cityName` (必选项) : 指定爬取的城市
+  
+返回值说明：
+  
+  + 执行成功
+
+```
+   {
+	"SUCCESS": true,
+   }
+``` 
+
+  + 当城市为空
+
+```
+   {
+	"SUCCESS": false,
+	"message":"cityName is null"
+   }
+``` 
+
+
+
+

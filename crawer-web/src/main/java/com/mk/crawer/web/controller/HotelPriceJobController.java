@@ -139,7 +139,7 @@ public class HotelPriceJobController {
 
     @RequestMapping(value = "/add-hotel-to-first")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> addHotel(Long hotelId) {
+    public ResponseEntity<Map<String,Object>> addHoteltoFirst(Long hotelId) {
 
         //
         HashMap hm = new HashMap();
