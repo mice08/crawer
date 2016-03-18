@@ -1,6 +1,7 @@
 package com.mk.crawer.biz.utils;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -61,5 +62,13 @@ public class JsonUtils {
         return result;
 
     }
-
+    /* 将json to Class<T>
+         *
+         * @param object
+         * @return json对象
+         * @throws JSONException
+         */
+    public static <T>T formatJson(String json, Class<T> classOfT) throws JSONException {
+        return JSON.parseObject(json,classOfT);
+    }
 }

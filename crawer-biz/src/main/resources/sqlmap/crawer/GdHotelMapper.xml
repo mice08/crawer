@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.GdHotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdHotel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="post_code" property="postCode" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="pcode" property="pcode" jdbcType="VARCHAR" />
+    <result column="pname" property="pname" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="ad_code" property="adCode" jdbcType="VARCHAR" />
+    <result column="ad_name" property="adName" jdbcType="VARCHAR" />
+    <result column="grid_code" property="gridCode" jdbcType="VARCHAR" />
+    <result column="distance" property="distance" jdbcType="VARCHAR" />
+    <result column="alias" property="alias" jdbcType="VARCHAR" />
+    <result column="navi_poi_id" property="naviPoiId" jdbcType="VARCHAR" />
+    <result column="entr_location" property="entrLocation" jdbcType="VARCHAR" />
+    <result column="exit_location" property="exitLocation" jdbcType="VARCHAR" />
+    <result column="match" property="match" jdbcType="INTEGER" />
+    <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    <result column="time_stamp" property="timeStamp" jdbcType="VARCHAR" />
+    <result column="indoor_map" property="indoorMap" jdbcType="INTEGER" />
+    <result column="group_buy_num" property="groupBuyNum" jdbcType="INTEGER" />
+    <result column="business_area" property="businessArea" jdbcType="VARCHAR" />
+    <result column="discount_num" property="discountNum" jdbcType="INTEGER" />
+    <result column="rating" property="rating" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="VARCHAR" />
+    <result column="hotel_ordering" property="hotelOrdering" jdbcType="INTEGER" />
+    <result column="lowest_price" property="lowestPrice" jdbcType="VARCHAR" />
+    <result column="event" property="event" jdbcType="VARCHAR" />
+    <result column="cp_id" property="cpId" jdbcType="VARCHAR" />
+    <result column="floor" property="floor" jdbcType="INTEGER" />
+    <result column="true_floor" property="trueFloor" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, source_id, name, tag, type, type_code, biz_type, address, location, tel, post_code, 
+    website, email, pcode, pname, city_code, city_name, ad_code, ad_name, grid_code, 
+    distance, alias, navi_poi_id, entr_location, exit_location, match, recommend, time_stamp, 
+    indoor_map, group_buy_num, business_area, discount_num, rating, star, cost, hotel_ordering, 
+    lowest_price, event, cp_id, floor, true_floor
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="sourceId != null">
+        AND source_id = #{sourceId}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_hotel
+    <include refid="Base_Query_List" />
+  </select>
+  <select id="count" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" resultType="java.lang.Integer" >
+    select count(*) from gd_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from gd_hotel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    insert into gd_hotel (id, source_id, name, 
+      tag, type, type_code, 
+      biz_type, address, location, 
+      tel, post_code, website, 
+      email, pcode, pname, 
+      city_code, city_name, ad_code, 
+      ad_name, grid_code, distance, 
+      alias, navi_poi_id, entr_location, 
+      exit_location, match, recommend, 
+      time_stamp, indoor_map, group_buy_num, 
+      business_area, discount_num, rating, 
+      star, cost, hotel_ordering, 
+      lowest_price, event, cp_id, 
+      floor, true_floor)
+    values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{tag,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, 
+      #{bizType,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{postCode,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{pcode,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, 
+      #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{adCode,jdbcType=VARCHAR}, 
+      #{adName,jdbcType=VARCHAR}, #{gridCode,jdbcType=VARCHAR}, #{distance,jdbcType=VARCHAR}, 
+      #{alias,jdbcType=VARCHAR}, #{naviPoiId,jdbcType=VARCHAR}, #{entrLocation,jdbcType=VARCHAR}, 
+      #{exitLocation,jdbcType=VARCHAR}, #{match,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER}, 
+      #{timeStamp,jdbcType=VARCHAR}, #{indoorMap,jdbcType=INTEGER}, #{groupBuyNum,jdbcType=INTEGER}, 
+      #{businessArea,jdbcType=VARCHAR}, #{discountNum,jdbcType=INTEGER}, #{rating,jdbcType=VARCHAR}, 
+      #{star,jdbcType=VARCHAR}, #{cost,jdbcType=VARCHAR}, #{hotelOrdering,jdbcType=INTEGER}, 
+      #{lowestPrice,jdbcType=VARCHAR}, #{event,jdbcType=VARCHAR}, #{cpId,jdbcType=VARCHAR}, 
+      #{floor,jdbcType=INTEGER}, #{trueFloor,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateById" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    update gd_hotel
+    <set >
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null" >
+        biz_type = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        post_code = #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pcode != null" >
+        pcode = #{pcode,jdbcType=VARCHAR},
+      </if>
+      <if test="pname != null" >
+        pname = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="adCode != null" >
+        ad_code = #{adCode,jdbcType=VARCHAR},
+      </if>
+      <if test="adName != null" >
+        ad_name = #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="gridCode != null" >
+        grid_code = #{gridCode,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        distance = #{distance,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null" >
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="naviPoiId != null" >
+        navi_poi_id = #{naviPoiId,jdbcType=VARCHAR},
+      </if>
+      <if test="entrLocation != null" >
+        entr_location = #{entrLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="exitLocation != null" >
+        exit_location = #{exitLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="match != null" >
+        match = #{match,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="timeStamp != null" >
+        time_stamp = #{timeStamp,jdbcType=VARCHAR},
+      </if>
+      <if test="indoorMap != null" >
+        indoor_map = #{indoorMap,jdbcType=INTEGER},
+      </if>
+      <if test="groupBuyNum != null" >
+        group_buy_num = #{groupBuyNum,jdbcType=INTEGER},
+      </if>
+      <if test="businessArea != null" >
+        business_area = #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="discountNum != null" >
+        discount_num = #{discountNum,jdbcType=INTEGER},
+      </if>
+      <if test="rating != null" >
+        rating = #{rating,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelOrdering != null" >
+        hotel_ordering = #{hotelOrdering,jdbcType=INTEGER},
+      </if>
+      <if test="lowestPrice != null" >
+        lowest_price = #{lowestPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null" >
+        event = #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="cpId != null" >
+        cp_id = #{cpId,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null" >
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="trueFloor != null" >
+        true_floor = #{trueFloor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
