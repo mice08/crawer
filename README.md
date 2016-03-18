@@ -745,6 +745,7 @@
 ```
    {
 	"SUCCESS": true,
+	"result":"请求成功"
    }
 ``` 
 
@@ -769,6 +770,7 @@
 ```
    {
 	"SUCCESS": true,
+	"result":"请求成功"
    }
 ``` 
 
