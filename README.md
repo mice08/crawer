@@ -726,7 +726,7 @@
 *** 
 ## ReFreshCityListController接口
 *** 
-### 1. 
+### 1. 清空redis城市队列
 
 > http://ip:port/citylist/removecitylist
 
@@ -750,10 +750,10 @@
 
 
 *** 
-### 2. 
+### 2. 增量更新redis城市队列
 
 > http://ip:port/citylist/refreshcitylist
-
+>查询数据库中的城市，放至redis中的城市队列
 ```
  Http Method `POST`
 ```
@@ -775,7 +775,7 @@
 
 
 *** 
-### 3. 
+### 3. 查询redis城市队列
 
 > http://ip:port/citylist/listcity
 
@@ -794,14 +794,35 @@
 ```
    {
 	"SUCCESS": true,
+	"citylist":[{
+		"id":
+		"cityCode":
+		"cityName":
+		"cityUrl":
+		"createTime":
+		"updateTime":
+		"siteId":
+		"cityType":
+		},{
+		"id":
+		"cityCode":
+		"cityName":
+		"cityUrl":
+		"createTime":
+		"updateTime":
+		"siteId":
+		"cityType":
+		}]
    }
 ``` 
 
 
 *** 
-### 4. 
+### 4. 按redis城市队列，增量更新酒店队列
 
 > http://ip:port/citylist/refreshhotel
+
+>按redis城市队列，查询数据库中的酒店，放至redis中的酒店下轮队列
 
 ```
  Http Method `POST`
@@ -823,31 +844,7 @@
 
 
 *** 
-### 5. 
-
-> http://ip:port/citylist/refreshhotel
-
-```
- Http Method `POST`
-```
-
-参数说明：
- 
-  + 
-  
-返回值说明：
-  
-  + 执行成功
-
-```
-   {
-	"SUCCESS": true,
-   }
-``` 
-
-
-*** 
-### 6. 立即爬取 指定城市
+### 5.  立即爬取 指定城市
 
 > http://ip:port/citylist/addCityToFirst
 
@@ -880,4 +877,8 @@
 
 
 
-
+*** 
+## 定时任务
+*** 
+### 1.  按redis城市队列，增量更新酒店队列
+> 每天凌晨0点10分执行

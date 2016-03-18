@@ -31,6 +31,7 @@ public class HotelInfoRefreshThreadAddJob implements Worker {
     @Autowired
     private QunarHotelService qunarHotelService;
 
+    //每天凌晨0点10分执行
     @Scheduled(cron = "0 10 0 * * ? ")
     @Override
     public void work() {
