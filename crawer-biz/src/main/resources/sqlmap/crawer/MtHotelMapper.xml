@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.MtHotelMapper">
+    <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.MtHotel">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="latestWeekCoupon" jdbcType="INTEGER" property="latestWeekCoupon" />
+        <result column="payInfo" jdbcType="VARCHAR" property="payInfoString" />
+        <result column="cityId" jdbcType="INTEGER" property="cityId" />
+        <result column="addr" jdbcType="VARCHAR" property="addr" />
+        <result column="ktvAppointStatus" jdbcType="INTEGER" property="ktvAppointStatus" />
+        <result column="brandName" jdbcType="VARCHAR" property="brandName" />
+        <result column="brandId" jdbcType="INTEGER" property="brandId" />
+        <result column="poiid" jdbcType="VARCHAR" property="poiid" />
+        <result column="fodderInfo" jdbcType="VARCHAR" property="fodderInfoString" />
+        <result column="groupInfo" jdbcType="INTEGER" property="groupInfo" />
+        <result column="showType" jdbcType="VARCHAR" property="showType" />
+        <result column="bizloginid" jdbcType="INTEGER" property="bizloginid" />
+        <result column="useTime" jdbcType="VARCHAR" property="useTime" />
+        <result column="chacDesc" jdbcType="VARCHAR" property="chacDesc" />
+        <result column="brandLogo" jdbcType="VARCHAR" property="brandLogo" />
+        <result column="extra" jdbcType="VARCHAR" property="extraString" />
+        <result column="preTags" jdbcType="VARCHAR" property="preTagsString" />
+        <result column="discount" jdbcType="VARCHAR" property="discount" />
+        <result column="posText" jdbcType="VARCHAR" property="posText" />
+        <result column="historySaleCount" jdbcType="VARCHAR" property="historySaleCount" />
+        <result column="historyCouponCount" jdbcType="INTEGER" property="historyCouponCount" />
+        <result column="avgPrice" jdbcType="FLOAT" property="avgPrice" />
+        <result column="floor" jdbcType="VARCHAR" property="floor" />
+        <result column="avgScore" jdbcType="FLOAT" property="avgScore" />
+        <result column="hotelAppointmentExtType" jdbcType="INTEGER" property="hotelAppointmentExtType" />
+        <result column="payType" jdbcType="INTEGER" property="payType" />
+        <result column="hotelStar" jdbcType="VARCHAR" property="hotelStar" />
+        <result column="dayRoomSpan" jdbcType="INTEGER" property="dayRoomSpan" />
+        <result column="lowestPrice" jdbcType="FLOAT" property="lowestPrice" />
+        <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+        <result column="superVoucher" jdbcType="VARCHAR" property="superVoucherString" />
+        <result column="markNumbers" jdbcType="VARCHAR" property="markNumbers" />
+        <result column="lng" jdbcType="DOUBLE" property="lng" />
+        <result column="hasPackage" jdbcType="TINYINT" property="hasPackage" />
+        <result column="areaId" jdbcType="INTEGER" property="areaId" />
+        <result column="subwayStationId" jdbcType="VARCHAR" property="subwayStationId" />
+        <result column="preferent" jdbcType="TINYINT" property="preferent" />
+        <result column="campaignTag" jdbcType="VARCHAR" property="campaignTag" />
+        <result column="isSupportAppointment" jdbcType="TINYINT" property="isSupportAppointment" />
+        <result column="posdescr" jdbcType="VARCHAR" property="posdescr" />
+        <result column="style" jdbcType="VARCHAR" property="style" />
+        <result column="featureMenus" jdbcType="VARCHAR" property="featureMenus" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="hourRoomSpan" jdbcType="INTEGER" property="hourRoomSpan" />
+        <result column="hasSales" jdbcType="INTEGER" property="hasSales" />
+        <result column="notice" jdbcType="VARCHAR" property="notice" />
+        <result column="campaignTagList" jdbcType="VARCHAR" property="campaignTagListString" />
+        <result column="lat" jdbcType="DOUBLE" property="lat" />
+        <result column="sourceType" jdbcType="INTEGER" property="sourceType" />
+        <result column="ktvLowestPrice" jdbcType="FLOAT" property="ktvLowestPrice" />
+        <result column="mallId" jdbcType="INTEGER" property="mallId" />
+        <result column="isHot" jdbcType="INTEGER" property="isHot" />
+        <result column="hasGroup" jdbcType="TINYINT" property="hasGroup" />
+        <result column="cates" jdbcType="VARCHAR" property="cates" />
+        <result column="zlSourceType" jdbcType="INTEGER" property="zlSourceType" />
+        <result column="chooseSitting" jdbcType="TINYINT" property="chooseSitting" />
+        <result column="isImax" jdbcType="TINYINT" property="isImax" />
+        <result column="isRoomListAggregated" jdbcType="TINYINT" property="isRoomListAggregated" />
+        <result column="ktv" jdbcType="VARCHAR" property="ktvString" />
+        <result column="abstracts" jdbcType="VARCHAR" property="abstractsString" />
+        <result column="areaName" jdbcType="VARCHAR" property="areaName" />
+        <result column="iUrl" jdbcType="VARCHAR" property="iUrl" />
+        <result column="openInfo" jdbcType="VARCHAR" property="openInfo" />
+        <result column="isQueuing" jdbcType="INTEGER" property="isQueuing" />
+        <result column="tour" jdbcType="VARCHAR" property="tourString" />
+        <result column="cateId" jdbcType="INTEGER" property="cateId" />
+        <result column="cateName" jdbcType="VARCHAR" property="cateName" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+
+    </sql>
+
+
+    <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.MtHotel">
+        insert into t_mt_hotel (phone,latestWeekCoupon,payInfo,cityId,addr,ktvAppointStatus,brandName,
+        brandId,poiid,fodderInfo,groupInfo,showType,bizloginid,useTime,chacDesc,brandLogo,extra,preTags,
+        discount,posText,historySaleCount,historyCouponCount,avgPrice,floor,avgScore,hotelAppointmentExtType,
+        payType,hotelStar,dayRoomSpan,lowestPrice,introduction,superVoucher,markNumbers,lng,hasPackage,areaId,
+        subwayStationId,preferent,campaignTag,isSupportAppointment,posdescr,style,featureMenus,name,hourRoomSpan,
+        hasSales,notice,campaignTagList,lat,sourceType,ktvLowestPrice,mallId,isHot,hasGroup,cates,zlSourceType,
+        chooseSitting,isImax,isRoomListAggregated,ktv,abstracts,areaName,iUrl,openInfo,isQueuing,tour,cateId,cateName
+        )
+        values (#{phone,jdbcType=VARCHAR}, #{latestWeekCoupon,jdbcType=INTEGER}, #{payInfoString,jdbcType=VARCHAR},
+        #{cityId,jdbcType=INTEGER}, #{addr,jdbcType=VARCHAR}, #{ktvAppointStatus,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR},
+        #{brandId,jdbcType=INTEGER}, #{poiid,jdbcType=VARCHAR}, #{fodderInfoString,jdbcType=VARCHAR}, #{groupInfo,jdbcType=INTEGER},
+        #{showType,jdbcType=VARCHAR},#{bizloginid,jdbcType=INTEGER},#{useTime,jdbcType=VARCHAR},#{chacDesc,jdbcType=VARCHAR},
+        #{brandLogo,jdbcType=VARCHAR},#{extraString,jdbcType=VARCHAR},#{preTagsString,jdbcType=VARCHAR},#{discount,jdbcType=VARCHAR},
+        #{posText,jdbcType=VARCHAR},#{historySaleCount,jdbcType=VARCHAR},#{historyCouponCount,jdbcType=INTEGER},#{avgPrice,jdbcType=FLOAT},
+        #{floor,jdbcType=VARCHAR},#{avgScore,jdbcType=FLOAT},#{hotelAppointmentExtType,jdbcType=INTEGER},#{payType,jdbcType=INTEGER},
+        #{hotelStar,jdbcType=VARCHAR},#{dayRoomSpan,jdbcType=INTEGER},#{lowestPrice,jdbcType=FLOAT},#{introduction,jdbcType=VARCHAR},
+        #{superVoucherString,jdbcType=VARCHAR},#{markNumbers,jdbcType=VARCHAR},#{lng,jdbcType=DOUBLE},#{hasPackage,jdbcType=TINYINT},
+        #{areaId,jdbcType=INTEGER},#{subwayStationId,jdbcType=VARCHAR},#{preferent,jdbcType=TINYINT},#{campaignTag,jdbcType=VARCHAR},
+        #{isSupportAppointment,jdbcType=TINYINT},#{posdescr,jdbcType=VARCHAR},#{style,jdbcType=VARCHAR},#{featureMenus,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},#{hourRoomSpan,jdbcType=INTEGER},#{hasSales,jdbcType=INTEGER},#{notice,jdbcType=VARCHAR},
+        #{campaignTagListString,jdbcType=VARCHAR},#{lat,jdbcType=DOUBLE},#{sourceType,jdbcType=INTEGER},#{ktvLowestPrice,jdbcType=FLOAT},
+        #{mallId,jdbcType=INTEGER},#{isHot,jdbcType=INTEGER},#{hasGroup,jdbcType=TINYINT},#{cates,jdbcType=VARCHAR},
+        #{zlSourceType,jdbcType=INTEGER},#{chooseSitting,jdbcType=TINYINT},#{isImax,jdbcType=TINYINT},#{isRoomListAggregated,jdbcType=TINYINT},
+        #{ktvString,jdbcType=VARCHAR},#{abstractsString,jdbcType=VARCHAR},#{areaName,jdbcType=VARCHAR},#{iUrl,jdbcType=VARCHAR},
+        #{openInfo,jdbcType=VARCHAR},#{isQueuing,jdbcType=INTEGER},#{tourString,jdbcType=VARCHAR},#{cateId,jdbcType=INTEGER},
+        #{cateName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+</mapper>

@@ -164,6 +164,76 @@ public class RoomTypeMappingExample {
             return (Criteria) this;
         }
 
+        public Criteria andHotelSourceIdIsNull() {
+            addCriterion("hotel_source_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdIsNotNull() {
+            addCriterion("hotel_source_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdEqualTo(String value) {
+            addCriterion("hotel_source_id =", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdNotEqualTo(String value) {
+            addCriterion("hotel_source_id <>", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdGreaterThan(String value) {
+            addCriterion("hotel_source_id >", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdGreaterThanOrEqualTo(String value) {
+            addCriterion("hotel_source_id >=", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdLessThan(String value) {
+            addCriterion("hotel_source_id <", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdLessThanOrEqualTo(String value) {
+            addCriterion("hotel_source_id <=", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdLike(String value) {
+            addCriterion("hotel_source_id like", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdNotLike(String value) {
+            addCriterion("hotel_source_id not like", value, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdIn(List<String> values) {
+            addCriterion("hotel_source_id in", values, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdNotIn(List<String> values) {
+            addCriterion("hotel_source_id not in", values, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdBetween(String value1, String value2) {
+            addCriterion("hotel_source_id between", value1, value2, "hotelSourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelSourceIdNotBetween(String value1, String value2) {
+            addCriterion("hotel_source_id not between", value1, value2, "hotelSourceId");
+            return (Criteria) this;
+        }
+
         public Criteria andOtsRoomTypeIdIsNull() {
             addCriterion("ots_room_type_id is null");
             return (Criteria) this;
@@ -234,52 +304,62 @@ public class RoomTypeMappingExample {
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdEqualTo(Long value) {
+        public Criteria andExRoomTypeIdEqualTo(String value) {
             addCriterion("ex_room_type_id =", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdNotEqualTo(Long value) {
+        public Criteria andExRoomTypeIdNotEqualTo(String value) {
             addCriterion("ex_room_type_id <>", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdGreaterThan(Long value) {
+        public Criteria andExRoomTypeIdGreaterThan(String value) {
             addCriterion("ex_room_type_id >", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andExRoomTypeIdGreaterThanOrEqualTo(String value) {
             addCriterion("ex_room_type_id >=", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdLessThan(Long value) {
+        public Criteria andExRoomTypeIdLessThan(String value) {
             addCriterion("ex_room_type_id <", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdLessThanOrEqualTo(Long value) {
+        public Criteria andExRoomTypeIdLessThanOrEqualTo(String value) {
             addCriterion("ex_room_type_id <=", value, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdIn(List<Long> values) {
+        public Criteria andExRoomTypeIdLike(String value) {
+            addCriterion("ex_room_type_id like", value, "exRoomTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andExRoomTypeIdNotLike(String value) {
+            addCriterion("ex_room_type_id not like", value, "exRoomTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andExRoomTypeIdIn(List<String> values) {
             addCriterion("ex_room_type_id in", values, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdNotIn(List<Long> values) {
+        public Criteria andExRoomTypeIdNotIn(List<String> values) {
             addCriterion("ex_room_type_id not in", values, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdBetween(Long value1, Long value2) {
+        public Criteria andExRoomTypeIdBetween(String value1, String value2) {
             addCriterion("ex_room_type_id between", value1, value2, "exRoomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andExRoomTypeIdNotBetween(Long value1, Long value2) {
+        public Criteria andExRoomTypeIdNotBetween(String value1, String value2) {
             addCriterion("ex_room_type_id not between", value1, value2, "exRoomTypeId");
             return (Criteria) this;
         }

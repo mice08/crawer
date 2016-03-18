@@ -3,8 +3,9 @@
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.RoomTypeMappingMapper" >
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
     <result column="ots_room_type_id" property="otsRoomTypeId" jdbcType="BIGINT" />
-    <result column="ex_room_type_id" property="exRoomTypeId" jdbcType="BIGINT" />
+    <result column="ex_room_type_id" property="exRoomTypeId" jdbcType="VARCHAR" />
     <result column="valid" property="valid" jdbcType="CHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -37,7 +38,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, ots_room_type_id, ex_room_type_id, valid
+    id, hotel_source_id, ots_room_type_id, ex_room_type_id, valid
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMappingExample" >
     select
@@ -65,16 +66,19 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
-    insert into ots_ex_room_type_mapping (id, ots_room_type_id, ex_room_type_id, 
-      valid)
-    values (#{id,jdbcType=BIGINT}, #{otsRoomTypeId,jdbcType=BIGINT}, #{exRoomTypeId,jdbcType=BIGINT}, 
-      #{valid,jdbcType=CHAR})
+    insert into ots_ex_room_type_mapping (id, hotel_source_id, ots_room_type_id, 
+      ex_room_type_id, valid)
+    values (#{id,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{otsRoomTypeId,jdbcType=BIGINT}, 
+      #{exRoomTypeId,jdbcType=VARCHAR}, #{valid,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     insert into ots_ex_room_type_mapping
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="hotelSourceId != null" >
+        hotel_source_id,
       </if>
       <if test="otsRoomTypeId != null" >
         ots_room_type_id,
@@ -90,11 +94,14 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="hotelSourceId != null" >
+        #{hotelSourceId,jdbcType=VARCHAR},
+      </if>
       <if test="otsRoomTypeId != null" >
         #{otsRoomTypeId,jdbcType=BIGINT},
       </if>
       <if test="exRoomTypeId != null" >
-        #{exRoomTypeId,jdbcType=BIGINT},
+        #{exRoomTypeId,jdbcType=VARCHAR},
       </if>
       <if test="valid != null" >
         #{valid,jdbcType=CHAR},
@@ -110,11 +117,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     update ots_ex_room_type_mapping
     <set >
+      <if test="hotelSourceId != null" >
+        hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR},
+      </if>
       <if test="otsRoomTypeId != null" >
         ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
       </if>
       <if test="exRoomTypeId != null" >
-        ex_room_type_id = #{exRoomTypeId,jdbcType=BIGINT},
+        ex_room_type_id = #{exRoomTypeId,jdbcType=VARCHAR},
       </if>
       <if test="valid != null" >
         valid = #{valid,jdbcType=CHAR},
@@ -124,19 +134,10 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.RoomTypeMapping" >
     update ots_ex_room_type_mapping
-    set ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
-      ex_room_type_id = #{exRoomTypeId,jdbcType=BIGINT},
+    set hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR},
+      ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
+      ex_room_type_id = #{exRoomTypeId,jdbcType=VARCHAR},
       valid = #{valid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select id="queryRoomTypeMapping" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
-    select  *  from  ots_ex_room_type_mapping  where  valid = 'T'
-    <if test="otsRoomTypeId != null" >
-      and  ots_room_type_id = #{otsRoomTypeId}
-    </if>
-    <if test="otsHotelName != null" >
-      and  ex_room_type_id = #{otsHotelName}
-    </if>
-  </select>
 </mapper>

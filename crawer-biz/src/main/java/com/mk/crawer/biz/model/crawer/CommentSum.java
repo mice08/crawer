@@ -4,173 +4,194 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CommentSum {
-    private Long id;
+	private Long id;
 
-    private Long hotelId;
+	private Long hotelId;
 
-    private BigDecimal score;
+	private String hotelName;
 
-    private Long goodTotal;
+	private String hotelSourceId;
 
-    private Long badTotal;
+	private BigDecimal score;
 
-    private Long mediumTotal;
+	private Long goodTotal;
 
-    private Long allTotal;
+	private Long badTotal;
 
-    private Long imageCount;
+	private Long mediumTotal;
 
-    private String hotTitles;
+	private Long allTotal;
 
-    private String tags;
+	private Long imageCount;
 
-    private String sentenceCmt;
+	private String hotTitles;
 
-    private String scoreShopMsg;
+	private String tags;
 
-    private String scoreShopUrl;
+	private String sentenceCmt;
 
-    private String msg;
+	private String scoreShopMsg;
 
-    private String valid;
+	private String scoreShopUrl;
 
-    private Date createTime;
+	private String msg;
 
-    private Date updateTime;
+	private String valid;
 
-    public Long getId() {
-        return id;
-    }
+	private Date createTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	private Date updateTime;
 
-    public Long getHotelId() {
-        return hotelId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public BigDecimal getScore() {
-        return score;
-    }
+	public Long getHotelId() {
+		return hotelId;
+	}
 
-    public void setScore(BigDecimal score) {
-        this.score = score;
-    }
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
 
-    public Long getGoodTotal() {
-        return goodTotal;
-    }
+	public String getHotelName() {
+		return hotelName;
+	}
 
-    public void setGoodTotal(Long goodTotal) {
-        this.goodTotal = goodTotal;
-    }
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
+	}
 
-    public Long getBadTotal() {
-        return badTotal;
-    }
+	public String getHotelSourceId() {
+		return hotelSourceId;
+	}
 
-    public void setBadTotal(Long badTotal) {
-        this.badTotal = badTotal;
-    }
+	public void setHotelSourceId(String hotelSourceId) {
+		this.hotelSourceId = hotelSourceId;
+	}
 
-    public Long getMediumTotal() {
-        return mediumTotal;
-    }
+	public BigDecimal getScore() {
+		return score;
+	}
 
-    public void setMediumTotal(Long mediumTotal) {
-        this.mediumTotal = mediumTotal;
-    }
+	public void setScore(BigDecimal score) {
+		this.score = score;
+	}
 
-    public Long getAllTotal() {
-        return allTotal;
-    }
+	public Long getGoodTotal() {
+		return goodTotal;
+	}
 
-    public void setAllTotal(Long allTotal) {
-        this.allTotal = allTotal;
-    }
+	public void setGoodTotal(Long goodTotal) {
+		this.goodTotal = goodTotal;
+	}
 
-    public Long getImageCount() {
-        return imageCount;
-    }
+	public Long getBadTotal() {
+		return badTotal;
+	}
 
-    public void setImageCount(Long imageCount) {
-        this.imageCount = imageCount;
-    }
+	public void setBadTotal(Long badTotal) {
+		this.badTotal = badTotal;
+	}
 
-    public String getHotTitles() {
-        return hotTitles;
-    }
+	public Long getMediumTotal() {
+		return mediumTotal;
+	}
 
-    public void setHotTitles(String hotTitles) {
-        this.hotTitles = hotTitles == null ? null : hotTitles.trim();
-    }
+	public void setMediumTotal(Long mediumTotal) {
+		this.mediumTotal = mediumTotal;
+	}
 
-    public String getTags() {
-        return tags;
-    }
+	public Long getAllTotal() {
+		return allTotal;
+	}
 
-    public void setTags(String tags) {
-        this.tags = tags == null ? null : tags.trim();
-    }
+	public void setAllTotal(Long allTotal) {
+		this.allTotal = allTotal;
+	}
 
-    public String getSentenceCmt() {
-        return sentenceCmt;
-    }
+	public Long getImageCount() {
+		return imageCount;
+	}
 
-    public void setSentenceCmt(String sentenceCmt) {
-        this.sentenceCmt = sentenceCmt == null ? null : sentenceCmt.trim();
-    }
+	public void setImageCount(Long imageCount) {
+		this.imageCount = imageCount;
+	}
 
-    public String getScoreShopMsg() {
-        return scoreShopMsg;
-    }
+	public String getHotTitles() {
+		return hotTitles;
+	}
 
-    public void setScoreShopMsg(String scoreShopMsg) {
-        this.scoreShopMsg = scoreShopMsg == null ? null : scoreShopMsg.trim();
-    }
+	public void setHotTitles(String hotTitles) {
+		this.hotTitles = hotTitles;
+	}
 
-    public String getScoreShopUrl() {
-        return scoreShopUrl;
-    }
+	public String getTags() {
+		return tags;
+	}
 
-    public void setScoreShopUrl(String scoreShopUrl) {
-        this.scoreShopUrl = scoreShopUrl == null ? null : scoreShopUrl.trim();
-    }
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public String getSentenceCmt() {
+		return sentenceCmt;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg == null ? null : msg.trim();
-    }
+	public void setSentenceCmt(String sentenceCmt) {
+		this.sentenceCmt = sentenceCmt;
+	}
 
-    public String getValid() {
-        return valid;
-    }
+	public String getScoreShopMsg() {
+		return scoreShopMsg;
+	}
 
-    public void setValid(String valid) {
-        this.valid = valid == null ? null : valid.trim();
-    }
+	public void setScoreShopMsg(String scoreShopMsg) {
+		this.scoreShopMsg = scoreShopMsg;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getScoreShopUrl() {
+		return scoreShopUrl;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setScoreShopUrl(String scoreShopUrl) {
+		this.scoreShopUrl = scoreShopUrl;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public String getMsg() {
+		return msg;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public String getValid() {
+		return valid;
+	}
+
+	public void setValid(String valid) {
+		this.valid = valid;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }

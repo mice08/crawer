@@ -96,6 +96,8 @@ public class QunarHotel {
 
     private Integer specialRec;
 
+    private String rnum;
+
     private String hourRoomRecLm;
 
     private String cityName;
@@ -164,9 +166,32 @@ public class QunarHotel {
 
     private String tagName;
 
+    private String bpoint;
+
+    private String phoneNumber;
+
+    private String hotelBrand;
+
+    private String oneSentence;
+
+    private String shortName;
+
     private Date createTime;
 
     private Date updateTime;
+
+    private String desc;
+
+
+
+
+    public String getRnum() {
+        return rnum;
+    }
+
+    public void setRnum(String rnum) {
+        this.rnum = rnum;
+    }
 
     public Long getId() {
         return id;
@@ -808,6 +833,46 @@ public class QunarHotel {
         this.tagName = tagName == null ? null : tagName.trim();
     }
 
+    public String getBpoint() {
+        return bpoint;
+    }
+
+    public void setBpoint(String bpoint) {
+        this.bpoint = bpoint == null ? null : bpoint.trim();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber == null ? null : phoneNumber.trim();
+    }
+
+    public String getHotelBrand() {
+        return hotelBrand;
+    }
+
+    public void setHotelBrand(String hotelBrand) {
+        this.hotelBrand = hotelBrand == null ? null : hotelBrand.trim();
+    }
+
+    public String getOneSentence() {
+        return oneSentence;
+    }
+
+    public void setOneSentence(String oneSentence) {
+        this.oneSentence = oneSentence == null ? null : oneSentence.trim();
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName == null ? null : shortName.trim();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -822,5 +887,13 @@ public class QunarHotel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

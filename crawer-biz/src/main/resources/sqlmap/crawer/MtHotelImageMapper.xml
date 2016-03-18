@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.MtHotelImageMapper">
+    <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.MtImage">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="md5" jdbcType="VARCHAR" property="md5" />
+        <result column="poiid" jdbcType="INTEGER" property="poiId" />
+        <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="imgDesc" jdbcType="VARCHAR" property="imgDesc" />
+        <result column="typeid" jdbcType="INTEGER" property="typeid" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+
+    </sql>
+
+
+    <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.MtImage">
+        insert into t_mt_images (md5,poiId,typeName,url,imgDesc,typeid
+        )
+        values (#{md5,jdbcType=VARCHAR}, #{poiid,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR},
+        #{url,jdbcType=VARCHAR}, #{imgDesc,jdbcType=VARCHAR}, #{typeid,jdbcType=INTEGER}
+        )
+    </insert>
+
+</mapper>

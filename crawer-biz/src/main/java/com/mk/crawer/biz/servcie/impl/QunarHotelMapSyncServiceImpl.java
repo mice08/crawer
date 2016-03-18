@@ -13,6 +13,7 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,26 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
     @Autowired
     private QunarHotelService qunarHotelService;
 
-    public Map<String,Object> hotelMapSyncByCity(String cityName){
+    public Map<String,Object> hotelMapSyncByCity(CityList bean){
         Cat.logEvent("hotelMapSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
         );
         logger.info("====================hotelMapSyncByCity beginTime={}====================",DateUtils.getDatetime());
         Map<String,Object> resultMap=new HashMap<String,Object>();
+        if(bean==null||(bean.getCityName()==null&& bean.getCityUrl()==null)){
+            logger.info("====================cityName={}&cityUrl={}====================",bean.getCityName(),bean.getCityUrl());
+            resultMap.put("message","cityName || cityUrl is not empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
         CityListExample cityListExample=new CityListExample();
-        cityListExample.createCriteria().andCityNameEqualTo(cityName);
+        if (!StringUtils.isEmpty(bean.getCityUrl())) {
+            cityListExample.createCriteria().andCityUrlEqualTo(bean.getCityUrl());
+            logger.info("====================cityUrl={}====================",bean.getCityUrl());
+        }else if (!StringUtils.isEmpty(bean.getCityName())){
+            cityListExample.createCriteria().andCityNameEqualTo(bean.getCityName());
+            logger.info("====================cityName={}====================",bean.getCityName());
+        }
         List<CityList> cityLists=cityListService.selectByExample(cityListExample);
         if (CollectionUtils.isEmpty(cityLists)){
             logger.info("====================hotelMapSyncByCity cityLists because is empty====================");
@@ -101,7 +114,7 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
         int start=0;
-        int len=100;
+        int len=500;
         String hotelResult=getRemoteDate(city.getCityName(),start,len);
         if(hotelResult==null){
             logger.info("====================hotelResult city={}  continue because url reslut is null====================",city.getCityName());
@@ -162,7 +175,8 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
         saveQunarHotel(hotels,city.getCityName());
         int count=(new BigDecimal(infoMap.get("count"))).intValue();
         if (count>len){
-            for (int i=1;i<=count/len;i++){
+            for (int i=2;i<=count/len;i++){
+
                 hotelResult=getRemoteDate(city.getCityName(),i*len,len);
                 if (hotelResult==null){
                     continue;
@@ -172,6 +186,12 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                     continue;
                 }
                 saveQunarHotel(hotelsJson,city.getCityName());
+
+                try {
+                    Thread.currentThread().sleep(5000l);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -366,6 +386,12 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
                 +"&len="+len
                 +"&tpl="+tpl;
         String url=Constant.qunar_map_hostlist+"?"+pramas;
+        try {
+            Thread.sleep(5000);
+
+        }catch (Exception e){
+
+        }
         return HttpUtils.get_data(url,"GET");
     }
     public Map<String,String> getJsonList(String value){
@@ -377,5 +403,12 @@ public class QunarHotelMapSyncServiceImpl implements QunarHotelMapSyncService {
             return null;
         }
         return resultMap;
+    }
+
+    public static void main(String[] args) {
+        String url = "http://pad.qunar.com/api/hotel/hotellist?city=%E4%B9%8C%E9%B2%81%E6%9C%A8%E9%BD%90&start=0&len=10";
+        //String url = "http://pad.qunar.com/";
+        String rs = HttpUtil.doGetNoProxy(url);
+        System.out.println(rs);
     }
 }

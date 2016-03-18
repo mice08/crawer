@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.MtHotelServiceMapper">
+    <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.MtHotelService">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="md5" jdbcType="VARCHAR" property="md5" />
+        <result column="poiId" jdbcType="INTEGER" property="poiId" />
+        <result column="attrId" jdbcType="INTEGER" property="attrId" />
+        <result column="attrDesc" jdbcType="VARCHAR" property="attrDesc" />
+        <result column="attrDetail" jdbcType="VARCHAR" property="attrDetail" />
+        <result column="imgUrl" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="poiDesc" jdbcType="VARCHAR" property="poiDesc" />
+        <result column="poiExtendsInfos" jdbcType="VARCHAR" property="poiExtendsInfos" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+
+    </sql>
+
+
+    <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.MtHotelService">
+        insert into t_mt_service (md5,poiId,attrId,attrDesc,attrDetail,imgUrl,poiDesc,poiExtendsInfos
+        )
+        values (#{md5,jdbcType=VARCHAR}, #{poiId,jdbcType=INTEGER}, #{attrId,jdbcType=VARCHAR},
+        #{attrDesc,jdbcType=VARCHAR}, #{attrDetail,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{poiDesc,jdbcType=VARCHAR},
+        #{poiExtendsInfos,jdbcType=VARCHAR}
+        )
+    </insert>
+
+</mapper>

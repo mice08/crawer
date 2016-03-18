@@ -3,14 +3,17 @@ package com.mk.crawer.biz.servcie.impl;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.crawer.api.QunarHotelSyncService;
+import com.mk.crawer.biz.mapper.crawer.HotelImageMapper;
 import com.mk.crawer.biz.model.crawer.*;
-import com.mk.crawer.biz.servcie.BrandsService;
-import com.mk.crawer.biz.servcie.ICityListService;
-import com.mk.crawer.biz.servcie.IHotelService;
+import com.mk.crawer.biz.servcie.*;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.framework.proxy.ThreadContext;
 import com.mk.framework.proxy.http.HttpUtil;
+import com.mk.framework.proxy.server.ProxyServer;
+import com.mk.framework.proxy.server.ProxyServerManager;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kangxiaolong on 2016-01-06.
@@ -35,6 +36,17 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
     private IHotelService hotelService ;
     @Autowired
     private BrandsService brandsService ;
+    @Autowired
+    private HotelImageService hotelImageService;
+
+    @Autowired
+    private HotelImageMapper hotelImageMapper;
+
+    @Autowired
+    private QunarHotelService qunarHotelService;
+
+    @Autowired
+    private HotelMappingService hotelMappingService;
     public Map<String,Object> hotelSyncByCity(String cityName){
         Cat.logEvent("hotelSyncByCity", "去哪儿酒店信息同步", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime()
@@ -72,6 +84,8 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+
+        Collections.reverse(cityLists);
         for (CityList city:cityLists) {
             doSync(city);
         }
@@ -84,6 +98,89 @@ public class QunarHotelSyncServiceImpl implements QunarHotelSyncService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
+    public Map<String,Object> qunarHotelImageSync(Boolean useProxy){
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店图片信息同步", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync beginTime={}====================",DateUtils.getDatetime());
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        CityListExample cityListExample=new CityListExample();
+        cityListExample.createCriteria().andCityTypeEqualTo("-1");
+        List<CityList> cityLists=cityListService.selectByExample(cityListExample);
+        if (CollectionUtils.isEmpty(cityLists)){
+            resultMap.put("message","cityList is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        Collections.reverse(cityLists);
+        for (CityList city:cityLists) {
+           /* HotelImage tmp = new HotelImage();
+            tmp.setCityName(city.getCityName());
+            HotelImage tmpHotelImage = hotelImageMapper.selectByRecord(tmp);
+            if (tmpHotelImage != null && StringUtils.isNotBlank(tmpHotelImage.getHotelSourceId())){
+                continue;
+            }*/
+
+            try {
+                doImageSync(city.getCityName(), useProxy);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        Cat.logEvent("qunarHotelSync", "去哪儿酒店信息同步", Event.SUCCESS,
+                "endTime=" + DateUtils.getDatetime()
+        );
+        logger.info("====================qunarHotelSync method endTime={}===================="
+                , DateUtils.getDatetime());
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+
+
+    public void doImageSync(String  city, Boolean useProxy){
+        System.out.println("~~~~~~~~~~start sync hotel image "+ city);
+        List<String> qunarHotelIds = qunarHotelService.seletQHotelCity(city);
+        ProxyServer proxyServer = null;
+        for (String hotelId : qunarHotelIds) {
+
+            try {
+
+                if (proxyServer == null){
+                    proxyServer = ProxyServerManager.take();
+                }
+
+                ThreadContext.PROXY_SERVER_THREAD_LOCAL.set(proxyServer);
+
+
+                Boolean  isOnlineHotel= true;//qunarHotelService.isOnlineHotel(qunarHotel.getSourceId());
+                Integer slp = 1;
+                try {
+                if (isOnlineHotel){
+
+                    hotelImageService.crawl(hotelId, useProxy);
+                    slp = 1500;
+                }else {
+                    System.out.println("酒店 id" + hotelId +" 不在上线范围内");
+                }
+                    Thread.sleep(slp);
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if ( proxyServer != null ) {
+                    ProxyServerManager.remove(proxyServer);
+                    proxyServer = null;
+                }
+
+            }
+        }
+        System.out.println("~~~~~~~~~~end sync hotel image "+ city);
+    }
+
     public Map<String,Object> doSync(CityList city){
 
         Map<String,Object> resultMap=new HashMap<String,Object>();

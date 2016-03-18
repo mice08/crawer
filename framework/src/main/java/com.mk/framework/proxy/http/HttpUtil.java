@@ -1,10 +1,16 @@
 package com.mk.framework.proxy.http;
 
+import com.mk.framework.proxy.Config;
+import com.mk.framework.proxy.JSONUtil;
+import com.mk.framework.proxy.ThreadContext;
+import com.mk.framework.proxy.server.ProxyServer;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -22,37 +28,44 @@ public class HttpUtil {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
 
-    public static String doGet(String url) {
-        return doGet(url, 1);
+    private static ThreadLocal<HttpClientContext> contextThreadLocal = new ThreadLocal<>();
+
+    private static HttpClientContext getContext() {
+        if ( contextThreadLocal.get() == null ) {
+            contextThreadLocal.set(HttpClientContext.create());
+        }
+
+        return contextThreadLocal.get();
     }
 
+    private static void removeContext() {
+        contextThreadLocal.remove();
+    }
 
+    public static String doGet(String url) throws Exception {
+        ProxyServer proxyServer = ThreadContext.PROXY_SERVER_THREAD_LOCAL.get();
 
-    static String doGet(String url, int count) {
-        if ( count <= Config.FETCH_RETRY_TIMES ) {
-
-            LOGGER.info("开始第{}次请求。", count);
-
-            ProxyServer proxyServer = ProxyServerManager.random();
-            try {
-                String result = HttpUtil.doGet(url, proxyServer);
-
-                if ( StringUtils.isEmpty(result)  ) {
-                    throw new IOException("响应内容为空");
-                } else if ( result.length() < 100 ) {
-                    ProxyServerManager.addBadServer(proxyServer);
-                    throw new IOException(result);
-                }
-
-                return result;
-            } catch (IOException e) {
-                LOGGER.warn("代理失效：{}，失效代理{}个", JSONUtil.toJson(proxyServer), ProxyServerManager.countBadServer());
-                return doGet(url, ++count);
-            }
-        } else {
-            LOGGER.info("共进行了{}次请求，请求结束。", Config.FETCH_RETRY_TIMES);
-            return null;
+        if ( proxyServer == null ) {
+            throw new NullPointerException("没有为该线程绑定代理服务器对象");
         }
+
+        String result;
+        try {
+            result = HttpUtil.doGet(url, proxyServer);
+        } catch (Exception e) {
+            removeContext();
+            throw e;
+        }
+
+        if ( StringUtils.isEmpty(result)  ) {
+            removeContext();
+            throw new Exception("响应内容为空");
+        } else if ( result.length() < 100 ) {
+            removeContext();
+            throw new Exception(result);
+        }
+
+        return result;
     }
 
     public static String doGetNoProxy(String url)  {
@@ -65,57 +78,104 @@ public class HttpUtil {
         return resp;
     }
 
-    static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        ThreadUtil.randomSleep(1000, 5000);
 
+    public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
         LOGGER.info("发送请求：{}", urlStr);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
-        HttpGet httpGet = new HttpGet(urlStr);
+        try {
+            HttpGet httpGet = new HttpGet(urlStr);
+            httpGet.setHeaders(Device.random().getHeaders());
 
-        RequestConfig config;
-        if (proxyServer != null) {
-            LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
-            HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-            config = RequestConfig
-                    .custom()
-                    .setProxy(httpHost)
-                    .setConnectTimeout(Config.READ_TIMEOUT)
-                    .build();
-        } else {
-            config = RequestConfig
-                    .custom()
-                    .setConnectTimeout(Config.READ_TIMEOUT)
-                    .build();
+            RequestConfig.Builder builder  = RequestConfig.custom();
+            if (proxyServer != null) {
+                LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
+                HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
+                builder.setProxy(httpHost);
+            } else {
+                LOGGER.info("未使用代理");
+            }
+
+            builder.setSocketTimeout(Config.READ_TIMEOUT)
+                   .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                   .setConnectTimeout(Config.READ_TIMEOUT);
+
+            httpGet.setConfig(builder.build());
+
+            CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet, getContext());
+
+            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+
+            HttpEntity httpEntity = closeableHttpResponse.getEntity();
+
+            byte[] bytes = EntityUtils.toByteArray(httpEntity);
+
+            String charset = CharsetDetector.guessEncoding(bytes);
+
+            String result = new String(bytes, charset);
+
+            if ( result.length() < 500 ) {
+                LOGGER.info("响应内容：{}", result);
+            } else {
+                LOGGER.info("响应内容：{}", result.substring(0, 499));
+            }
+
+            LOGGER.info("响应码为：{}", statusCode);
+            if ( statusCode != 200 ) {
+                throw new IOException("响应码为：" + statusCode);
+            }
+
+            return result;
+        } finally {
+            if ( closeableHttpClient != null ) {
+                closeableHttpClient.close();
+            }
         }
-        httpGet.setConfig(config);
+    }
 
 
-        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
 
-        HttpEntity httpEntity = closeableHttpResponse.getEntity();
+    public static String getCookies() throws IOException {
 
-        String contentType= httpEntity.getContentType().getValue();
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
-        String result;
+        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
-        if ( contentType.contains("GBK") ) {
-            result = EntityUtils.toString(httpEntity, "GBK");
-        } else if ( contentType.contains("GB2312") ) {
-            result = EntityUtils.toString(httpEntity, "GB2312");
-        } else if ( contentType.contains("UTF-8") ) {
-            result = EntityUtils.toString(httpEntity, "UTF-8");
-        } else if ( contentType.contains("application/json") ){
-            result = EntityUtils.toString(httpEntity, "UTF-8");
-        } else {
-            result = EntityUtils.toString(httpEntity, "GBK");
+        try {
+            HttpGet httpGet = new HttpGet("http://pad.qunar.com");
+
+            RequestConfig.Builder builder  = RequestConfig.custom();
+
+
+            builder.setSocketTimeout(Config.READ_TIMEOUT)
+                    .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                    .setConnectTimeout(Config.READ_TIMEOUT);
+
+            httpGet.setConfig(builder.build());
+
+            CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet, getContext());
+
+            Header[] headers  = closeableHttpResponse.getAllHeaders();
+            String cookies =null;
+            for (Header header : headers) {
+               if (header.getName().equals("Set-Cookie"))
+                   if (header.getValue().contains("QN48")){
+                       String [] tmp = header.getValue().split(";");
+
+                       cookies= tmp[0];
+                       break;
+                   }
+
+            }
+            return cookies ;
+        } finally {
+            if ( closeableHttpClient != null ) {
+                closeableHttpClient.close();
+            }
         }
-
-        LOGGER.info("获得响应：{}", result);
-        return result;
     }
 
     public static String urlEncoder(String url) {
@@ -128,9 +188,5 @@ public class HttpUtil {
         return null;
     }
 
-    public static void main(String[] args) throws IOException {
-//        LOGGER.info(doGet("http://1212.ip138.com/ic.asp"));
-        LOGGER.info(doGet("http://pad.qunar.com/api/hotel/hotellist?city=%E8%8A%92%E5%B8%82&fromDate=2016-01-09&toDate=2016-01-10"));
-    }
 
 }

@@ -3,9 +3,11 @@ package com.mk.crawer.biz.model.crawer;
 public class RoomTypeMapping {
     private Long id;
 
+    private String hotelSourceId;
+
     private Long otsRoomTypeId;
 
-    private Long exRoomTypeId;
+    private String exRoomTypeId;
 
     private String valid;
 
@@ -17,6 +19,14 @@ public class RoomTypeMapping {
         this.id = id;
     }
 
+    public String getHotelSourceId() {
+        return hotelSourceId;
+    }
+
+    public void setHotelSourceId(String hotelSourceId) {
+        this.hotelSourceId = hotelSourceId == null ? null : hotelSourceId.trim();
+    }
+
     public Long getOtsRoomTypeId() {
         return otsRoomTypeId;
     }
@@ -25,12 +35,12 @@ public class RoomTypeMapping {
         this.otsRoomTypeId = otsRoomTypeId;
     }
 
-    public Long getExRoomTypeId() {
+    public String getExRoomTypeId() {
         return exRoomTypeId;
     }
 
-    public void setExRoomTypeId(Long exRoomTypeId) {
-        this.exRoomTypeId = exRoomTypeId;
+    public void setExRoomTypeId(String exRoomTypeId) {
+        this.exRoomTypeId = exRoomTypeId == null ? null : exRoomTypeId.trim();
     }
 
     public String getValid() {

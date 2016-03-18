@@ -20,4 +20,9 @@
     <!-- 启用annotation方式 -->
     <task:annotation-driven scheduler="scheduler" executor="executor" proxy-target-class="true" />
 
+    <!--每天同步ota price 到 redis-->
+    <bean id="otaPriceServiceImpl" class="com.mk.crawer.biz.servcie.impl.OtaPriceServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="otaPriceServiceImpl" method="catheOtaPrice" cron="0 0 3 * * ?"/>
+    </task:scheduled-tasks>
 </beans>

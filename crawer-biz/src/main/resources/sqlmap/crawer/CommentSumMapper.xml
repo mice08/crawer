@@ -1,290 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.crawer.biz.mapper.crawer.CommentSumMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.CommentSum" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
-    <result column="score" property="score" jdbcType="DECIMAL" />
-    <result column="good_total" property="goodTotal" jdbcType="BIGINT" />
-    <result column="bad_total" property="badTotal" jdbcType="BIGINT" />
-    <result column="medium_total" property="mediumTotal" jdbcType="BIGINT" />
-    <result column="all_total" property="allTotal" jdbcType="BIGINT" />
-    <result column="image_count" property="imageCount" jdbcType="BIGINT" />
-    <result column="hot_titles" property="hotTitles" jdbcType="VARCHAR" />
-    <result column="tags" property="tags" jdbcType="VARCHAR" />
-    <result column="sentence_cmt" property="sentenceCmt" jdbcType="VARCHAR" />
-    <result column="score_shop_msg" property="scoreShopMsg" jdbcType="VARCHAR" />
-    <result column="score_shop_url" property="scoreShopUrl" jdbcType="VARCHAR" />
-    <result column="msg" property="msg" jdbcType="VARCHAR" />
-    <result column="valid" property="valid" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    id, hotel_id, score, good_total, bad_total, medium_total, all_total, image_count, 
-    hot_titles, tags, sentence_cmt, score_shop_msg, score_shop_url, msg, valid, create_time, 
-    update_time
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.CommentSumExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    from t_ex_comment_sum
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_ex_comment_sum
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_ex_comment_sum
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.CommentSumMapper">
+	<resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.CommentSum">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+		<result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+		<result column="hotel_source_id" property="hotelSourceId"
+			jdbcType="VARCHAR" />
+		<result column="score" property="score" jdbcType="DECIMAL" />
+		<result column="good_total" property="goodTotal" jdbcType="BIGINT" />
+		<result column="bad_total" property="badTotal" jdbcType="BIGINT" />
+		<result column="medium_total" property="mediumTotal" jdbcType="BIGINT" />
+		<result column="all_total" property="allTotal" jdbcType="BIGINT" />
+		<result column="image_count" property="imageCount" jdbcType="BIGINT" />
+		<result column="hot_titles" property="hotTitles" jdbcType="VARCHAR" />
+		<result column="tags" property="tags" jdbcType="VARCHAR" />
+		<result column="sentence_cmt" property="sentenceCmt" jdbcType="VARCHAR" />
+		<result column="score_shop_msg" property="scoreShopMsg"
+			jdbcType="VARCHAR" />
+		<result column="score_shop_url" property="scoreShopUrl"
+			jdbcType="VARCHAR" />
+		<result column="msg" property="msg" jdbcType="VARCHAR" />
+		<result column="valid" property="valid" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
 
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CommentSum" >
-    insert into t_ex_comment_sum (id, hotel_id, score, 
-      good_total, bad_total, medium_total,
-      all_total, image_count, hot_titles, 
-      tags, sentence_cmt, score_shop_msg, 
-      score_shop_url, msg, valid, 
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{score,jdbcType=DECIMAL}, 
-      #{goodTotal,jdbcType=BIGINT}, #{badTotal,jdbcType=BIGINT}, #{mediumTotal,jdbcType=BIGINT}, 
-      #{allTotal,jdbcType=BIGINT}, #{imageCount,jdbcType=BIGINT}, #{hotTitles,jdbcType=VARCHAR}, 
-      #{tags,jdbcType=VARCHAR}, #{sentenceCmt,jdbcType=VARCHAR}, #{scoreShopMsg,jdbcType=VARCHAR}, 
-      #{scoreShopUrl,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{valid,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
-  </insert>
+	<sql id="Base_Column_List">
+		id, hotel_id, hotel_name, hotel_source_id, score,
+		good_total, bad_total,
+		medium_total, all_total, image_count,
+		hot_titles, tags, sentence_cmt, score_shop_msg, score_shop_url, msg,
+		valid,
+		create_time,
+		update_time
+	</sql>
 
-  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.CommentSum" >
-    insert into t_ex_comment_sum
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="hotelId != null" >
-        hotel_id,
-      </if>
-      <if test="score != null" >
-        score,
-      </if>
-      <if test="goodTotal != null" >
-        good_total,
-      </if>
-      <if test="badTotal != null" >
-        bad_total,
-      </if>
-      <if test="mediumTotal != null" >
-        medium_total,
-      </if>
-      <if test="allTotal != null" >
-        all_total,
-      </if>
-      <if test="imageCount != null" >
-        image_count,
-      </if>
-      <if test="hotTitles != null" >
-        hot_titles,
-      </if>
-      <if test="tags != null" >
-        tags,
-      </if>
-      <if test="sentenceCmt != null" >
-        sentence_cmt,
-      </if>
-      <if test="scoreShopMsg != null" >
-        score_shop_msg,
-      </if>
-      <if test="scoreShopUrl != null" >
-        score_shop_url,
-      </if>
-      <if test="msg != null" >
-        msg,
-      </if>
-      <if test="valid != null" >
-        valid,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="hotelId != null" >
-        #{hotelId,jdbcType=BIGINT},
-      </if>
-      <if test="score != null" >
-        #{score,jdbcType=DECIMAL},
-      </if>
-      <if test="goodTotal != null" >
-        #{goodTotal,jdbcType=BIGINT},
-      </if>
-      <if test="badTotal != null" >
-        #{badTotal,jdbcType=BIGINT},
-      </if>
-      <if test="mediumTotal != null" >
-        #{mediumTotal,jdbcType=BIGINT},
-      </if>
-      <if test="allTotal != null" >
-        #{allTotal,jdbcType=BIGINT},
-      </if>
-      <if test="imageCount != null" >
-        #{imageCount,jdbcType=BIGINT},
-      </if>
-      <if test="hotTitles != null" >
-        #{hotTitles,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null" >
-        #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="sentenceCmt != null" >
-        #{sentenceCmt,jdbcType=VARCHAR},
-      </if>
-      <if test="scoreShopMsg != null" >
-        #{scoreShopMsg,jdbcType=VARCHAR},
-      </if>
-      <if test="scoreShopUrl != null" >
-        #{scoreShopUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="msg != null" >
-        #{msg,jdbcType=VARCHAR},
-      </if>
-      <if test="valid != null" >
-        #{valid,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from t_ex_comment_sum
+		where id = #{id,jdbcType=BIGINT}
+	</select>
 
-  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.CommentSumExample" resultType="java.lang.Integer" >
-    select count(*) from t_ex_comment_sum
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
+	<select id="selectScoreByOtsId" resultType="map" parameterType="java.lang.String">
+		select sum.score score, map.ex_hotel_id as
+		hotel_source_id
+		from
+		t_ex_comment_sum sum
+		join ots_ex_hotel_mapping map
+		on
+		sum.hotel_source_id = map.ex_hotel_id
+		where map.ots_hotel_id =
+		#{hotelId,jdbcType=VARCHAR}
+	</select>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.CommentSum" >
-    update t_ex_comment_sum
-    <set >
-      <if test="hotelId != null" >
-        hotel_id = #{hotelId,jdbcType=BIGINT},
-      </if>
-      <if test="score != null" >
-        score = #{score,jdbcType=DECIMAL},
-      </if>
-      <if test="goodTotal != null" >
-        good_total = #{goodTotal,jdbcType=BIGINT},
-      </if>
-      <if test="badTotal != null" >
-        bad_total = #{badTotal,jdbcType=BIGINT},
-      </if>
-      <if test="mediumTotal != null" >
-        medium_total = #{mediumTotal,jdbcType=BIGINT},
-      </if>
-      <if test="allTotal != null" >
-        all_total = #{allTotal,jdbcType=BIGINT},
-      </if>
-      <if test="imageCount != null" >
-        image_count = #{imageCount,jdbcType=BIGINT},
-      </if>
-      <if test="hotTitles != null" >
-        hot_titles = #{hotTitles,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null" >
-        tags = #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="sentenceCmt != null" >
-        sentence_cmt = #{sentenceCmt,jdbcType=VARCHAR},
-      </if>
-      <if test="scoreShopMsg != null" >
-        score_shop_msg = #{scoreShopMsg,jdbcType=VARCHAR},
-      </if>
-      <if test="scoreShopUrl != null" >
-        score_shop_url = #{scoreShopUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="msg != null" >
-        msg = #{msg,jdbcType=VARCHAR},
-      </if>
-      <if test="valid != null" >
-        valid = #{valid,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+	<select id="selectOtsHotelId" fetchSize="1000000" resultType="map">
+		select
+		id
+		from
+		ots_ex_hotel_mapping
+		where ex_hotel_id IS NOT NULL AND ots_hotel_id IS NOT NULL and valid = 'T'
+	</select>
 
-  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.CommentSum" >
-    update t_ex_comment_sum
-    set hotel_id = #{hotelId,jdbcType=BIGINT},
-      score = #{score,jdbcType=DECIMAL},
-      good_total = #{goodTotal,jdbcType=BIGINT},
-      bad_total = #{badTotal,jdbcType=BIGINT},
-      medium_total = #{mediumTotal,jdbcType=BIGINT},
-      all_total = #{allTotal,jdbcType=BIGINT},
-      image_count = #{imageCount,jdbcType=BIGINT},
-      hot_titles = #{hotTitles,jdbcType=VARCHAR},
-      tags = #{tags,jdbcType=VARCHAR},
-      sentence_cmt = #{sentenceCmt,jdbcType=VARCHAR},
-      score_shop_msg = #{scoreShopMsg,jdbcType=VARCHAR},
-      score_shop_url = #{scoreShopUrl,jdbcType=VARCHAR},
-      msg = #{msg,jdbcType=VARCHAR},
-      valid = #{valid,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		t_ex_comment_sum
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.CommentSum">
+		insert into t_ex_comment_sum
+		(hotel_id, hotel_name, hotel_source_id, score,
+		good_total,
+		bad_total,
+		medium_total,
+		all_total, image_count, hot_titles,
+		tags,
+		sentence_cmt,
+		score_shop_msg,
+		score_shop_url, msg, valid)
+		values (
+		#{hotelId,jdbcType=BIGINT},#{hotelName,jdbcType=VARCHAR},#{hotelSourceId,jdbcType=VARCHAR},
+		#{score,jdbcType=DECIMAL},
+		#{goodTotal,jdbcType=BIGINT},
+		#{badTotal,jdbcType=BIGINT}, #{mediumTotal,jdbcType=BIGINT},
+		#{allTotal,jdbcType=BIGINT}, #{imageCount,jdbcType=BIGINT},
+		#{hotTitles,jdbcType=VARCHAR},
+		#{tags,jdbcType=VARCHAR},
+		#{sentenceCmt,jdbcType=VARCHAR}, #{scoreShopMsg,jdbcType=VARCHAR},
+		#{scoreShopUrl,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR},
+		#{valid,jdbcType=VARCHAR})
+	</insert>
+
+
 </mapper>

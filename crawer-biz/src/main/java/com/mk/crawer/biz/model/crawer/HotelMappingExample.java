@@ -8,6 +8,10 @@ public class HotelMappingExample {
 
     protected boolean distinct;
 
+    private Integer pageIndex;
+
+    private Integer pageSize;
+
     protected List<Criteria> oredCriteria;
 
     public HotelMappingExample() {
@@ -304,52 +308,62 @@ public class HotelMappingExample {
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdEqualTo(Long value) {
+        public Criteria andExHotelIdEqualTo(String value) {
             addCriterion("ex_hotel_id =", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdNotEqualTo(Long value) {
+        public Criteria andExHotelIdNotEqualTo(String value) {
             addCriterion("ex_hotel_id <>", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdGreaterThan(Long value) {
+        public Criteria andExHotelIdGreaterThan(String value) {
             addCriterion("ex_hotel_id >", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andExHotelIdGreaterThanOrEqualTo(String value) {
             addCriterion("ex_hotel_id >=", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdLessThan(Long value) {
+        public Criteria andExHotelIdLessThan(String value) {
             addCriterion("ex_hotel_id <", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdLessThanOrEqualTo(Long value) {
+        public Criteria andExHotelIdLessThanOrEqualTo(String value) {
             addCriterion("ex_hotel_id <=", value, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdIn(List<Long> values) {
+        public Criteria andExHotelIdLike(String value) {
+            addCriterion("ex_hotel_id like", value, "exHotelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andExHotelIdNotLike(String value) {
+            addCriterion("ex_hotel_id not like", value, "exHotelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andExHotelIdIn(List<String> values) {
             addCriterion("ex_hotel_id in", values, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdNotIn(List<Long> values) {
+        public Criteria andExHotelIdNotIn(List<String> values) {
             addCriterion("ex_hotel_id not in", values, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdBetween(Long value1, Long value2) {
+        public Criteria andExHotelIdBetween(String value1, String value2) {
             addCriterion("ex_hotel_id between", value1, value2, "exHotelId");
             return (Criteria) this;
         }
 
-        public Criteria andExHotelIdNotBetween(Long value1, Long value2) {
+        public Criteria andExHotelIdNotBetween(String value1, String value2) {
             addCriterion("ex_hotel_id not between", value1, value2, "exHotelId");
             return (Criteria) this;
         }
@@ -421,6 +435,76 @@ public class HotelMappingExample {
 
         public Criteria andExHotelNameNotBetween(String value1, String value2) {
             addCriterion("ex_hotel_name not between", value1, value2, "exHotelName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteIsNull() {
+            addCriterion("site is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteIsNotNull() {
+            addCriterion("site is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteEqualTo(String value) {
+            addCriterion("site =", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotEqualTo(String value) {
+            addCriterion("site <>", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteGreaterThan(String value) {
+            addCriterion("site >", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteGreaterThanOrEqualTo(String value) {
+            addCriterion("site >=", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLessThan(String value) {
+            addCriterion("site <", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLessThanOrEqualTo(String value) {
+            addCriterion("site <=", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteLike(String value) {
+            addCriterion("site like", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotLike(String value) {
+            addCriterion("site not like", value, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteIn(List<String> values) {
+            addCriterion("site in", values, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotIn(List<String> values) {
+            addCriterion("site not in", values, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteBetween(String value1, String value2) {
+            addCriterion("site between", value1, value2, "site");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteNotBetween(String value1, String value2) {
+            addCriterion("site not between", value1, value2, "site");
             return (Criteria) this;
         }
 
@@ -586,5 +670,21 @@ public class HotelMappingExample {
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
         }
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

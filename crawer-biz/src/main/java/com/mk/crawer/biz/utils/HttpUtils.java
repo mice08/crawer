@@ -133,6 +133,9 @@ public class HttpUtils {
             conn.setDoOutput(true);
             conn.setConnectTimeout(10000);
             conn.setRequestMethod(method);
+            conn.setRequestProperty("Content-type", "text/html");
+            conn.setRequestProperty("Accept-Charset", "utf-8");
+            conn.setRequestProperty("contentType", "utf-8");
             conn.connect();
 
             //返回

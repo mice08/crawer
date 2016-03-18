@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.MtCityMapper">
+    <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.MtCity">
+        <id column="id" jdbcType="BIGINT" property="dbId" />
+        <result column="cityId" jdbcType="INTEGER" property="id" />
+        <result column="rank" jdbcType="VARCHAR" property="rank" />
+        <result column="acronym" jdbcType="VARCHAR" property="acronym" />
+        <result column="onlineTime" jdbcType="BIGINT" property="onlineTime" />
+        <result column="divisionStr" jdbcType="VARCHAR" property="divisionStr" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="locationId" jdbcType="VARCHAR" property="locationId" />
+        <result column="lng" jdbcType="DOUBLE" property="lng" />
+        <result column="lat" jdbcType="DOUBLE" property="lat" />
+        <result column="pinyin" jdbcType="VARCHAR" property="pinyin" />
+        <result column="isOpen" jdbcType="TINYINT" property="isOpen" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, cityId, rank, acronym, onlineTime, divisionStr, name, locationId, lng, lat, pinyin, isOpen
+    </sql>
+
+
+    <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.MtCity">
+        insert into t_mt_city (cityId, rank, acronym, onlineTime, divisionStr, name, locationId, lng, lat, pinyin, isOpen
+        )
+        values (#{id,jdbcType=INTEGER}, #{rank,jdbcType=VARCHAR}, #{acronym,jdbcType=VARCHAR},
+        #{onlineTime,jdbcType=BIGINT}, #{divisionStr,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+        #{locationId,jdbcType=VARCHAR}, #{lng,jdbcType=DOUBLE},#{lat,jdbcType=DOUBLE},#{pinyin,jdbcType=VARCHAR},
+        #{isOpen,jdbcType=TINYINT}
+        )
+    </insert>
+
+    <select id="getCityList" resultMap="BaseResultMap">
+        select * from t_mt_city
+    </select>
+
+</mapper>

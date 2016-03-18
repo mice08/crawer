@@ -1,5 +1,7 @@
 package com.mk.crawer.biz.servcie;
 
+import com.mk.crawer.biz.model.crawer.CityList;
+
 import java.util.Map;
 
 /**
@@ -7,5 +9,5 @@ import java.util.Map;
  */
 public interface QunarHotelMapSyncService {
     public Map<String,Object> qunarHotelMapSync();
-    public Map<String,Object> hotelMapSyncByCity(String cityName);
+    public Map<String,Object> hotelMapSyncByCity(CityList bean);
 }
