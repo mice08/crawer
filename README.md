@@ -754,6 +754,7 @@
 ### 2. 增量更新redis城市队列
 
 > http://ip:port/citylist/refreshcitylist
+
 >查询数据库中的城市，放至redis中的城市队列
 ```
  Http Method `POST`
