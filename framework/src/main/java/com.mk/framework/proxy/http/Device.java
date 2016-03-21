@@ -53,13 +53,13 @@ public class Device {
     public static class AppleIPad implements IRequestHead {
         @Override
         public Header[] getHeaders() {
-            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-            try {
-                 cookie = HttpUtil.getCookies();
-            } catch (IOException e) {
-                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-                e.printStackTrace();
-            }
+//            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+//            try {
+//                 cookie = HttpUtil.getCookies();
+//            } catch (IOException e) {
+//                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+//                e.printStackTrace();
+//            }
 
            return HeaderConfig
                     .custom()
@@ -67,7 +67,7 @@ public class Device {
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53")
                     .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
-                    .add("Cookie", cookie)
+                    //.add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -75,20 +75,20 @@ public class Device {
     public static class AppleIPadMin implements IRequestHead {
         @Override
         public Header[] getHeaders() {
-            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-            try {
-                cookie = HttpUtil.getCookies();
-            } catch (IOException e) {
-                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-                e.printStackTrace();
-            }
+//            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+//            try {
+//                cookie = HttpUtil.getCookies();
+//            } catch (IOException e) {
+//                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+//                e.printStackTrace();
+//            }
             return HeaderConfig
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53")
                     .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
-                    .add("Cookie", cookie)
+                    //.add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -146,9 +146,9 @@ public class Device {
     static {
         deviceList.add(new AppleIPad());
         deviceList.add(new AppleIPadMin());
-        deviceList.add(new AmazonKindleFireHD());
-        deviceList.add(new GoogleNexus10());
-        deviceList.add(new GoogleNexus7());
+//        deviceList.add(new AmazonKindleFireHD());
+//        deviceList.add(new GoogleNexus10());
+//        deviceList.add(new GoogleNexus7());
     }
 
     public static IRequestHead random() {
