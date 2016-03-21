@@ -119,7 +119,7 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 +"&offset="+offset
                 +"&extensions=all";
         String url= Constant.gd_hostlist+"?"+pramas;
-        return HttpUtils.get_data(url,"GET");
+        return HttpUtil.doGetNoProxy(url);
     }
     private GdHotel copyBean(Pois bean) {
         GdHotel gdHotel = new GdHotel();
