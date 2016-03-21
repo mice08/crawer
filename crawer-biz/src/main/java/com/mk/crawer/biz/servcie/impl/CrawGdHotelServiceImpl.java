@@ -14,6 +14,7 @@ import com.mk.crawer.biz.model.ots.TDistrict;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
 import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
+import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.crawer.biz.utils.JsonUtils;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
@@ -118,7 +119,7 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 +"&offset="+offset
                 +"&extensions=all";
         String url= Constant.gd_hostlist+"?"+pramas;
-        return HttpUtil.doGetNoProxy(url);
+        return HttpUtils.get_data(url,"GET");
     }
     private GdHotel copyBean(Pois bean) {
         GdHotel gdHotel = new GdHotel();
