@@ -56,7 +56,7 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 }
                 Map<String,String> dataJson = JsonUtils.jsonToMap(data);
                 Integer count = dataJson.get("count")==null?0:Integer.valueOf(dataJson.get("count"));
-                logger.info(String.format("\n====================types={}&cityCode={}====================\n"),type,cityBean.getCode());
+                logger.info(String.format("\n====================types={}&cityCode={}&count={}====================\n"),type,cityBean.getCode(),count);
                 if (count==0){
                     continue;
                 }
