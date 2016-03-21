@@ -146,9 +146,9 @@ public class Device {
     static {
         deviceList.add(new AppleIPad());
         deviceList.add(new AppleIPadMin());
-      //  deviceList.add(new AmazonKindleFireHD());
-       // deviceList.add(new GoogleNexus10());
-        //deviceList.add(new GoogleNexus7());
+        deviceList.add(new AmazonKindleFireHD());
+        deviceList.add(new GoogleNexus10());
+        deviceList.add(new GoogleNexus7());
     }
 
     public static IRequestHead random() {
