@@ -24,8 +24,8 @@
       <if test="id != null">
         id = #{id}
       </if>
-      <if test="cityCode != null">
-        AND code = #{cityCode}
+      <if test="code != null">
+        AND code = #{code}
       </if>
       <if test="cityName != null">
         AND city_name like '%${cityName}%'
@@ -80,7 +80,7 @@
       pin_yin, acronym, sort,
       latitude, longitude, is_hot_city, 
       `range`, valid, level)
-    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR},
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR},
       #{pinYin,jdbcType=VARCHAR}, #{acronym,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
       #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL}, #{isHotCity,jdbcType=VARCHAR}, 
       #{range,jdbcType=DOUBLE}, #{valid,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER})
@@ -88,8 +88,8 @@
   <update id="updateById" parameterType="com.mk.crawer.biz.model.ots.TCityList">
     update t_citylist
     <set>
-      <if test="cityCode != null">
-        code = #{cityCode,jdbcType=VARCHAR},
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
       </if>
       <if test="cityName != null">
         city_name = #{cityName,jdbcType=VARCHAR},
