@@ -2,41 +2,50 @@ package com.mk.crawer.api.dtos;
 
 import java.util.List;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.util.StringUtils;
 
 
 public class Pois {
-
-    private String id;
+    @JSONField(name ="id")
+    private String sourceId;
     private String name;
     private String tag;
     private String type;
-    private String typecode;
+    @JSONField(name ="typecode")
+    private String typeCode;
     @JSONField(name ="biz_type")
     private String bizType;
     private String address;
     private String location;
     private String tel;
-    private String postcode;
+    @JSONField(name ="postcode")
+    private String postCode;
     private String website;
     private String email;
     private String pcode;
     private String pname;
-    private String citycode;
-    private String cityname;
-    private String adcode;
-    private String adname;
-    private String gridcode;
+    @JSONField(name ="citycode")
+    private String cityCode;
+    @JSONField(name ="cityname")
+    private String cityName;
+    @JSONField(name ="adcode")
+    private String adCode;
+    @JSONField(name ="adname")
+    private String adName;
+    @JSONField(name ="gridcode")
+    private String gridCode;
     private String distance;
     private String alias;
     @JSONField(name ="navi_poiid")
-    private String naviPoiid;
+    private String naviPoiId;
     @JSONField(name ="entr_location")
     private String entrLocation;
     @JSONField(name ="exit_location")
     private String exitLocation;
     private String match;
     private String recommend;
-    private String timestamp;
+    @JSONField(name ="timestamp")
+    private String timeStamp;
     @JSONField(name ="indoor_map")
     private String indoorMap;
     @JSONField(name ="groupbuy_num")
@@ -45,15 +54,20 @@ public class Pois {
     private String businessArea;
     @JSONField(name ="discount_num")
     private String discountNum;
+    private String event;
     private List<Photos> photos;
-
-
-    public String getId() {
-        return id;
+    @JSONField(name ="biz_ext")
+    private BizExt bizExt;
+    @JSONField(name ="indoor_data")
+    private IndoorData indoorData;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSourceId(String sourceId) {
+        if (!StringUtils.isEmpty(sourceId)&&!sourceId.equals("[]")){
+            this.sourceId = sourceId;
+        }
     }
 
     public String getName() {
@@ -61,7 +75,9 @@ public class Pois {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (!StringUtils.isEmpty(name)&&!name.equals("[]")){
+            this.name = name;
+        }
     }
 
     public String getTag() {
@@ -69,7 +85,9 @@ public class Pois {
     }
 
     public void setTag(String tag) {
-        this.tag = tag;
+        if (!StringUtils.isEmpty(tag)&&!tag.equals("[]")){
+            this.tag = tag;
+        }
     }
 
     public String getType() {
@@ -77,15 +95,19 @@ public class Pois {
     }
 
     public void setType(String type) {
-        this.type = type;
+        if (!StringUtils.isEmpty(type)&&!type.equals("[]")){
+            this.type = type;
+        }
     }
 
-    public String getTypecode() {
-        return typecode;
+    public String getTypeCode() {
+        return typeCode;
     }
 
-    public void setTypecode(String typecode) {
-        this.typecode = typecode;
+    public void setTypeCode(String typeCode) {
+        if (!StringUtils.isEmpty(typeCode)&&!typeCode.equals("[]")){
+            this.typeCode = typeCode;
+        }
     }
 
     public String getBizType() {
@@ -93,7 +115,9 @@ public class Pois {
     }
 
     public void setBizType(String bizType) {
-        this.bizType = bizType;
+        if (!StringUtils.isEmpty(bizType)&&!bizType.equals("[]")){
+            this.bizType = bizType;
+        }
     }
 
     public String getAddress() {
@@ -101,7 +125,9 @@ public class Pois {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        if (!StringUtils.isEmpty(address)&&!address.equals("[]")){
+            this.address = address;
+        }
     }
 
     public String getLocation() {
@@ -109,7 +135,9 @@ public class Pois {
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        if (!StringUtils.isEmpty(location)&&!location.equals("[]")){
+            this.location = location;
+        }
     }
 
     public String getTel() {
@@ -117,15 +145,19 @@ public class Pois {
     }
 
     public void setTel(String tel) {
-        this.tel = tel;
+        if (!StringUtils.isEmpty(tel)&&!tel.equals("[]")){
+            this.tel = tel;
+        }
     }
 
-    public String getPostcode() {
-        return postcode;
+    public String getPostCode() {
+        return postCode;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
+    public void setPostCode(String postCode) {
+        if (!StringUtils.isEmpty(postCode)&&!postCode.equals("[]")){
+            this.postCode = postCode;
+        }
     }
 
     public String getWebsite() {
@@ -133,7 +165,9 @@ public class Pois {
     }
 
     public void setWebsite(String website) {
-        this.website = website;
+        if (!StringUtils.isEmpty(website)&&!website.equals("[]")){
+            this.website = website;
+        }
     }
 
     public String getEmail() {
@@ -141,7 +175,9 @@ public class Pois {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (!StringUtils.isEmpty(email)&&!email.equals("[]")){
+            this.email = email;
+        }
     }
 
     public String getPcode() {
@@ -149,7 +185,9 @@ public class Pois {
     }
 
     public void setPcode(String pcode) {
-        this.pcode = pcode;
+        if (!StringUtils.isEmpty(pcode)&&!pcode.equals("[]")){
+            this.pcode = pcode;
+        }
     }
 
     public String getPname() {
@@ -157,47 +195,59 @@ public class Pois {
     }
 
     public void setPname(String pname) {
-        this.pname = pname;
+        if (!StringUtils.isEmpty(pname)&&!pname.equals("[]")){
+            this.pname = pname;
+        }
     }
 
-    public String getCitycode() {
-        return citycode;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setCitycode(String citycode) {
-        this.citycode = citycode;
+    public void setCityCode(String cityCode) {
+        if (!StringUtils.isEmpty(cityCode)&&!cityCode.equals("[]")){
+            this.cityCode = cityCode;
+        }
     }
 
-    public String getCityname() {
-        return cityname;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
+    public void setCityName(String cityName) {
+        if (!StringUtils.isEmpty(cityName)&&!cityName.equals("[]")){
+            this.cityName = cityName;
+        }
     }
 
-    public String getAdcode() {
-        return adcode;
+    public String getAdCode() {
+        return adCode;
     }
 
-    public void setAdcode(String adcode) {
-        this.adcode = adcode;
+    public void setAdCode(String adCode) {
+        if (!StringUtils.isEmpty(adCode)&&!adCode.equals("[]")){
+            this.adCode = adCode;
+        }
     }
 
-    public String getAdname() {
-        return adname;
+    public String getAdName() {
+        return adName;
     }
 
-    public void setAdname(String adname) {
-        this.adname = adname;
+    public void setAdName(String adName) {
+        if (!StringUtils.isEmpty(adName)&&!adName.equals("[]")){
+            this.adName = adName;
+        }
     }
 
-    public String getGridcode() {
-        return gridcode;
+    public String getGridCode() {
+        return gridCode;
     }
 
-    public void setGridcode(String gridcode) {
-        this.gridcode = gridcode;
+    public void setGridCode(String gridCode) {
+        if (!StringUtils.isEmpty(gridCode)&&!gridCode.equals("[]")){
+            this.gridCode = gridCode;
+        }
     }
 
     public String getDistance() {
@@ -205,7 +255,9 @@ public class Pois {
     }
 
     public void setDistance(String distance) {
-        this.distance = distance;
+        if (!StringUtils.isEmpty(distance)&&!distance.equals("[]")){
+            this.distance = distance;
+        }
     }
 
     public String getAlias() {
@@ -213,15 +265,19 @@ public class Pois {
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
+        if (!StringUtils.isEmpty(alias)&&!alias.equals("[]")){
+            this.alias = alias;
+        }
     }
 
-    public String getNaviPoiid() {
-        return naviPoiid;
+    public String getNaviPoiId() {
+        return naviPoiId;
     }
 
-    public void setNaviPoiid(String naviPoiid) {
-        this.naviPoiid = naviPoiid;
+    public void setNaviPoiId(String naviPoiId) {
+        if (!StringUtils.isEmpty(naviPoiId)&&!naviPoiId.equals("[]")){
+            this.naviPoiId = naviPoiId;
+        }
     }
 
     public String getEntrLocation() {
@@ -229,7 +285,9 @@ public class Pois {
     }
 
     public void setEntrLocation(String entrLocation) {
-        this.entrLocation = entrLocation;
+        if (!StringUtils.isEmpty(entrLocation)&&!entrLocation.equals("[]")){
+            this.entrLocation = entrLocation;
+        }
     }
 
     public String getExitLocation() {
@@ -237,7 +295,9 @@ public class Pois {
     }
 
     public void setExitLocation(String exitLocation) {
-        this.exitLocation = exitLocation;
+        if (!StringUtils.isEmpty(exitLocation)&&!exitLocation.equals("[]")){
+            this.exitLocation = exitLocation;
+        }
     }
 
     public String getMatch() {
@@ -245,7 +305,9 @@ public class Pois {
     }
 
     public void setMatch(String match) {
-        this.match = match;
+        if (!StringUtils.isEmpty(match)&&!match.equals("[]")){
+            this.match = match;
+        }
     }
 
     public String getRecommend() {
@@ -253,15 +315,19 @@ public class Pois {
     }
 
     public void setRecommend(String recommend) {
-        this.recommend = recommend;
+        if (!StringUtils.isEmpty(recommend)&&!recommend.equals("[]")){
+            this.recommend = recommend;
+        }
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setTimeStamp(String timeStamp) {
+        if (!StringUtils.isEmpty(timeStamp)&&!timeStamp.equals("[]")){
+            this.timeStamp = timeStamp;
+        }
     }
 
     public String getIndoorMap() {
@@ -269,7 +335,9 @@ public class Pois {
     }
 
     public void setIndoorMap(String indoorMap) {
-        this.indoorMap = indoorMap;
+        if (!StringUtils.isEmpty(indoorMap)&&!indoorMap.equals("[]")){
+            this.indoorMap = indoorMap;
+        }
     }
 
     public String getGroupbuyNum() {
@@ -277,7 +345,9 @@ public class Pois {
     }
 
     public void setGroupbuyNum(String groupbuyNum) {
-        this.groupbuyNum = groupbuyNum;
+        if (!StringUtils.isEmpty(groupbuyNum)&&!groupbuyNum.equals("[]")){
+            this.groupbuyNum = groupbuyNum;
+        }
     }
 
     public String getBusinessArea() {
@@ -285,7 +355,9 @@ public class Pois {
     }
 
     public void setBusinessArea(String businessArea) {
-        this.businessArea = businessArea;
+        if (!StringUtils.isEmpty(businessArea)&&!businessArea.equals("[]")){
+            this.businessArea = businessArea;
+        }
     }
 
     public String getDiscountNum() {
@@ -293,7 +365,19 @@ public class Pois {
     }
 
     public void setDiscountNum(String discountNum) {
-        this.discountNum = discountNum;
+        if (!StringUtils.isEmpty(discountNum)&&!discountNum.equals("[]")){
+            this.discountNum = discountNum;
+        }
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        if (!StringUtils.isEmpty(event)&&!event.equals("[]")){
+            this.event = event;
+        }
     }
 
     public List<Photos> getPhotos() {
@@ -302,5 +386,21 @@ public class Pois {
 
     public void setPhotos(List<Photos> photos) {
         this.photos = photos;
+    }
+
+    public BizExt getBizExt() {
+        return bizExt;
+    }
+
+    public void setBizExt(BizExt bizExt) {
+        this.bizExt = bizExt;
+    }
+
+    public IndoorData getIndoorData() {
+        return indoorData;
+    }
+
+    public void setIndoorData(IndoorData indoorData) {
+        this.indoorData = indoorData;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mk.crawer.biz.model.crawer.GdHotelPhotosMapper">
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.GdHotelPhotosMapper">
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdHotelPhotos">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="hotel_source_id" jdbcType="VARCHAR" property="hotelSourceId" />
@@ -20,6 +20,9 @@
       </if>
       <if test="title != null">
         AND title = #{title}
+      </if>
+      <if test="url != null">
+        AND url = #{url}
       </if>
     </where>
   </sql>
@@ -47,7 +50,7 @@
     delete from gd_hotel_photos
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.GdHotelPhotos">
+  <insert id="save" parameterType="com.mk.crawer.biz.model.crawer.GdHotelPhotos">
     insert into gd_hotel_photos (id, hotel_source_id, title, 
       url)
     values (#{id,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 

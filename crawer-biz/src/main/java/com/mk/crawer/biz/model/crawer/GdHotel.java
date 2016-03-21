@@ -1,5 +1,7 @@
 package com.mk.crawer.biz.model.crawer;
 
+import java.util.Date;
+
 public class GdHotel {
     private Long id;
 
@@ -82,6 +84,10 @@ public class GdHotel {
     private Integer floor;
 
     private String trueFloor;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -409,5 +415,21 @@ public class GdHotel {
 
     public void setTrueFloor(String trueFloor) {
         this.trueFloor = trueFloor == null ? null : trueFloor.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -2,7 +2,6 @@ package com.mk.crawer.web.controller;
 
 
 import com.mk.crawer.api.QunarHotelSyncService;
-import com.mk.crawer.biz.servcie.IHotelImageService;
 import com.mk.crawer.job.hotel.price.HotelImageRefreshThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,6 @@ import java.util.Map;
 
 @Controller
 public class QunarHotelSyncController {
-    @Autowired
-    private IHotelImageService hotelImageService;
     @Autowired
     private QunarHotelSyncService qunarHotelSyncService;
 

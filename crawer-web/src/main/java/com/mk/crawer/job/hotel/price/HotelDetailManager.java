@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Created by 振涛 on 2016/1/13.
  */
-@Component
+//@Component
 public class HotelDetailManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(HotelDetailManager.class);

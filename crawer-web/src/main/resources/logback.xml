@@ -9,21 +9,21 @@
 		</layout>
 	</appender>
 
-	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<Encoding>UTF-8</Encoding>
-		<file>${catalina.base}/logs/crawlers.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${catalina.base}/logs/crawlers.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
-			<MaxHistory>30</MaxHistory>
-		</rollingPolicy>
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80}[%line] - %msg%n</Pattern>
-		</layout>
-	</appender>
+	<!--<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+		<!--<Encoding>UTF-8</Encoding>-->
+		<!--<file>${catalina.base}/logs/crawlers.log</file>-->
+		<!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+			<!--<FileNamePattern>${catalina.base}/logs/crawlers.%d{yyyy-MM-dd}.log.zip</FileNamePattern>-->
+			<!--<MaxHistory>30</MaxHistory>-->
+		<!--</rollingPolicy>-->
+		<!--<layout class="ch.qos.logback.classic.PatternLayout">-->
+			<!--<Pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80}[%line] - %msg%n</Pattern>-->
+		<!--</layout>-->
+	<!--</appender>-->
 
 	<root level="info">
-		<!--<appender-ref ref="stdout" />-->
-		<appender-ref ref="file" />
+		<appender-ref ref="stdout" />
+		<!--<appender-ref ref="file" />-->
 	</root>
 
 </configuration>  

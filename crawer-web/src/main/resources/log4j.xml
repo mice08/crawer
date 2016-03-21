@@ -37,5 +37,4 @@
 		<priority value="debug" />
 		<appender-ref ref="console" />
 	</root>
-	<appender name="catAppender" class="com.dianping.cat.log4j.CatAppender"></appender>
 </log4j:configuration>

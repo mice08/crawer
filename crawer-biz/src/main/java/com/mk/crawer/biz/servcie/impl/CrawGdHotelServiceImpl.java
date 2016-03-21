@@ -63,20 +63,37 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 for (int i=1;i<=count/offset+1;i++){
                     String data1= getRemoteDate(cityBean.getCode(),offset,i,type);
                     if(StringUtils.isEmpty(data1)){
+                        logger.info(String.format("\n====================i={} data1 is empty====================\n"),i);
                         continue;
                     }
                     HotelInfo hotelInfo = JsonUtils.formatJson(data1,HotelInfo.class);
-                    for (Pois dto:hotelInfo.getPois()){
-                        GdHotel gdHotel = new GdHotel();
-                        BeanUtils.copyProperties(dto, gdHotel);
-                        gdHotel.setSourceId(dto.getId());
-                        hotelMapper.save(gdHotel);
-                        for (Photos photo:dto.getPhotos()){
-                            GdHotelPhotos hotelPhotos = new GdHotelPhotos();
-                            BeanUtils.copyProperties(photo, hotelPhotos);
-                            hotelPhotos.setHotelSourceId(dto.getId());
-                            hotelPhotosMapper.save(hotelPhotos);
-                        }
+                    for (final Pois dto:hotelInfo.getPois()){
+                        pool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                            logger.info(String.format("\n====================hotelSourceId={}====================\n"),dto.getSourceId());
+                            GdHotel gdHotel =copyBean(dto);
+                            GdHotel gdHotelCheck = new GdHotel();
+                            gdHotelCheck.setSourceId(dto.getSourceId());
+                            gdHotelCheck=hotelMapper.getByPramas(gdHotelCheck);
+                            if (gdHotelCheck==null||gdHotelCheck.getId()==null){
+                                hotelMapper.save(gdHotel);
+                            }else {
+                                gdHotel.setId(gdHotelCheck.getId());
+                                gdHotel.setUpdateTime(new Date());
+                                hotelMapper.updateById(gdHotel);
+                            }
+                            for (Photos photo:dto.getPhotos()){
+                                GdHotelPhotos hotelPhotos = new GdHotelPhotos();
+                                BeanUtils.copyProperties(photo, hotelPhotos);
+                                hotelPhotos.setHotelSourceId(dto.getSourceId());
+                                GdHotelPhotos hotelPhotosCheck = hotelPhotosMapper.getByPramas(hotelPhotos);
+                                if (hotelPhotosCheck==null||hotelPhotosCheck.getId()==null) {
+                                    hotelPhotosMapper.save(hotelPhotos);
+                                }
+                            }
+                            }
+                        });
                     }
                 }
             }
@@ -102,6 +119,43 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 +"&extensions=all";
         String url= Constant.gd_hostlist+"?"+pramas;
         return HttpUtil.doGetNoProxy(url);
+    }
+    private GdHotel copyBean(Pois bean) {
+        GdHotel gdHotel = new GdHotel();
+        BeanUtils.copyProperties(bean, gdHotel);
+        if (bean.getMatch()!=null){
+            gdHotel.setMatch(Integer.valueOf(bean.getMatch()));
+        }
+        if (bean.getRecommend()!=null){
+            gdHotel.setRecommend(Integer.valueOf(bean.getRecommend()));
+        }
+        if (bean.getIndoorMap()!=null){
+            gdHotel.setIndoorMap(Integer.valueOf(bean.getIndoorMap()));
+        }
+        if (bean.getGroupbuyNum()!=null){
+            gdHotel.setGroupBuyNum(Integer.valueOf(bean.getGroupbuyNum()));
+        }
+        if (bean.getDiscountNum()!=null){
+            gdHotel.setDiscountNum(Integer.valueOf(bean.getDiscountNum()));
+        }
+        if (bean.getBizExt()!=null){
+            gdHotel.setRating(bean.getBizExt().getRating());
+            gdHotel.setStar(bean.getBizExt().getStar());
+            gdHotel.setCost(bean.getBizExt().getCost());
+            if (bean.getBizExt().getHotelOrdering()!=null){
+                gdHotel.setHotelOrdering(Integer.valueOf(bean.getBizExt().getHotelOrdering()));
+            }
+            gdHotel.setLowestPrice(bean.getBizExt().getLowestPrice());
+
+        }
+        if (bean.getIndoorData()!=null){
+            gdHotel.setCpId(bean.getIndoorData().getCpId());
+            if (bean.getIndoorData().getFloor()!=null){
+                gdHotel.setFloor(Integer.valueOf(bean.getIndoorData().getFloor()));
+            }
+            gdHotel.setTrueFloor(bean.getIndoorData().getTrueFloor());
+        }
+        return gdHotel;
     }
     public Set<String> getTypes() {
         Set<String> types = new HashSet<>();

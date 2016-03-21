@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-@Component
+//@Component
 public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final String CHECK_URL = "https://www.baidu.com/";

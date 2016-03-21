@@ -1,5 +1,7 @@
 package com.mk.crawer.api.dtos;
 
+import org.springframework.util.StringUtils;
+
 public class Photos {
 
     private String title;
@@ -10,7 +12,9 @@ public class Photos {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        if (!StringUtils.isEmpty(title)&&!title.equals("[]")){
+            this.title = title;
+        }
     }
 
     public String getUrl() {
@@ -18,6 +22,8 @@ public class Photos {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        if (!StringUtils.isEmpty(url)&&!url.equals("[]")){
+            this.url = url;
+        }
     }
 }

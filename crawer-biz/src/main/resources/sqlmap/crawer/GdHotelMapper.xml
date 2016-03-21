@@ -43,13 +43,15 @@
     <result column="cp_id" property="cpId" jdbcType="VARCHAR" />
     <result column="floor" property="floor" jdbcType="INTEGER" />
     <result column="true_floor" property="trueFloor" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, source_id, name, tag, type, type_code, biz_type, address, location, tel, post_code, 
+    id, source_id, `name`, tag, `type`, type_code, biz_type, address, location, tel, post_code,
     website, email, pcode, pname, city_code, city_name, ad_code, ad_name, grid_code, 
-    distance, alias, navi_poi_id, entr_location, exit_location, match, recommend, time_stamp, 
+    distance, alias, navi_poi_id, entr_location, exit_location, `match`, recommend, time_stamp,
     indoor_map, group_buy_num, business_area, discount_num, rating, star, cost, hotel_ordering, 
-    lowest_price, event, cp_id, floor, true_floor
+    lowest_price, event, cp_id, floor, true_floor,create_time,update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -86,15 +88,15 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="save" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
-    insert into gd_hotel (id, source_id, name, 
-      tag, type, type_code, 
+    insert into gd_hotel (id, source_id, `name`,
+      tag, `type`, type_code,
       biz_type, address, location, 
       tel, post_code, website, 
       email, pcode, pname, 
       city_code, city_name, ad_code, 
       ad_name, grid_code, distance, 
       alias, navi_poi_id, entr_location, 
-      exit_location, match, recommend, 
+      exit_location, `match`, recommend,
       time_stamp, indoor_map, group_buy_num, 
       business_area, discount_num, rating, 
       star, cost, hotel_ordering, 
@@ -122,13 +124,13 @@
         source_id = #{sourceId,jdbcType=VARCHAR},
       </if>
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="tag != null" >
         tag = #{tag,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=VARCHAR},
+        `type` = #{type,jdbcType=VARCHAR},
       </if>
       <if test="typeCode != null" >
         type_code = #{typeCode,jdbcType=VARCHAR},
@@ -191,7 +193,7 @@
         exit_location = #{exitLocation,jdbcType=VARCHAR},
       </if>
       <if test="match != null" >
-        match = #{match,jdbcType=INTEGER},
+        `match` = #{match,jdbcType=INTEGER},
       </if>
       <if test="recommend != null" >
         recommend = #{recommend,jdbcType=INTEGER},
@@ -237,6 +239,12 @@
       </if>
       <if test="trueFloor != null" >
         true_floor = #{trueFloor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

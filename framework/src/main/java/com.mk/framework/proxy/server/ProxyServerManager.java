@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 振涛 on 2016/1/6.
  */
-@Component
+//@Component
 public class ProxyServerManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyServerManager.class);
