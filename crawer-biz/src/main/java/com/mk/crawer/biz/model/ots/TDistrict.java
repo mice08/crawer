@@ -2,7 +2,7 @@ package com.mk.crawer.biz.model.ots;
 
 import java.math.BigDecimal;
 
-public class TDistrict1 {
+public class TDistrict {
     private Long id;
 
     private String code;
