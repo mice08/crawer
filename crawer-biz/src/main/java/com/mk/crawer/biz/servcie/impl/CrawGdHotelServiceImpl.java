@@ -42,9 +42,9 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
     GdHotelPhotosMapper hotelPhotosMapper;
     public Map<String,Object> gdHotelSync(TDistrict bean){
         Map<String,Object> resultMap=new HashMap<String,Object>();
-        Cat.logEvent("onlineRoomTypeToRedis","OnlineRoomType同步到Radis", Event.SUCCESS,
+        Cat.logEvent("gdHotelSync","gdHotelSync Crawler GAODE HOTEL", Event.SUCCESS,
                 "beginTime=" + DateUtils.getDatetime());
-        logger.info(String.format("\n====================onlineRoomTypeToRedis begin time={}====================\n"),DateUtils.getDatetime());
+        logger.info(String.format("\n====================gdHotelSync begin time={}====================\n"),DateUtils.getDatetime());
         List<TDistrict> districtList = districtMapper.qureyByPramas(bean);
         for (TDistrict cityBean : districtList){
             int offset = 50;
@@ -98,10 +98,10 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 }
             }
         }
-        Cat.logEvent("onlineRoomTypeToRedis", "OnlineRoomType同步到Radis", Event.SUCCESS,
+        Cat.logEvent("gdHotelSync", "gdHotelSync Crawler GAODE HOTEL", Event.SUCCESS,
                 "endTime=" + DateUtils.getDatetime()
         );
-        logger.info(String.format("\n====================onlineRoomTypeToRedis  endTime={}====================\n")
+        logger.info(String.format("\n====================gdHotelSync  endTime={}====================\n")
                 , DateUtils.getDatetime());
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
