@@ -88,10 +88,9 @@ public class HttpUtil {
 
         try {
             HttpGet httpGet = new HttpGet(urlStr);
-
+            httpGet.setHeaders(Device.random().getHeaders());
             RequestConfig.Builder builder  = RequestConfig.custom();
             if (proxyServer != null) {
-                httpGet.setHeaders(Device.random().getHeaders());
                 LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
                 HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
                 builder.setProxy(httpHost);
