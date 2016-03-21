@@ -53,21 +53,21 @@ public class Device {
     public static class AppleIPad implements IRequestHead {
         @Override
         public Header[] getHeaders() {
-//            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-//            try {
-//                 cookie = HttpUtil.getCookies();
-//            } catch (IOException e) {
-//                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-//                e.printStackTrace();
-//            }
+            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+            try {
+                 cookie = HttpUtil.getCookies();
+            } catch (IOException e) {
+                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+                e.printStackTrace();
+            }
 
            return HeaderConfig
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53")
-                    .add("Referer", "http://restapi.amap.com/")
+                    .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
-                    //.add("Cookie", cookie)
+                    .add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -75,20 +75,20 @@ public class Device {
     public static class AppleIPadMin implements IRequestHead {
         @Override
         public Header[] getHeaders() {
-//            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-//            try {
-//                cookie = HttpUtil.getCookies();
-//            } catch (IOException e) {
-//                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
-//                e.printStackTrace();
-//            }
+            String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+            try {
+                cookie = HttpUtil.getCookies();
+            } catch (IOException e) {
+                cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
+                e.printStackTrace();
+            }
             return HeaderConfig
                     .custom()
                     .add("DNT", "1")
                     .add("User-Agent", "Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53")
-                    .add("Referer", "http://restapi.amap.com/")
+                    .add("Referer", "http://pad.qunar.com")
                     .add("X-Requested-With", "XMLHttpRequest")
-                    //.add("Cookie", cookie)
+                    .add("Cookie", cookie)
                     .toArray();
         }
     }
@@ -137,15 +137,34 @@ public class Device {
                     .toArray();
         }
     }
-
+    public static class GdConfig implements IRequestHead {
+        @Override
+        public Header[] getHeaders() {
+            String cookie = "guid=eb98-5405-9780-7e19; cna=F1kKD7Cw/1YCAYzPUy14MR3i; l=Aisr5z2PjnCVuyL0Ahch8C-UO0UR-D54";
+            return HeaderConfig
+                    .custom()
+                    .add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                    .add("Accept-Encoding", "gzip, deflate, sdch")
+                    .add("Accept-Language", "zh-CN,zh;q=0.8")
+                    .add("Cache-Control", "no-cache")
+                    .add("Connection", "keep-alive")
+                    .add("Host", "restapi.amap.com")
+                    .add("Cookie", cookie)
+                    .add("Pragma", "no-cache")
+                    .add("Upgrade-Insecure-Requests", "1")
+                    .add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36")
+                    .toArray();
+        }
+    }
 
     private static List<IRequestHead> deviceList = new ArrayList<>();
 
     private static Random random = new Random();
 
     static {
-        deviceList.add(new AppleIPad());
-        deviceList.add(new AppleIPadMin());
+//        deviceList.add(new AppleIPad());
+//        deviceList.add(new AppleIPadMin());
+        deviceList.add(new GdConfig());
 //        deviceList.add(new AmazonKindleFireHD());
 //        deviceList.add(new GoogleNexus10());
 //        deviceList.add(new GoogleNexus7());
