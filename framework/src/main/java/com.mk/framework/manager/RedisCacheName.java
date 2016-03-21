@@ -76,4 +76,9 @@ public class RedisCacheName {
      * 开关：酒店信息刷新任务
      */
     public static final String CRAWLER_SWITCH_HOTEL_DETAIL_REFRESH_KEY = "CRAWLER:SWITCH:HOTEL_DETAIL_REFRESH_KEY";
+
+    /**
+     * city_name to cityCode
+     */
+    public static final String CITY_NAME_INFO = "CITY_NAME_INFO_";
 }

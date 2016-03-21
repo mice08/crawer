@@ -7,15 +7,15 @@ import com.mk.crawer.api.dtos.Photos;
 import com.mk.crawer.api.dtos.Pois;
 import com.mk.crawer.biz.mapper.crawer.GdHotelMapper;
 import com.mk.crawer.biz.mapper.crawer.GdHotelPhotosMapper;
+import com.mk.crawer.biz.mapper.ots.TCityListMapper;
 import com.mk.crawer.biz.mapper.ots.TDistrictMapper;
 import com.mk.crawer.biz.model.crawer.GdHotel;
 import com.mk.crawer.biz.model.crawer.GdHotelPhotos;
+import com.mk.crawer.biz.model.ots.TCityList;
 import com.mk.crawer.biz.model.ots.TDistrict;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
-import com.mk.crawer.biz.utils.Constant;
-import com.mk.crawer.biz.utils.DateUtils;
-import com.mk.crawer.biz.utils.HttpUtils;
-import com.mk.crawer.biz.utils.JsonUtils;
+import com.mk.crawer.biz.utils.*;
+import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +42,8 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
     GdHotelMapper hotelMapper;
     @Autowired
     GdHotelPhotosMapper hotelPhotosMapper;
+    @Autowired
+    TCityListMapper cityListMapper;
     public Map<String,Object> gdHotelSync(TDistrict bean){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("gdHotelSync","gdHotelSync Crawler GAODE HOTEL", Event.SUCCESS,
@@ -139,6 +142,12 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
         if (bean.getDiscountNum()!=null){
             gdHotel.setDiscountNum(Integer.valueOf(bean.getDiscountNum()));
         }
+        if (bean.getCityName()!=null){
+            String cityCode = getCityCode(bean.getCityName());
+            if(!StringUtils.isEmpty(cityCode)){
+                gdHotel.setCityCode(cityCode);
+            }
+        }
         if (bean.getBizExt()!=null){
             gdHotel.setRating(bean.getBizExt().getRating());
             gdHotel.setStar(bean.getBizExt().getStar());
@@ -171,5 +180,60 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
         types.add("100201");
         return types;
     }
+    public String getCityCode(String cityName){
+        if (StringUtils.isEmpty(cityName)){
+            return null;
+        }
+        if (cityName.indexOf("市")!=-1){
+            cityName=cityName.substring(0,cityName.length()-1);
 
+        }
+        String cityCode = getRedisValue(String.format("%s%s", RedisCacheName.CITY_NAME_INFO,
+                cityName));
+        if (!StringUtils.isEmpty(cityCode)){
+            return cityCode;
+        }else {
+            TCityList cityList = new TCityList();
+            cityList.setCityName(cityName);
+            cityList=cityListMapper.getByPramas(cityList);
+            if (cityList!=null&&cityList.getId()!=null){
+                cityCode= cityList.getCode();
+                setRedisValue(String.format("%s%s", RedisCacheName.CITY_NAME_INFO,
+                        cityName),cityCode);
+            }else {
+                return null;
+            }
+        }
+        return  cityCode;
+    }
+    public String getRedisValue(String key){
+        Jedis jedis = null;
+        try {
+            jedis =  RedisUtil.getJedis();
+            return jedis.get(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }finally {
+            if(null != jedis){
+                jedis.close();
+            }
+
+        }
+    }
+    public void setRedisValue(String key,String value){
+        Jedis jedis = null;
+        try {
+            jedis =  RedisUtil.getJedis();
+            jedis.set(key,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }finally {
+            if(null != jedis){
+                jedis.close();
+            }
+
+        }
+    }
 }
