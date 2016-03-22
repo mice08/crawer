@@ -6,21 +6,20 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class RoomInfo {
 
-    private Date floor;
+    private String floor;
     @JSONField(name ="pic_info")
     private List<PicInfo> picInfo;
     private String network;
     private String bed;
     private String area;
 
-
-    public void setFloor(Date floor) {
-        this.floor = floor;
-    }
-    public Date getFloor() {
+    public String getFloor() {
         return floor;
     }
 
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
 
     public void setPicInfo(List<PicInfo> picInfo) {
         this.picInfo = picInfo;

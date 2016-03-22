@@ -7,28 +7,18 @@ import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.model.ots.TDistrict;
 import com.mk.crawer.biz.servcie.CrawGdHotelReviewService;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
-import com.mk.crawer.biz.servcie.QunarHotelService;
-import com.mk.crawer.job.hotel.price.HotelDetail;
-import com.mk.crawer.job.hotel.price.HotelDetailManager;
-import com.mk.framework.AppUtils;
-import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.JSONUtil;
-import com.mk.framework.proxy.RedisUtil;
-import org.slf4j.Logger;
+import com.mk.crawer.biz.servcie.CrawGdRoomType;
+import com.mk.crawer.biz.thread.GdRoomTypeQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by kangxiaolong on 2016/3/18.
@@ -42,6 +32,9 @@ public class CrawGdHotelController {
     CrawGdHotelService crawGdHotelService;
     @Autowired
     CrawGdHotelReviewService reviewService;
+    @Autowired
+    private CrawGdRoomType crawGdRoomType;
+
     @RequestMapping(value = "/gdHotelSync" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> gdHotelSync(TDistrict bean) {
@@ -52,6 +45,27 @@ public class CrawGdHotelController {
     @ResponseBody
     public ResponseEntity<Map<String,Object>> gdHotelCommetSync(GdHotel bean) {
         Map<String,Object> resultMap=reviewService.gdHotelCommetSync(bean);
+        return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/createGdRoomTypeSync" , method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> createGdRoomTypeSync() {
+        crawGdRoomType.crawGdRoomType(GdRoomTypeQueue.getQueue());
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/excuteRoomTypeToDb" , method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> gdHotelSync() {
+        crawGdRoomType.executeRoomTypeToDb(GdRoomTypeQueue.getQueue());
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
         return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
     }
 

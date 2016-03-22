@@ -21,4 +21,6 @@ public interface GdRoomPicMapper {
     int updateByPrimaryKeySelective(GdRoomPic record);
 
     int updateByPrimaryKey(GdRoomPic record);
+
+    int batchInsert(List<GdRoomPic> gdRoomPicVector);
 }

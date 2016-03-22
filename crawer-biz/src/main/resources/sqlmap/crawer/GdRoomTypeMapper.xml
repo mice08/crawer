@@ -93,6 +93,23 @@
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{updateBy,jdbcType=VARCHAR}, #{isVaild,jdbcType=CHAR})
   </insert>
+  <insert id="batchnsert" parameterType="java.util.List" >
+    insert into gd_room_type (id, hotel_id, room_Id,
+    room_type_Id, room_group_id, Room_type_name,
+    price_lowest, floor, network,
+    bed, area, room_status,
+    create_time, update_time, create_by,
+    update_by, is_vaild)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.hotelId,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT},
+      #{item.roomTypeId,jdbcType=BIGINT}, #{item.roomGroupId,jdbcType=BIGINT}, #{item.roomTypeName,jdbcType=VARCHAR},
+      #{item.priceLowest,jdbcType=DECIMAL}, #{item.floor,jdbcType=VARCHAR}, #{item.network,jdbcType=VARCHAR},
+      #{item.bed,jdbcType=VARCHAR}, #{item.area,jdbcType=VARCHAR}, #{item.roomStatus,jdbcType=VARCHAR},
+      #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR},
+      #{item.updateBy,jdbcType=VARCHAR}, #{item.isVaild,jdbcType=CHAR})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.GdRoomType" >
     insert into gd_room_type
     <trim prefix="(" suffix=")" suffixOverrides="," >

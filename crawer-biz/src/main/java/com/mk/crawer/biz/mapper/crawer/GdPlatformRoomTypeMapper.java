@@ -22,4 +22,6 @@ public interface GdPlatformRoomTypeMapper {
     int updateByPrimaryKeySelective(GdPlatformRoomType record);
 
     int updateByPrimaryKey(GdPlatformRoomType record);
+
+    int batchInsert(List<GdPlatformRoomType> gdPlatformRoomTypeVector);
 }

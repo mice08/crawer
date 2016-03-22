@@ -1,5 +1,6 @@
 package com.mk.crawer.biz.mapper.crawer;
 
+import com.mk.crawer.biz.model.crawer.GdRoomPic;
 import com.mk.crawer.biz.model.crawer.GdRoomType;
 import com.mk.crawer.biz.model.crawer.GdRoomTypeExample;
 
@@ -21,4 +22,6 @@ public interface GdRoomTypeMapper {
     int updateByPrimaryKeySelective(GdRoomType record);
 
     int updateByPrimaryKey(GdRoomType record);
+
+    int batchInsert(List<GdRoomPic> gdRoomPicVector);
 }

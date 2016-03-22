@@ -81,6 +81,19 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, 
       #{isVaild,jdbcType=CHAR})
   </insert>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    insert into gd_room_pic (id, room_Id, room_type_Id,
+    url, url_type, create_time,
+    update_time, create_by, update_by,
+    is_vaild)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT}, #{item.roomTypeId,jdbcType=BIGINT},
+      #{item.url,jdbcType=VARCHAR}, #{item.urlType,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR},
+      #{item.isVaild,jdbcType=CHAR})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.GdRoomPic" >
     insert into gd_room_pic
     <trim prefix="(" suffix=")" suffixOverrides="," >
