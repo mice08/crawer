@@ -1,10 +1,8 @@
 package com.mk.crawer.job.gd;
 
+import com.mk.crawer.biz.model.crawer.GdHotel;
 import com.mk.crawer.job.SwitchUtil;
 import com.mk.crawer.job.hotel.price.Config;
-import com.mk.crawer.job.hotel.price.HotelDetail;
-import com.mk.crawer.job.hotel.price.HotelDetailManager;
-import com.mk.crawer.job.hotel.price.HotelDetailRefreshThread;
 import com.mk.framework.proxy.server.ProxyServer;
 import com.mk.framework.proxy.server.ProxyServerManager;
 import org.slf4j.Logger;
@@ -69,11 +67,11 @@ public class HotelSearchRefreshJob implements ApplicationListener<ContextRefresh
                         if (SwitchUtil.HotelDetailRefresh.isOpen()) {
 
                             ProxyServer proxyServer = ProxyServerManager.take();
-//
-//                            HotelDetailRefreshThread refreshThread =
-//                                    new HotelDetailRefreshThread(proxyServer, hotelDetail);
 
-//                            EXECUTOR_100.execute(refreshThread);
+                            //TODO
+                            GdHotel hotel = null;
+                            HotelSearchRefreshThread thread = new HotelSearchRefreshThread(proxyServer, hotel);
+                            EXECUTOR_100.execute(thread);
                         } else {
                             LOGGER.info("GD-刷新酒店信息的任务暂时暂停");
                             TimeUnit.SECONDS.sleep(1);
