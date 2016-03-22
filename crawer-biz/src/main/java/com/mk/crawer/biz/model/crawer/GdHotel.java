@@ -89,6 +89,10 @@ public class GdHotel {
 
     private Date updateTime;
 
+    private Integer pageIndex;
+
+    private Integer pageSize;
+
     public Long getId() {
         return id;
     }
@@ -431,5 +435,21 @@ public class GdHotel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -1,9 +1,11 @@
 package com.mk.crawer.web.controller;
 
 import com.mk.crawer.biz.model.crawer.CityList;
+import com.mk.crawer.biz.model.crawer.GdHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotel;
 import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.model.ots.TDistrict;
+import com.mk.crawer.biz.servcie.CrawGdHotelReviewService;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
 import com.mk.crawer.biz.servcie.QunarHotelService;
 import com.mk.crawer.job.hotel.price.HotelDetail;
@@ -38,10 +40,18 @@ public class CrawGdHotelController {
 
     @Autowired
     CrawGdHotelService crawGdHotelService;
+    @Autowired
+    CrawGdHotelReviewService reviewService;
     @RequestMapping(value = "/gdHotelSync" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> gdHotelSync(TDistrict bean) {
         Map<String,Object> resultMap=crawGdHotelService.gdHotelSync(bean);
+        return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/gdHotelCommetSync" , method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> gdHotelCommetSync(GdHotel bean) {
+        Map<String,Object> resultMap=reviewService.gdHotelCommetSync(bean);
         return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
     }
 

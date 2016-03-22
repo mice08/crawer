@@ -283,6 +283,7 @@ public class Constant {
 
 	public static String qunar_touch_hostlist = new PropertiesUtil().getValue("common.properties", "qunar.touch.hostlist");
 	public static String qunar_map_hostlist = new PropertiesUtil().getValue("common.properties", "qunar.map.hostlist");
-	public static String gd_hostlist = new PropertiesUtil().getValue("common.properties", "gd.hotelList");
+	public static String gd_hotelList = new PropertiesUtil().getValue("common.properties", "gd.hotelList");
+	public static String gd_hotelReview = new PropertiesUtil().getValue("common.properties", "gd.hotelReview");
 
 }

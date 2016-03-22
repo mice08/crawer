@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.GdCommentDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdCommentDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
+    <result column="src_type" property="srcType" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DECIMAL" />
+    <result column="review" property="review" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotel_source_id, src_type, author, score, review, `time`, create_time
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelSourceId != null">
+        AND hotel_source_id = #{hotelSourceId}
+      </if>
+      <if test="srcType != null">
+        AND src_type = #{srcType}
+      </if>
+      <if test="author != null">
+        AND author = #{author}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdCommentDetail" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_comment_detail
+    <include refid="Base_Query_List" />
+  </select>
+  <select id="count" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" resultType="java.lang.Integer" >
+    select count(*) from gd_comment_detail
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdCommentDetail" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_comment_detail
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from gd_comment_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.crawer.biz.model.crawer.GdCommentDetail" >
+    insert into gd_comment_detail (id, hotel_source_id, src_type,
+      author, score, review, 
+      `time`)
+    values (#{id,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{srcType,jdbcType=VARCHAR},
+      #{author,jdbcType=VARCHAR}, #{score,jdbcType=DECIMAL}, #{review,jdbcType=VARCHAR}, 
+      #{time,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateById" parameterType="com.mk.crawer.biz.model.crawer.GdCommentDetail" >
+    update gd_comment_detail
+    <set >
+      <if test="hotelSourceId != null" >
+        hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcType != null" >
+        src_type = #{srcType,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="review != null" >
+        review = #{review,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        `time` = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

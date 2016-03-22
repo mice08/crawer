@@ -96,7 +96,7 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                                 }
                                 GdHotelPhotos hotelPhotosCheck = new GdHotelPhotos();
                                 String urlKey =hotelPhotos.getUrl().substring(hotelPhotos.getUrl().lastIndexOf("/")+1);
-                                hotelPhotosCheck.setUrl(urlKey);
+                                hotelPhotosCheck.setUrlKey(urlKey);
                                 hotelPhotosCheck  = hotelPhotosMapper.getByPramas(hotelPhotosCheck);
                                 if (hotelPhotosCheck==null||hotelPhotosCheck.getId()==null) {
                                     hotelPhotos.setUrlKey(urlKey);
@@ -128,7 +128,7 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                 +"&page="+page
                 +"&offset="+offset
                 +"&extensions=all";
-        String url= Constant.gd_hostlist+"?"+pramas;
+        String url= Constant.gd_hotelList+"?"+pramas;
         return HttpUtil.doGetNoProxy(url);
     }
     private GdHotel copyBean(Pois bean) {

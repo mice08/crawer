@@ -69,6 +69,10 @@
     <include refid="Base_Column_List" />
     from gd_hotel
     <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
   </select>
   <select id="count" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" resultType="java.lang.Integer" >
     select count(*) from gd_hotel
