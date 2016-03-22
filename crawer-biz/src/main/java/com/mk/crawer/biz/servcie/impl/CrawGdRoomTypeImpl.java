@@ -3,7 +3,7 @@ package com.mk.crawer.biz.servcie.impl;
 import com.alibaba.fastjson.JSON;
 import com.mk.crawer.biz.bean.Multilist;
 import com.mk.crawer.biz.bean.PicInfo;
-import com.mk.crawer.biz.bean.RoomTypeInfo;
+import com.mk.crawer.biz.bean.RoomTypeInfo1;
 import com.mk.crawer.biz.bean.Roomlist;
 import com.mk.crawer.biz.mapper.crawer.GdPlatformRoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.GdRoomPicMapper;
@@ -16,7 +16,6 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.framework.AppUtils;
-import com.mk.framework.proxy.http.HttpUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -58,8 +57,8 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
 
         @Override
         public void run() {
-            RoomTypeInfo roomTypeInfo = JSON.parseObject(json, RoomTypeInfo.class);
-            for(Roomlist room: roomTypeInfo.getRoomlist()){
+            RoomTypeInfo1 roomTypeInfo1 = JSON.parseObject(json, RoomTypeInfo1.class);
+            for(Roomlist room: roomTypeInfo1.getRoomlist()){
                 putRoomTypeToQueue(room, queue);
                 putPlatformRoomTypeToQueue(room, queue);
                 putPlatformRoomPicToQueue(room, queue);
@@ -201,8 +200,8 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
         String tomorrowStr = DateUtils.formatDateTime(DateUtils.addDays(now, 1), DateUtils.FORMAT_DATE);
         String json = HttpUtils.get_data(String.format(GD_HOTEL_SEARCH_URL, "B000A7O2PV", toDayStr, tomorrowStr), "GET");
         System.out.println(json);
-        RoomTypeInfo roomTypeInfo = JSON.parseObject(json, RoomTypeInfo.class);
-        Roomlist room = roomTypeInfo.getRoomlist().get(0);
+        RoomTypeInfo1 roomTypeInfo1 = JSON.parseObject(json, RoomTypeInfo1.class);
+        Roomlist room = roomTypeInfo1.getRoomlist().get(0);
         GdRoomType roomType = new GdRoomType();
         roomType.setRoomTypeName(room.getMultilist().get(0).getRoomtypename());
         roomType.setArea(room.getRoomInfo().getArea());
