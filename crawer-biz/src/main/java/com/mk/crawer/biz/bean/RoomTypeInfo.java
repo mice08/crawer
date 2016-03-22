@@ -3,7 +3,7 @@ import java.util.List;
 import com.alibaba.fastjson.annotation.JSONField;
 
 
-public class RoomTypeInfo1 {
+public class RoomTypeInfo {
 
     private String status;
     private String code;
