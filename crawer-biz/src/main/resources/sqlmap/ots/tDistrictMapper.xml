@@ -16,7 +16,7 @@
   <sql id="Base_Query_List">
     <where>
       <if test="id != null">
-        id = #{id}
+        id  &lt;= #{id}
       </if>
       <if test="code != null">
         AND Code = #{code}
@@ -29,6 +29,7 @@
     <include refid="Base_Column_List" />
     from t_district
     <include refid="Base_Query_List" />
+    ORDER BY id DESC
   </select>
   <select id="count" parameterType="com.mk.crawer.biz.model.ots.TDistrict" resultType="java.lang.Integer" >
     select count(*) from t_district
