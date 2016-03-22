@@ -1,9 +1,6 @@
 package com.mk.crawer.web.controller;
 
-import com.mk.crawer.biz.model.crawer.CityList;
 import com.mk.crawer.biz.model.crawer.GdHotel;
-import com.mk.crawer.biz.model.crawer.QunarHotel;
-import com.mk.crawer.biz.model.crawer.QunarHotelExample;
 import com.mk.crawer.biz.model.ots.TDistrict;
 import com.mk.crawer.biz.servcie.CrawGdHotelReviewService;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
