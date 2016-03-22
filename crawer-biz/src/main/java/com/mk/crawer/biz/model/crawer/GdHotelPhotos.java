@@ -9,6 +9,8 @@ public class GdHotelPhotos {
 
     private String url;
 
+    private String urlKey;
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class GdHotelPhotos {
 
     public void setUrl(String url) {
         this.url = url == null ? null : url.trim();
+    }
+
+    public String getUrlKey() {
+        return urlKey;
+    }
+
+    public void setUrlKey(String urlKey) {
+        this.urlKey = urlKey;
     }
 }

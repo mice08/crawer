@@ -91,8 +91,15 @@ public class CrawGdHotelServiceImpl implements CrawGdHotelService {
                                 GdHotelPhotos hotelPhotos = new GdHotelPhotos();
                                 BeanUtils.copyProperties(photo, hotelPhotos);
                                 hotelPhotos.setHotelSourceId(dto.getSourceId());
-                                GdHotelPhotos hotelPhotosCheck = hotelPhotosMapper.getByPramas(hotelPhotos);
+                                if (StringUtils.isEmpty(hotelPhotos.getUrl())){
+                                    return;
+                                }
+                                GdHotelPhotos hotelPhotosCheck = new GdHotelPhotos();
+                                String urlKey =hotelPhotos.getUrl().substring(hotelPhotos.getUrl().lastIndexOf("/")+1);
+                                hotelPhotosCheck.setUrl(urlKey);
+                                hotelPhotosCheck  = hotelPhotosMapper.getByPramas(hotelPhotosCheck);
                                 if (hotelPhotosCheck==null||hotelPhotosCheck.getId()==null) {
+                                    hotelPhotos.setUrlKey(urlKey);
                                     hotelPhotosMapper.save(hotelPhotos);
                                 }
                             }

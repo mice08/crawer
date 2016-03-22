@@ -6,9 +6,10 @@
     <result column="hotel_source_id" jdbcType="VARCHAR" property="hotelSourceId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="url_key" jdbcType="VARCHAR" property="urlKey" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, hotel_source_id, title, url
+    id, hotel_source_id, title, url,url_key
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -23,6 +24,9 @@
       </if>
       <if test="url != null">
         AND url = #{url}
+      </if>
+      <if test="urlKey != null">
+        AND url_key = #{urlKey}
       </if>
     </where>
   </sql>
@@ -52,9 +56,9 @@
   </delete>
   <insert id="save" parameterType="com.mk.crawer.biz.model.crawer.GdHotelPhotos">
     insert into gd_hotel_photos (id, hotel_source_id, title, 
-      url)
+      url,url_key)
     values (#{id,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{url,jdbcType=VARCHAR})
+      #{url,jdbcType=VARCHAR},#{urlKey,jdbcType=VARCHAR})
   </insert>
   <update id="updateById" parameterType="com.mk.crawer.biz.model.crawer.GdHotelPhotos">
     update gd_hotel_photos
@@ -67,6 +71,9 @@
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url_key = #{urlKey,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
