@@ -19,8 +19,6 @@ public class Multilist {
     @JSONField(name ="AveragePrice")
     private String averageprice;
     private String breakfast;
-    @JSONField(name ="hotelCode")
-    private String hotelcode;
     private String network;
     @JSONField(name ="src_weight")
     private String srcWeight;
@@ -190,12 +188,7 @@ public class Multilist {
     }
 
 
-    public void setHotelcode(String hotelcode) {
-        this.hotelcode = hotelcode;
-    }
-    public String getHotelcode() {
-        return hotelcode;
-    }
+
 
 
     public void setHours(String hours) {
