@@ -5,6 +5,8 @@ import java.util.Date;
 public class GdPlatformRoomType {
     private Long id;
 
+    private String hotelSourceId;
+
     private Long hotelId;
 
     private String roomId;
@@ -181,5 +183,13 @@ public class GdPlatformRoomType {
 
     public void setIsVaild(String isVaild) {
         this.isVaild = isVaild == null ? null : isVaild.trim();
+    }
+
+    public String getHotelSourceId() {
+        return hotelSourceId;
+    }
+
+    public void setHotelSourceId(String hotelSourceId) {
+        this.hotelSourceId = hotelSourceId;
     }
 }

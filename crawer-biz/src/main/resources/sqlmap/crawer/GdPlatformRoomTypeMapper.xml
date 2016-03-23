@@ -3,6 +3,7 @@
 <mapper namespace="com.mk.crawer.biz.mapper.crawer.GdPlatformRoomTypeMapper" >
   <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="room_Id" property="roomId" jdbcType="BIGINT" />
     <result column="room_type_Id" property="roomTypeId" jdbcType="BIGINT" />
@@ -81,14 +82,14 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
-    insert into gd_platform_room_type (id, hotel_id, room_Id, 
+    insert into gd_platform_room_type (id, hotel_source_id, hotel_id, room_Id,
       room_type_Id, src_name, src_type, 
       Is_Available, Average_Price, break_fast, 
       total_price, url, Room_Type_Name, 
       bed, create_time, update_time, 
       create_by, update_by, is_vaild
       )
-    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT},
       #{roomTypeId,jdbcType=BIGINT}, #{srcName,jdbcType=VARCHAR}, #{srcType,jdbcType=VARCHAR}, 
       #{isAvailable,jdbcType=VARCHAR}, #{averagePrice,jdbcType=VARCHAR}, #{breakFast,jdbcType=VARCHAR}, 
       #{totalPrice,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{roomTypeName,jdbcType=VARCHAR}, 
@@ -97,7 +98,7 @@
       )
   </insert>
   <insert id="batchInsert" parameterType="java.util.List" >
-    insert into gd_platform_room_type (id, hotel_id, room_Id,
+    insert into gd_platform_room_type (id, hotel_source_id, hotel_id, room_Id,
     room_type_Id, src_name, src_type,
     Is_Available, Average_Price, break_fast,
     total_price, url, Room_Type_Name,
@@ -106,7 +107,7 @@
     )
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.hotelId,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT},
+      (#{item.id,jdbcType=BIGINT}, #{item.hotelSourceId,jdbcType=VARCHAR}, #{item.hotelId,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT},
       #{item.roomTypeId,jdbcType=BIGINT}, #{item.srcName,jdbcType=VARCHAR}, #{item.srcType,jdbcType=VARCHAR},
       #{item.isAvailable,jdbcType=VARCHAR}, #{item.averagePrice,jdbcType=VARCHAR}, #{item.breakFast,jdbcType=VARCHAR},
       #{item.totalPrice,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, #{item.roomTypeName,jdbcType=VARCHAR},

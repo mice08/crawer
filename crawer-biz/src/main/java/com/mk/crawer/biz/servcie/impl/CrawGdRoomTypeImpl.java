@@ -68,7 +68,7 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
         if (bean.getPageIndex()!=null){
             start=bean.getPageIndex();
         }
-        for (int i=start;i<=pageCount;i++){
+        for (int i=start;i<=1;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             bean.setPageSize(pageSize);
@@ -130,7 +130,7 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
+                prt.setHotelSourceId(hotelSourceId);
                 prt.setRoomTypeId(mu.getRoomtypeid());
                 prt.setRoomTypeName(mu.getRoomtypename());
                 prt.setSrcName(mu.getSrcName());
@@ -176,6 +176,7 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
             Date now = new Date();
             GdRoomType roomType = new GdRoomType();
             roomType.setRoomTypeName(room.getMultilist().get(0).getRoomtypename());
+            roomType.setHotelSourceId(hotelSourceId);
             roomType.setArea(room.getRoomInfo().getArea());
             roomType.setBed(room.getRoomInfo().getBed());
             roomType.setFloor(room.getRoomInfo().getFloor());
