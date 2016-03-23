@@ -43,7 +43,7 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
             @Override
             public void run() {
                 EXECUTOR.shutdown();
-                LOGGER.info("检测代理IP是否有效的线程池关闭");
+                //LOGGER.info("检测代理IP是否有效的线程池关闭");
             }
         });
     }
@@ -106,9 +106,9 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
 
                 addToWaitForCheckQueue(proxyServerList);
 
-                LOGGER.info("付费渠道GBJ获取到{}代理IP", proxyServerList.size());
+                //LOGGER.info("付费渠道GBJ获取到{}代理IP", proxyServerList.size());
             } catch (Exception e) {
-                LOGGER.error("获取代理IP发生错误", e);
+               // LOGGER.error("获取代理IP发生错误", e);
             }
         }
 
@@ -132,9 +132,9 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
 
                 addToWaitForCheckQueue(proxyServerList);
 
-                LOGGER.info("付费渠道快代理获取到{}代理IP", proxyServerList.size());
+                //LOGGER.info("付费渠道快代理获取到{}代理IP", proxyServerList.size());
             } catch (Exception e) {
-                LOGGER.error("获取代理IP发生错误", e);
+               // LOGGER.error("获取代理IP发生错误", e);
             }
         }
 
@@ -158,9 +158,9 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
 
                 addToWaitForCheckQueue(proxyServerList);
 
-                LOGGER.info("付费渠道代理666获取到{}代理IP", proxyServerList.size());
+                //LOGGER.info("付费渠道代理666获取到{}代理IP", proxyServerList.size());
             } catch (Exception e) {
-                LOGGER.error("获取代理IP发生错误", e);
+                //LOGGER.error("获取代理IP发生错误", e);
             }
         }
 
@@ -238,7 +238,7 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
 
                 jedis.sadd(RedisCacheName.CRAWLER_PROXY_IP_CHECKED_SET, JSONUtil.toJson(proxyServer));
             } catch (Exception e) {
-                LOGGER.debug("代理IP检测结果：{}", e);
+                //LOGGER.debug("代理IP检测结果：{}", e);
             } finally {
                 RedisUtil.close(jedis);
             }
@@ -246,7 +246,7 @@ public class ProxyServerFetch implements ApplicationListener<ContextRefreshedEve
     }
 
     private static void initExecutor() {
-        LOGGER.info("初始化线程池");
+        //LOGGER.info("初始化线程池");
         if ( EXECUTOR != null ) {
             EXECUTOR.shutdown();
         }

@@ -60,7 +60,7 @@ public class ProxyServerManager implements ApplicationListener<ContextRefreshedE
                             ProxyServer proxyServer = JSONUtil.fromJson(jsonStr, ProxyServer.class);
                             proxyServer.intervalTime(0, TimeUnit.MILLISECONDS);
                             CHECKED.put(proxyServer);
-                            LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
+                            //LOGGER.info("有效代理IP加入可用队列：{}", jsonStr);
                         }
 
                         TimeUnit.SECONDS.sleep(1);
@@ -70,7 +70,7 @@ public class ProxyServerManager implements ApplicationListener<ContextRefreshedE
                 }
             } finally {
                 RedisUtil.close(jedis);
-                LOGGER.info("载入有效代理的进程结束");
+                //LOGGER.info("载入有效代理的进程结束");
             }
         }
     }
@@ -79,10 +79,10 @@ public class ProxyServerManager implements ApplicationListener<ContextRefreshedE
         ProxyServer proxyServer = CHECKED.take();
 
         while (USING_PROXY_SERVER_SET.contains(proxyServer)) {
-            LOGGER.info("代理IP：{}正在被使用", proxyServer.getIp());
+            //LOGGER.info("代理IP：{}正在被使用", proxyServer.getIp());
             proxyServer = CHECKED.take();
         }
-        LOGGER.info("从队列中获取代理IP：{}", proxyServer.getIp());
+        //LOGGER.info("从队列中获取代理IP：{}", proxyServer.getIp());
 
         USING_PROXY_SERVER_SET.add(proxyServer);
 
