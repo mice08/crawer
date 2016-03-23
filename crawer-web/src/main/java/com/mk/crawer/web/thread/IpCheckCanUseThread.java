@@ -9,14 +9,6 @@ import com.mk.framework.AppUtils;
 public class IpCheckCanUseThread extends   Thread{
     private  String  orderBy;
 
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
-
     public  IpCheckCanUseThread(String  orderBy){
         this.orderBy = orderBy;
     }
