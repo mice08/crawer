@@ -1,5 +1,7 @@
 package com.mk.crawer.biz.servcie;
 
+import com.mk.crawer.biz.model.crawer.GdHotel;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -8,5 +10,5 @@ import java.util.concurrent.LinkedBlockingQueue;
 public interface CrawGdRoomType {
     void executeRoomTypeToDb(LinkedBlockingQueue queue);
 
-    void crawGdRoomType(LinkedBlockingQueue queue);
+    void crawGdRoomType(GdHotel bean, LinkedBlockingQueue queue);
 }

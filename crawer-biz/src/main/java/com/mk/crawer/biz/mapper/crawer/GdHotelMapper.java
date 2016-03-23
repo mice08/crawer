@@ -11,5 +11,6 @@ public interface GdHotelMapper {
     public Integer save(GdHotel bean);
     public Integer delete(Integer id);
     public Integer updateById(GdHotel bean);
+    public Integer updateBySourceId(GdHotel bean);
     public Integer count(GdHotel bean);
 }

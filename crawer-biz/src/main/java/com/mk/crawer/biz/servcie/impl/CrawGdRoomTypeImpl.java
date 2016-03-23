@@ -1,13 +1,14 @@
 package com.mk.crawer.biz.servcie.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.mk.crawer.biz.bean.Multilist;
-import com.mk.crawer.biz.bean.PicInfo;
-import com.mk.crawer.biz.bean.RoomTypeInfo;
-import com.mk.crawer.biz.bean.Roomlist;
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.mk.crawer.biz.bean.*;
+import com.mk.crawer.biz.mapper.crawer.GdHotelMapper;
 import com.mk.crawer.biz.mapper.crawer.GdPlatformRoomTypeMapper;
 import com.mk.crawer.biz.mapper.crawer.GdRoomPicMapper;
 import com.mk.crawer.biz.mapper.crawer.GdRoomTypeMapper;
+import com.mk.crawer.biz.model.crawer.GdHotel;
 import com.mk.crawer.biz.model.crawer.GdPlatformRoomType;
 import com.mk.crawer.biz.model.crawer.GdRoomPic;
 import com.mk.crawer.biz.model.crawer.GdRoomType;
@@ -16,6 +17,9 @@ import com.mk.crawer.biz.utils.Constant;
 import com.mk.crawer.biz.utils.DateUtils;
 import com.mk.crawer.biz.utils.HttpUtils;
 import com.mk.framework.AppUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,34 +35,77 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Service
 public class CrawGdRoomTypeImpl implements CrawGdRoomType {
     private static final String GD_HOTEL_SEARCH_URL = "http://m.amap.com/service/valueadded/hotelsearch.json?poiid=%s&indate=%s&outdate=%s&mode=1";
-    private static ExecutorService pool = Executors.newFixedThreadPool(64);
+    private static ExecutorService pool = Executors.newFixedThreadPool(32);
+    private static ExecutorService exePool = Executors.newFixedThreadPool(10);
+    private static Logger logger = LoggerFactory.getLogger(CrawGdHotelServiceImpl.class);
+
+    @Autowired
+    private GdHotelMapper gdHotelMapper;
+
 
     @Override
     public void executeRoomTypeToDb(LinkedBlockingQueue queue){
-        pool.execute(new ExecuteRoomTypeToDb(queue));
+        exePool.execute(new ExecuteRoomTypeToDb(queue));
     }
 
     @Override
-    public void crawGdRoomType(LinkedBlockingQueue queue){
+    public void crawGdRoomType(GdHotel bean, LinkedBlockingQueue queue){
+        Cat.logEvent("crawGdRoomType","crawGdRoomType Crawler GAODE Room type info", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime());
+        logger.info(String.format("\n====================crawGdRoomType begin time={}====================\n"),DateUtils.getDatetime());
+        int count = gdHotelMapper.count(bean);
+        if (count<=0){
+          return;
+        }
         Date now = new Date();
         String toDayStr = DateUtils.formatDateTime(now, DateUtils.FORMAT_DATE);
         String tomorrowStr = DateUtils.formatDateTime(DateUtils.addDays(now, 1), DateUtils.FORMAT_DATE);
-        String json = HttpUtils.get_data(String.format(GD_HOTEL_SEARCH_URL, "B000A7O2PV", toDayStr, tomorrowStr), "GET");
-        pool.execute(new CrawGdRoomTypeThread(queue, json));
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        Integer start =0;
+        if (bean.getPageIndex()!=null){
+            start=bean.getPageIndex();
+        }
+        for (int i=start;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            bean.setPageSize(pageSize);
+            bean.setPageIndex(i*pageSize);
+            List<GdHotel> hotelList = gdHotelMapper.qureyByPramas(bean);
+            if (CollectionUtils.isEmpty(hotelList)){
+                logger.info(String.format("\n====================hotelList is empty====================\n"));
+                continue;
+            }
+            for(GdHotel hotel:hotelList){
+                pool.execute(new CrawGdRoomTypeThread(queue, String.format(GD_HOTEL_SEARCH_URL, hotel.getSourceId(), toDayStr, tomorrowStr), hotel.getSourceId()));
+            }
+        }
+        Cat.logEvent("crawGdRoomType","crawGdRoomType Crawler GAODE Room type info", Event.SUCCESS,
+                "beginTime=" + DateUtils.getDatetime());
+
     }
 
     private class CrawGdRoomTypeThread implements Runnable{
         private LinkedBlockingQueue queue;
-        private String json;
-        CrawGdRoomTypeThread(LinkedBlockingQueue queue, String json){
+        private String address;
+        private String hotelSourceId;
+        CrawGdRoomTypeThread(LinkedBlockingQueue queue, String address, String hotelSourceId){
             this.queue = queue;
-            this.json = json;
+            this.address = address;
+            this.hotelSourceId = hotelSourceId;
         }
 
         @Override
         public void run() {
+            String json = HttpUtils.get_data(address, "GET");
             RoomTypeInfo roomTypeInfo = JSON.parseObject(json, RoomTypeInfo.class);
-            for(Roomlist room: roomTypeInfo.getRoomlist()){
+            if("18".equals(roomTypeInfo.getCode().trim())){
+                queue.add(hotelSourceId);
+                return;
+            }
+            for(Roomlist room : roomTypeInfo.getRoomlist()){
                 putRoomTypeToQueue(room, queue);
                 putPlatformRoomTypeToQueue(room, queue);
                 putPlatformRoomPicToQueue(room, queue);
@@ -78,8 +125,13 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                 prt.setHotelId(Long.valueOf(mu.getHotelid()));
                 prt.setIsAvailable(mu.getIsavailable());
                 prt.setIsVaild("T");
-                prt.setRoomId(Long.valueOf(mu.getRoomid()));
-                prt.setRoomTypeId(Long.valueOf(mu.getRoomtypeid()));
+                try{
+                    prt.setRoomId(mu.getRoomid());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                prt.setRoomTypeId(mu.getRoomtypeid());
                 prt.setRoomTypeName(mu.getRoomtypename());
                 prt.setSrcName(mu.getSrcName());
                 prt.setSrcType(mu.getSrcType());
@@ -95,6 +147,9 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
         }
 
         private void putPlatformRoomPicToQueue(Roomlist room, LinkedBlockingQueue queue) {
+            if(room.getRoomInfo() == null){
+                return;
+            }
             if(CollectionUtils.isEmpty(room.getRoomInfo().getPicInfo())){
                 return;
             }
@@ -102,8 +157,8 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                 Date now = new Date();
                 GdRoomPic gdRoomPic = new GdRoomPic();
                 gdRoomPic.setIsVaild("T");
-                gdRoomPic.setRoomId(Long.valueOf(room.getMultilist().get(0).getRoomid()));
-                gdRoomPic.setRoomTypeId(Long.valueOf(room.getMultilist().get(0).getRoomtypeid()));
+                gdRoomPic.setRoomId(room.getMultilist().get(0).getRoomid());
+                gdRoomPic.setRoomTypeId(room.getMultilist().get(0).getRoomtypeid());
                 gdRoomPic.setUrl(picInfo.getUrl());
                 gdRoomPic.setUrlType(picInfo.getSrcType());
                 gdRoomPic.setCreateBy(Constant.sysUser);
@@ -129,8 +184,8 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
             roomType.setNetwork(room.getRoomInfo().getNetwork());
             roomType.setPriceLowest(new BigDecimal(room.getPriceLowest()));
             roomType.setRoomGroupId(Long.valueOf(room.getRoomgroupId()));
-            roomType.setRoomId(Long.valueOf(room.getMultilist().get(0).getRoomid()));
-            roomType.setRoomTypeId(Long.valueOf(room.getMultilist().get(0).getRoomtypeid()));
+            roomType.setRoomId(room.getMultilist().get(0).getRoomid());
+            roomType.setRoomTypeId(room.getMultilist().get(0).getRoomtypeid());
             roomType.setRoomStatus(Boolean.valueOf(room.getRoomStatus()) ? "T" : "F");
             roomType.setCreateBy(Constant.sysUser);
             roomType.setCreateTime(now);
@@ -155,6 +210,7 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
             GdRoomTypeMapper gdRoomTypeMapper = AppUtils.getBean(GdRoomTypeMapper.class);
             GdPlatformRoomTypeMapper gdPlatformRoomTypeMapper = AppUtils.getBean(GdPlatformRoomTypeMapper.class);
             GdRoomPicMapper gdRoomPicMapper = AppUtils.getBean(GdRoomPicMapper.class);
+            GdHotelMapper gdHotelMapper = AppUtils.getBean(GdHotelMapper.class);
             while (true){
                 try {
                     Object obj = queue.take();
@@ -163,28 +219,20 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                         continue;
                     }
                     if(obj instanceof GdRoomType){
-                        /*if( gdRoomPicVector.size() > 1000){
-                            gdRoomTypeMapper.batchInsert(gdRoomPicVector);
-                            gdRoomPicVector.clear();
-                        }
-                        gdRoomTypeVector.add((GdRoomType)obj);*/
                         gdRoomTypeMapper.insert((GdRoomType)obj);
                     }
                     if(obj instanceof GdPlatformRoomType){
-                        /*if(gdPlatformRoomTypeVector.size() > 1000){
-                            gdPlatformRoomTypeMapper.batchInsert(gdPlatformRoomTypeVector);
-                            gdPlatformRoomTypeVector.clear();
-                        }
-                        gdPlatformRoomTypeVector.add((GdPlatformRoomType)obj);*/
                         gdPlatformRoomTypeMapper.insert((GdPlatformRoomType)obj);
                     }
                     if(obj instanceof GdRoomPic){
-                        /*if(gdRoomPicVector.size() > 1000){
-                            gdRoomPicMapper.batchInsert(gdRoomPicVector);
-                            gdRoomPicVector.clear();
-                        }
-                        gdRoomPicVector.add((GdRoomPic)obj);*/
                         gdRoomPicMapper.insert((GdRoomPic)obj);
+                    }
+                    if(obj instanceof String){
+                        GdHotel gdHotel = new GdHotel();
+                        gdHotel.setSourceId((String)obj);
+                        gdHotel.setUpdateTime(new Date());
+                        gdHotel.setOtaOnsell("F");
+                        gdHotelMapper.updateBySourceId(gdHotel);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -194,31 +242,25 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
         }
     }
 
-    public static void main(String args[]){
-        Date now = new Date();
-        String toDayStr = DateUtils.formatDateTime(now, DateUtils.FORMAT_DATE);
-        String tomorrowStr = DateUtils.formatDateTime(DateUtils.addDays(now, 1), DateUtils.FORMAT_DATE);
-        String json = HttpUtils.get_data(String.format(GD_HOTEL_SEARCH_URL, "B000A7O2PV", toDayStr, tomorrowStr), "GET");
-        System.out.println(json);
-        RoomTypeInfo roomTypeInfo = JSON.parseObject(json, RoomTypeInfo.class);
-        Roomlist room = roomTypeInfo.getRoomlist().get(0);
-        GdRoomType roomType = new GdRoomType();
-        roomType.setRoomTypeName(room.getMultilist().get(0).getRoomtypename());
-        roomType.setArea(room.getRoomInfo().getArea());
-        roomType.setBed(room.getRoomInfo().getBed());
-        roomType.setFloor(room.getRoomInfo().getFloor());
-        roomType.setHotelId(Long.valueOf(room.getMultilist().get(0).getHotelid()));
-        roomType.setIsVaild("T");
-        roomType.setNetwork(room.getRoomInfo().getNetwork());
-        roomType.setPriceLowest(new BigDecimal(room.getPriceLowest()));
-        roomType.setRoomGroupId(Long.valueOf(room.getRoomgroupId()));
-        roomType.setRoomId(Long.valueOf(room.getMultilist().get(0).getRoomid()));
-        roomType.setRoomTypeId(Long.valueOf(room.getMultilist().get(0).getRoomtypeid()));
-        roomType.setRoomStatus(Boolean.valueOf(room.getRoomStatus()) ? "T" : "F");
-        roomType.setCreateBy(Constant.sysUser);
-        roomType.setCreateTime(now);
-        roomType.setUpdateTime(now);
-        roomType.setUpdateBy(Constant.sysUser);
-        Boolean.valueOf("true");
+    public static void main(String args[]) throws InterruptedException {
+        LinkedBlockingQueue qu = new LinkedBlockingQueue();
+        List<RoomInfo> l = new ArrayList<>();
+        l.add(new RoomInfo());
+        List<String> a = new ArrayList<>();
+        a.add("1");
+        qu.add(l);
+        qu.add(a);
+        Object obj = qu.take();
+        if(obj instanceof List){
+            if(((List) obj).get(0) instanceof RoomInfo){
+                System.out.println(1);
+            }
+            if(((List) obj).get(0) instanceof String){
+                System.out.println(2);
+            }
+
+        }
+
+
     }
 }
