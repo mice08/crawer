@@ -286,4 +286,6 @@ public class Constant {
 	public static String gd_hotelList = new PropertiesUtil().getValue("common.properties", "gd.hotelList");
 	public static String gd_hotelReview = new PropertiesUtil().getValue("common.properties", "gd.hotelReview");
 
+	public static final String sysUser="sys";
+
 }

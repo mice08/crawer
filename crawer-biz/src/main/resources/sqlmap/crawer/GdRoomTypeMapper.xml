@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.GdRoomTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdRoomType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="room_Id" property="roomId" jdbcType="BIGINT" />
+    <result column="room_type_Id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="room_group_id" property="roomGroupId" jdbcType="BIGINT" />
+    <result column="Room_type_name" property="roomTypeName" jdbcType="VARCHAR" />
+    <result column="price_lowest" property="priceLowest" jdbcType="DECIMAL" />
+    <result column="floor" property="floor" jdbcType="VARCHAR" />
+    <result column="network" property="network" jdbcType="VARCHAR" />
+    <result column="bed" property="bed" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="room_status" property="roomStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, hotel_id, room_Id, room_type_Id, room_group_id, Room_type_name, price_lowest, 
+    floor, network, bed, area, room_status, create_time, update_time, create_by, update_by, 
+    is_vaild
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdRoomTypeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from gd_room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gd_room_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from gd_room_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.GdRoomType" >
+    insert into gd_room_type (id, hotel_id, room_Id, 
+      room_type_Id, room_group_id, Room_type_name, 
+      price_lowest, floor, network, 
+      bed, area, room_status, 
+      create_time, update_time, create_by, 
+      update_by, is_vaild)
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT}, 
+      #{roomTypeId,jdbcType=BIGINT}, #{roomGroupId,jdbcType=BIGINT}, #{roomTypeName,jdbcType=VARCHAR}, 
+      #{priceLowest,jdbcType=DECIMAL}, #{floor,jdbcType=VARCHAR}, #{network,jdbcType=VARCHAR}, 
+      #{bed,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{roomStatus,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateBy,jdbcType=VARCHAR}, #{isVaild,jdbcType=CHAR})
+  </insert>
+  <insert id="batchnsert" parameterType="java.util.List" >
+    insert into gd_room_type (id, hotel_id, room_Id,
+    room_type_Id, room_group_id, Room_type_name,
+    price_lowest, floor, network,
+    bed, area, room_status,
+    create_time, update_time, create_by,
+    update_by, is_vaild)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.hotelId,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT},
+      #{item.roomTypeId,jdbcType=BIGINT}, #{item.roomGroupId,jdbcType=BIGINT}, #{item.roomTypeName,jdbcType=VARCHAR},
+      #{item.priceLowest,jdbcType=DECIMAL}, #{item.floor,jdbcType=VARCHAR}, #{item.network,jdbcType=VARCHAR},
+      #{item.bed,jdbcType=VARCHAR}, #{item.area,jdbcType=VARCHAR}, #{item.roomStatus,jdbcType=VARCHAR},
+      #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR},
+      #{item.updateBy,jdbcType=VARCHAR}, #{item.isVaild,jdbcType=CHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.GdRoomType" >
+    insert into gd_room_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hotelId != null" >
+        hotel_id,
+      </if>
+      <if test="roomId != null" >
+        room_Id,
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_Id,
+      </if>
+      <if test="roomGroupId != null" >
+        room_group_id,
+      </if>
+      <if test="roomTypeName != null" >
+        Room_type_name,
+      </if>
+      <if test="priceLowest != null" >
+        price_lowest,
+      </if>
+      <if test="floor != null" >
+        floor,
+      </if>
+      <if test="network != null" >
+        network,
+      </if>
+      <if test="bed != null" >
+        bed,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="roomStatus != null" >
+        room_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="isVaild != null" >
+        is_vaild,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="roomGroupId != null" >
+        #{roomGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeName != null" >
+        #{roomTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLowest != null" >
+        #{priceLowest,jdbcType=DECIMAL},
+      </if>
+      <if test="floor != null" >
+        #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="network != null" >
+        #{network,jdbcType=VARCHAR},
+      </if>
+      <if test="bed != null" >
+        #{bed,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStatus != null" >
+        #{roomStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        #{isVaild,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.GdRoomTypeExample" resultType="java.lang.Integer" >
+    select count(*) from gd_room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.GdRoomType" >
+    update gd_room_type
+    <set >
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        room_Id = #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_Id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="roomGroupId != null" >
+        room_group_id = #{roomGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeName != null" >
+        Room_type_name = #{roomTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLowest != null" >
+        price_lowest = #{priceLowest,jdbcType=DECIMAL},
+      </if>
+      <if test="floor != null" >
+        floor = #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="network != null" >
+        network = #{network,jdbcType=VARCHAR},
+      </if>
+      <if test="bed != null" >
+        bed = #{bed,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStatus != null" >
+        room_status = #{roomStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.GdRoomType" >
+    update gd_room_type
+    set hotel_id = #{hotelId,jdbcType=BIGINT},
+      room_Id = #{roomId,jdbcType=BIGINT},
+      room_type_Id = #{roomTypeId,jdbcType=BIGINT},
+      room_group_id = #{roomGroupId,jdbcType=BIGINT},
+      Room_type_name = #{roomTypeName,jdbcType=VARCHAR},
+      price_lowest = #{priceLowest,jdbcType=DECIMAL},
+      floor = #{floor,jdbcType=VARCHAR},
+      network = #{network,jdbcType=VARCHAR},
+      bed = #{bed,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      room_status = #{roomStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      is_vaild = #{isVaild,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

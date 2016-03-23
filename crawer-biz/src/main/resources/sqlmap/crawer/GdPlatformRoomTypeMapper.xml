@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.crawer.biz.mapper.crawer.GdPlatformRoomTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="room_Id" property="roomId" jdbcType="BIGINT" />
+    <result column="room_type_Id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="src_name" property="srcName" jdbcType="VARCHAR" />
+    <result column="src_type" property="srcType" jdbcType="VARCHAR" />
+    <result column="Is_Available" property="isAvailable" jdbcType="VARCHAR" />
+    <result column="Average_Price" property="averagePrice" jdbcType="VARCHAR" />
+    <result column="break_fast" property="breakFast" jdbcType="VARCHAR" />
+    <result column="total_price" property="totalPrice" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="Room_Type_Name" property="roomTypeName" jdbcType="VARCHAR" />
+    <result column="bed" property="bed" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, hotel_id, room_Id, room_type_Id, src_name, src_type, Is_Available, Average_Price, 
+    break_fast, total_price, url, Room_Type_Name, bed, create_time, update_time, create_by, 
+    update_by, is_vaild
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomTypeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from gd_platform_room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gd_platform_room_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from gd_platform_room_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
+    insert into gd_platform_room_type (id, hotel_id, room_Id, 
+      room_type_Id, src_name, src_type, 
+      Is_Available, Average_Price, break_fast, 
+      total_price, url, Room_Type_Name, 
+      bed, create_time, update_time, 
+      create_by, update_by, is_vaild
+      )
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT}, 
+      #{roomTypeId,jdbcType=BIGINT}, #{srcName,jdbcType=VARCHAR}, #{srcType,jdbcType=VARCHAR}, 
+      #{isAvailable,jdbcType=VARCHAR}, #{averagePrice,jdbcType=VARCHAR}, #{breakFast,jdbcType=VARCHAR}, 
+      #{totalPrice,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{roomTypeName,jdbcType=VARCHAR}, 
+      #{bed,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{isVaild,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    insert into gd_platform_room_type (id, hotel_id, room_Id,
+    room_type_Id, src_name, src_type,
+    Is_Available, Average_Price, break_fast,
+    total_price, url, Room_Type_Name,
+    bed, create_time, update_time,
+    create_by, update_by, is_vaild
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.hotelId,jdbcType=BIGINT}, #{item.roomId,jdbcType=BIGINT},
+      #{item.roomTypeId,jdbcType=BIGINT}, #{item.srcName,jdbcType=VARCHAR}, #{item.srcType,jdbcType=VARCHAR},
+      #{item.isAvailable,jdbcType=VARCHAR}, #{item.averagePrice,jdbcType=VARCHAR}, #{item.breakFast,jdbcType=VARCHAR},
+      #{item.totalPrice,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, #{item.roomTypeName,jdbcType=VARCHAR},
+      #{item.bed,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP},
+      #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, #{item.isVaild,jdbcType=CHAR}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
+    insert into gd_platform_room_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hotelId != null" >
+        hotel_id,
+      </if>
+      <if test="roomId != null" >
+        room_Id,
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_Id,
+      </if>
+      <if test="srcName != null" >
+        src_name,
+      </if>
+      <if test="srcType != null" >
+        src_type,
+      </if>
+      <if test="isAvailable != null" >
+        Is_Available,
+      </if>
+      <if test="averagePrice != null" >
+        Average_Price,
+      </if>
+      <if test="breakFast != null" >
+        break_fast,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="roomTypeName != null" >
+        Room_Type_Name,
+      </if>
+      <if test="bed != null" >
+        bed,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="isVaild != null" >
+        is_vaild,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="srcName != null" >
+        #{srcName,jdbcType=VARCHAR},
+      </if>
+      <if test="srcType != null" >
+        #{srcType,jdbcType=VARCHAR},
+      </if>
+      <if test="isAvailable != null" >
+        #{isAvailable,jdbcType=VARCHAR},
+      </if>
+      <if test="averagePrice != null" >
+        #{averagePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="breakFast != null" >
+        #{breakFast,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTypeName != null" >
+        #{roomTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bed != null" >
+        #{bed,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        #{isVaild,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomTypeExample" resultType="java.lang.Integer" >
+    select count(*) from gd_platform_room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
+    update gd_platform_room_type
+    <set >
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomId != null" >
+        room_Id = #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_Id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="srcName != null" >
+        src_name = #{srcName,jdbcType=VARCHAR},
+      </if>
+      <if test="srcType != null" >
+        src_type = #{srcType,jdbcType=VARCHAR},
+      </if>
+      <if test="isAvailable != null" >
+        Is_Available = #{isAvailable,jdbcType=VARCHAR},
+      </if>
+      <if test="averagePrice != null" >
+        Average_Price = #{averagePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="breakFast != null" >
+        break_fast = #{breakFast,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTypeName != null" >
+        Room_Type_Name = #{roomTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bed != null" >
+        bed = #{bed,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.crawer.biz.model.crawer.GdPlatformRoomType" >
+    update gd_platform_room_type
+    set hotel_id = #{hotelId,jdbcType=BIGINT},
+      room_Id = #{roomId,jdbcType=BIGINT},
+      room_type_Id = #{roomTypeId,jdbcType=BIGINT},
+      src_name = #{srcName,jdbcType=VARCHAR},
+      src_type = #{srcType,jdbcType=VARCHAR},
+      Is_Available = #{isAvailable,jdbcType=VARCHAR},
+      Average_Price = #{averagePrice,jdbcType=VARCHAR},
+      break_fast = #{breakFast,jdbcType=VARCHAR},
+      total_price = #{totalPrice,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      Room_Type_Name = #{roomTypeName,jdbcType=VARCHAR},
+      bed = #{bed,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      is_vaild = #{isVaild,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
