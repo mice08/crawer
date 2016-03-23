@@ -204,9 +204,6 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
 
         @Override
         public void run() {
-            List<GdRoomType> gdRoomTypeVector =  new Vector<>();
-            List<GdPlatformRoomType> gdPlatformRoomTypeVector =  new Vector<>();
-            List<GdRoomPic> gdRoomPicVector =  new Vector<>();
             GdRoomTypeMapper gdRoomTypeMapper = AppUtils.getBean(GdRoomTypeMapper.class);
             GdPlatformRoomTypeMapper gdPlatformRoomTypeMapper = AppUtils.getBean(GdPlatformRoomTypeMapper.class);
             GdRoomPicMapper gdRoomPicMapper = AppUtils.getBean(GdRoomPicMapper.class);
