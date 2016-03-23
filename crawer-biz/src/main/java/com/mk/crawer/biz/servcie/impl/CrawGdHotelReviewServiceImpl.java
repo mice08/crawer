@@ -60,7 +60,11 @@ public class CrawGdHotelReviewServiceImpl implements CrawGdHotelReviewService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=0;i<=pageCount;i++){
+        Integer start =0;
+        if (bean.getPageIndex()!=null){
+            start=bean.getPageIndex();
+        }
+        for (int i=start;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             bean.setPageSize(pageSize);
