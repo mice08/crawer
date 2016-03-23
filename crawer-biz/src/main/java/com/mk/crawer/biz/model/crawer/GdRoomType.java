@@ -8,9 +8,9 @@ public class GdRoomType {
 
     private Long hotelId;
 
-    private Long roomId;
+    private String roomId;
 
-    private Long roomTypeId;
+    private String roomTypeId;
 
     private Long roomGroupId;
 
@@ -54,19 +54,19 @@ public class GdRoomType {
         this.hotelId = hotelId;
     }
 
-    public Long getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(String roomId) {
         this.roomId = roomId;
     }
 
-    public Long getRoomTypeId() {
+    public String getRoomTypeId() {
         return roomTypeId;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
+    public void setRoomTypeId(String roomTypeId) {
         this.roomTypeId = roomTypeId;
     }
 

@@ -93,6 +93,8 @@ public class GdHotel {
 
     private Integer pageSize;
 
+    private String otaOnsell;
+
     public Long getId() {
         return id;
     }
@@ -451,5 +453,13 @@ public class GdHotel {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getOtaOnsell() {
+        return otaOnsell;
+    }
+
+    public void setOtaOnsell(String otaOnsell) {
+        this.otaOnsell = otaOnsell;
     }
 }

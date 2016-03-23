@@ -47,8 +47,8 @@ public class CrawGdHotelController {
 
     @RequestMapping(value = "/createGdRoomTypeSync" , method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> createGdRoomTypeSync() {
-        crawGdRoomType.crawGdRoomType(GdRoomTypeQueue.getQueue());
+    public ResponseEntity<Map<String,Object>> createGdRoomTypeSync(GdHotel bean) {
+        crawGdRoomType.crawGdRoomType(bean, GdRoomTypeQueue.getQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

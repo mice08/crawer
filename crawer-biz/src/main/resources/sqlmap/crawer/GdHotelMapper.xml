@@ -45,6 +45,7 @@
     <result column="true_floor" property="trueFloor" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ota_onsell" property="otaOnsell" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, source_id, `name`, tag, `type`, type_code, biz_type, address, location, tel, post_code,
@@ -252,5 +253,140 @@
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateBySourceId" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    update gd_hotel
+    <set >
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null" >
+        biz_type = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        post_code = #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pcode != null" >
+        pcode = #{pcode,jdbcType=VARCHAR},
+      </if>
+      <if test="pname != null" >
+        pname = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="adCode != null" >
+        ad_code = #{adCode,jdbcType=VARCHAR},
+      </if>
+      <if test="adName != null" >
+        ad_name = #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="gridCode != null" >
+        grid_code = #{gridCode,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        distance = #{distance,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null" >
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="naviPoiId != null" >
+        navi_poi_id = #{naviPoiId,jdbcType=VARCHAR},
+      </if>
+      <if test="entrLocation != null" >
+        entr_location = #{entrLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="exitLocation != null" >
+        exit_location = #{exitLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="match != null" >
+        `match` = #{match,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="timeStamp != null" >
+        time_stamp = #{timeStamp,jdbcType=VARCHAR},
+      </if>
+      <if test="indoorMap != null" >
+        indoor_map = #{indoorMap,jdbcType=INTEGER},
+      </if>
+      <if test="groupBuyNum != null" >
+        group_buy_num = #{groupBuyNum,jdbcType=INTEGER},
+      </if>
+      <if test="businessArea != null" >
+        business_area = #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="discountNum != null" >
+        discount_num = #{discountNum,jdbcType=INTEGER},
+      </if>
+      <if test="rating != null" >
+        rating = #{rating,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelOrdering != null" >
+        hotel_ordering = #{hotelOrdering,jdbcType=INTEGER},
+      </if>
+      <if test="lowestPrice != null" >
+        lowest_price = #{lowestPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null" >
+        event = #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="cpId != null" >
+        cp_id = #{cpId,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null" >
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="trueFloor != null" >
+        true_floor = #{trueFloor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="otaOnsell != null" >
+        ota_onsell = #{otaOnsell,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where source_id = #{sourceId,jdbcType=VARCHAR}
   </update>
 </mapper>
