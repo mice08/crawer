@@ -14,7 +14,6 @@ import com.mk.framework.AppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.jredis.JredisConnection;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -32,8 +31,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Service
 public class CrawGdHotelTelServiceImpl implements CrawGdHotelTelService {
     private static final String GD_HOTEL_TEL_URL = "http://api.map.baidu.com/place/v2/search?ak=%s&output=json&query=%s&page_size=1&page_num=0&scope=2&region=%s";
-    private static ExecutorService pool = Executors.newFixedThreadPool(32);
-    private static ExecutorService exePool = Executors.newFixedThreadPool(10);
+    private static ExecutorService pool = Executors.newFixedThreadPool(1);
+    private static ExecutorService exePool = Executors.newFixedThreadPool(20);
     private static Logger logger = LoggerFactory.getLogger(CrawGdHotelTelServiceImpl.class);
 
     @Autowired
