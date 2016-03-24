@@ -4,6 +4,7 @@ import com.mk.crawer.biz.model.crawer.GdHotel;
 import com.mk.crawer.biz.model.ots.TDistrict;
 import com.mk.crawer.biz.servcie.CrawGdHotelReviewService;
 import com.mk.crawer.biz.servcie.CrawGdHotelService;
+import com.mk.crawer.biz.servcie.CrawGdHotelTelService;
 import com.mk.crawer.biz.servcie.CrawGdRoomType;
 import com.mk.crawer.biz.thread.GdRoomTypeQueue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class CrawGdHotelController {
     CrawGdHotelReviewService reviewService;
     @Autowired
     private CrawGdRoomType crawGdRoomType;
+    @Autowired
+    private CrawGdHotelTelService crawGdHotelTelService;
 
     @RequestMapping(value = "/gdHotelSync" , method = RequestMethod.POST)
     @ResponseBody
@@ -60,6 +63,27 @@ public class CrawGdHotelController {
     @ResponseBody
     public ResponseEntity<Map<String,Object>> gdHotelSync() {
         crawGdRoomType.executeRoomTypeToDb(GdRoomTypeQueue.getQueue());
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/crawGdHotelTel" , method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> crawGdHotelTel(GdHotel bean) {
+        crawGdHotelTelService.crawGdHotelTel(bean, GdRoomTypeQueue.getQueue());
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/executeUpdateHotelTelToDb" , method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> executeUpdateHotelTelToDb() {
+        crawGdHotelTelService.executeUpdateHotelTelToDb(GdRoomTypeQueue.getQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

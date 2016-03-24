@@ -68,7 +68,7 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
         if (bean.getPageIndex()!=null){
             start=bean.getPageIndex();
         }
-        for (int i=start;i<=1;i++){
+        for (int i=start;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             bean.setPageSize(pageSize);
