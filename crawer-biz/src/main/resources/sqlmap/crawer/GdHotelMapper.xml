@@ -80,6 +80,21 @@
     <include refid="Base_Query_List" />
     ORDER BY id DESC
   </select>
+  <select id="countTelIsNull" resultType="java.lang.Integer" >
+    select count(*) from gd_hotel
+    where tel is null
+    ORDER BY id DESC
+  </select>
+  <select id="queryHotelByTelIsNull" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_hotel
+    where tel is null
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
   <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.crawer.biz.model.crawer.GdHotel" >
     select
     <include refid="Base_Column_List" />

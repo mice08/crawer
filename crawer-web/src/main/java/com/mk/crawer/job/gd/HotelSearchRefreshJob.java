@@ -22,7 +22,7 @@ public class HotelSearchRefreshJob implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+       /* Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 EXECUTOR_100.shutdown();
@@ -30,7 +30,7 @@ public class HotelSearchRefreshJob implements ApplicationListener<ContextRefresh
             }
         });
 
-        EXECUTOR_100.execute(new StartRefreshThread());
+        EXECUTOR_100.execute(new StartRefreshThread());*/
     }
 
     static class HotelInfoRefreshThreadFactory implements ThreadFactory {
