@@ -28,7 +28,7 @@ import java.util.Map;
 @RequestMapping(value = "/bdaccesskey")
 public class BaiDuAccessKeyController {
 
-    @RequestMapping(value = "/writeredis", method = RequestMethod.POST)
+    @RequestMapping(value = "/writeredis", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> writeToRedis() {
         Map<String, Object> result = new HashMap<String, Object>();
