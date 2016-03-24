@@ -137,7 +137,11 @@ public class CrawGdHotelTelServiceImpl implements CrawGdHotelTelService {
             GdHotelTel hotelTel = new GdHotelTel();
             hotelTel.setTel(results.getTelephone());
             hotelTel.setHotelSourceId(gdHotel.getSourceId());
-            queue.add(hotelTel);
+            try {
+                queue.put(hotelTel);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

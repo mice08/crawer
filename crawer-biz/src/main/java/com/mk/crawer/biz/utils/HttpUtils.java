@@ -137,11 +137,14 @@ public class HttpUtils {
             conn.setRequestProperty("Accept-Charset", "utf-8");
             conn.setRequestProperty("contentType", "utf-8");
             conn.connect();
-
+            StringBuffer result = new StringBuffer();
             //返回
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String result = reader.readLine();
-            return result.trim();
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                result.append(tempString);
+            }
+            return result.toString();
         } catch (Exception e) {
             return null;
         }

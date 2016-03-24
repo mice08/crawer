@@ -35,8 +35,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Service
 public class CrawGdRoomTypeImpl implements CrawGdRoomType {
     private static final String GD_HOTEL_SEARCH_URL = "http://m.amap.com/service/valueadded/hotelsearch.json?poiid=%s&indate=%s&outdate=%s&mode=1";
-    private static ExecutorService pool = Executors.newFixedThreadPool(32);
-    private static ExecutorService exePool = Executors.newFixedThreadPool(10);
+    private static ExecutorService pool = Executors.newFixedThreadPool(2);
+    private static ExecutorService exePool = Executors.newFixedThreadPool(20);
     private static Logger logger = LoggerFactory.getLogger(CrawGdHotelServiceImpl.class);
 
     @Autowired
@@ -142,7 +142,11 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                 prt.setCreateTime(now);
                 prt.setUpdateBy(Constant.sysUser);
                 prt.setUpdateTime(now);
-                queue.add(prt);
+                try {
+                    queue.put(prt);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -165,7 +169,11 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
                 gdRoomPic.setCreateTime(now);
                 gdRoomPic.setUpdateTime(now);
                 gdRoomPic.setUpdateBy(Constant.sysUser);
-                queue.add(gdRoomPic);
+                try {
+                    queue.put(gdRoomPic);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -192,7 +200,11 @@ public class CrawGdRoomTypeImpl implements CrawGdRoomType {
             roomType.setCreateTime(now);
             roomType.setUpdateTime(now);
             roomType.setUpdateBy(Constant.sysUser);
-            queue.add(roomType);
+            try {
+                queue.put(roomType);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

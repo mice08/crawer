@@ -51,7 +51,7 @@ public class CrawGdHotelController {
     @RequestMapping(value = "/createGdRoomTypeSync" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> createGdRoomTypeSync(GdHotel bean) {
-        crawGdRoomType.crawGdRoomType(bean, GdRoomTypeQueue.getQueue());
+        crawGdRoomType.crawGdRoomType(bean, GdRoomTypeQueue.getRoomTypeQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
@@ -62,7 +62,7 @@ public class CrawGdHotelController {
     @RequestMapping(value = "/excuteRoomTypeToDb" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> gdHotelSync() {
-        crawGdRoomType.executeRoomTypeToDb(GdRoomTypeQueue.getQueue());
+        crawGdRoomType.executeRoomTypeToDb(GdRoomTypeQueue.getRoomTypeQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
@@ -72,7 +72,7 @@ public class CrawGdHotelController {
     @RequestMapping(value = "/crawGdHotelTel" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> crawGdHotelTel(GdHotel bean) {
-        crawGdHotelTelService.crawGdHotelTel(bean, GdRoomTypeQueue.getQueue());
+        crawGdHotelTelService.crawGdHotelTel(bean, GdRoomTypeQueue.getHotelTelUpdateQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
@@ -83,7 +83,7 @@ public class CrawGdHotelController {
     @RequestMapping(value = "/executeUpdateHotelTelToDb" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> executeUpdateHotelTelToDb() {
-        crawGdHotelTelService.executeUpdateHotelTelToDb(GdRoomTypeQueue.getQueue());
+        crawGdHotelTelService.executeUpdateHotelTelToDb(GdRoomTypeQueue.getHotelTelUpdateQueue());
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
